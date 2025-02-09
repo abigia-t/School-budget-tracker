@@ -1,6 +1,7 @@
 # School Budget Tracker with React + Vite
 
 Features
+
 . Role-based access for different actors (System Admin, School Director, Finance Head, etc.)
 . Budget management for various school programs
 . Tuition fee management by parents
