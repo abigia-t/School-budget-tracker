@@ -16,7 +16,6 @@ const Header = () => {
         BUDGET TRACKING SYSTEM
       </h2>
 
-      {/* Education-Related Icon (You can change or add more icons) */}
       <div className="text-white text-3xl md:text-4xl">
         <FaGraduationCap />
       </div>
