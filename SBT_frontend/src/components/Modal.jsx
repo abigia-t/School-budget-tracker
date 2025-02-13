@@ -8,7 +8,7 @@ const Modal = ({ isOpen, title, children, onClose }) => {
       <div className="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
         {/* Modal Header */}
         <div className="flex justify-between items-center border-b pb-2">
-          <h2 className="text-xl font-bold">{title}</h2>
+          <h2 className="text-2xl text-black  font-bold">{title}</h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-black font-semibold"

@@ -17,8 +17,7 @@ const Home = () => {
     });
     setTimeout(() => setContactModalOpen(false), 3000); // Close modal after the toast duration
   };
-  
-  
+
   return (
     <div className="min-h-screen w-full flex flex-col">
       {/* Navigation Bar */}
@@ -100,32 +99,36 @@ const Home = () => {
         {/* Modal Content */}
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-sm font-medium">Your Name</label>
+            <label className="block text-1xl font-medium">Your Name</label>
             <input
               type="text"
-              className="w-full border rounded-lg px-3 py-2"
+              className="w-full text-black border rounded-lg px-3 py-2"
               placeholder="Enter your name"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium">Your Email</label>
+            <label className="block  text-1xl font-medium">
+              Your Email
+            </label>
             <input
               type="email"
-              className="w-full border rounded-lg px-3 py-2"
+              className="w-full text-black border rounded-lg px-3 py-2"
               placeholder="Enter your email"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium">Message</label>
+            <label className="block text-1xl font-medium">
+              Message
+            </label>
             <textarea
-              className="w-full border rounded-lg px-3 py-2"
-              rows="4"
+              className="w-full text-black border rounded-lg px-3 py-2"
+              rows="7"
               placeholder="Your message here..."
             ></textarea>
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-950 text-white px-4 py-2 rounded-lg hover:bg-blue-900"
+            className="w-full bg-blue-950 text-white text-[20px] px-4 py-2 rounded-lg hover:bg-blue-900"
           >
             Submit
           </button>
