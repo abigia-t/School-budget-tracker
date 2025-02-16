@@ -10,7 +10,7 @@ const App = () => {
       <div className="flex-grow flex justify-center items-center">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/gm" element={<GM />} />
+          <Route path="*" element={<GM />} />
         </Routes>
       </div>
     </div>

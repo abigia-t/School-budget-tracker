@@ -1,5 +1,8 @@
 import React from "react";
 import Header from "../components/Header";
+import { assets } from "../assets/assets";
+import {FaGraduationCap} from "react-icons/fa";
+
 
 const GM = () => {
   return (

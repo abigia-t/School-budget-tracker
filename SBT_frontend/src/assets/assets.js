@@ -5,7 +5,8 @@ import getty_2 from "./getty_2.jpg";
 import getty_3 from "./getty_3.jpg";
 import getty_4 from "./getty_4.jpg";
 import getty_5 from "./getty_5.jpg";
-import feature_icon1 from "./feature_icon1.jpg"; 
+import getty_6 from "./getty_6.jpg";
+import feature_icon1 from "./feature_icon1.jpg";
 import feature_icon2 from "./feature_icon2.jpg";
 import feature_icon3 from "./feature_icon3.jpg";
 
@@ -17,6 +18,7 @@ export const assets = {
   getty_3,
   getty_4,
   getty_5,
+  getty_6,
   feature_icon1,
   feature_icon2,
   feature_icon3,
