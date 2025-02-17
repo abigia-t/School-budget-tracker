@@ -43,7 +43,7 @@ const AccountForm = () => {
   const toggleForm = () => setIsSignIn(!isSignIn);
 
   return (
-    <div className="flex flex-col items-center p-4 bg-white rounded shadow-md w-96">
+    <div className="flex flex-col items-center p-3 bg-white rounded shadow-md w-96">
       <h2 className="text-xl font-bold mb-4">{isSignIn ? "Sign In" : "Create Account"}</h2>
 
       <Formik
@@ -61,7 +61,7 @@ const AccountForm = () => {
         onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (
-          <Form className="w-full">
+          <Form className=" text-black w-full">
             {/* Conditional Fields for Create Account */}
             {!isSignIn && (
               <>
@@ -165,7 +165,7 @@ const AccountForm = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="w-full p-2 bg-blue-500 text-white text-xl rounded hover:bg-blue-600"
             >
               {isSignIn ? "Sign In" : "Create Account"}
             </button>
@@ -173,13 +173,13 @@ const AccountForm = () => {
         )}
       </Formik>
 
-      <p className="text-sm mt-4">
+      <p className="text-sm text-black mt-4">
         {isSignIn ? "Don't have an account?" : "Already have an account?"}{" "}
         <button
           onClick={toggleForm}
-          className="text-blue-500 underline"
+          className="text-blue-500 text-xl underline"
         >
-          {isSignIn ? "Create one" : "Sign in"}
+          {isSignIn ? " Create Account" : " Sign in"}
         </button>
       </p>
     </div>

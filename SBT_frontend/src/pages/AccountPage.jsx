@@ -77,7 +77,7 @@ const AccountPage = () => {
           </nav>
         }
       />
-      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="flex justify-center  items-center py-10 pt-20">
       <AccountForm />
     </div>
     </div>
