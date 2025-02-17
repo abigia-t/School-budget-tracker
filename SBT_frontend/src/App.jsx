@@ -3,6 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import GM from "./pages/GM";
 import "react-toastify/dist/ReactToastify.css";
+import AccountPage from "./pages/AccountPage";
+import Footer from "./components/Footer";
 
 const App = () => {
   return (
@@ -10,9 +12,11 @@ const App = () => {
       <div className="flex-grow flex justify-center items-center">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="*" element={<GM />} />
+          <Route path="/gm" element={<GM />} />
+          <Route path="/login" element={<AccountPage/>}/>
         </Routes>
       </div>
+      <Footer/>
     </div>
   );
 };

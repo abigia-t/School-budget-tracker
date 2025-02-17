@@ -3,9 +3,9 @@ import { assets, features } from "../assets/assets";
 import { FaCarSide } from "react-icons/fa";
 import Title from "../components/Title";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
 import Modal from "../components/Modal";
 import { ToastContainer, toast } from "react-toastify";
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [isContactModalOpen, setContactModalOpen] = useState(false);
@@ -25,7 +25,8 @@ const Home = () => {
       <Header
         header={
           <nav className="bg-blue-950 text-white fixed left-0 top-0 right-0 py-4 px-6 shadow-md flex justify-between items-center z-50">
-            <div
+           <Link to={"/"}>
+           <div
               onClick={() => {
                 const element = document.getElementById("home");
                 if (element) {
@@ -40,7 +41,7 @@ const Home = () => {
                 className="h-12 w-12 object-contain"
               />
               <h1 className="text-lg md:text-xl font-bold">Yajeb Academy</h1>
-            </div>
+            </div></Link>
             <ul className="hidden md:flex gap-10 text-lg font-semibold">
               <li
                 onClick={() => {
@@ -82,10 +83,12 @@ const Home = () => {
                 Features
               </li>
             </ul>
+            <Link to={"/login"}>
             <button className="flex items-center gap-2 bg-white text-blue-950 px-4 py-2 rounded-full shadow-md hover:bg-gray-200 transition">
               <FaCarSide />
               Sign In
             </button>
+            </Link>
           </nav>
         }
       />
@@ -214,25 +217,6 @@ const Home = () => {
           </ul>
         </div>
       </div>
-
-      {/* Footer */}
-      <Footer
-        logo={
-          <div className="flex items-center gap-3">
-            <img
-              className="h-10 w-10 object-contain"
-              src={assets.edu_logo}
-              alt="Yajeb Academy Logo"
-            />
-            <h2 className="text-lg md:text-xl font-semibold">Yajeb Academy</h2>
-          </div>
-        }
-        copyRight={
-          <p className="text-sm text-gray-200 text-center md:text-left mt-2 md:mt-0">
-            © {new Date().getFullYear()} Yajeb Academy. All Rights Reserved.
-          </p>
-        }
-      />
     </div>
   );
 };
