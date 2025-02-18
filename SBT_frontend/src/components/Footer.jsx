@@ -3,6 +3,10 @@ import { assets } from "../assets/assets";
 const Footer = () => {
   return (
     <footer className="bg-blue-950 text-white py-2 px-6 flex flex-col md:flex-row justify-between items-center shadow-md">
+
+
+      {/* Logo & Academy Info */}
+
       <div className="flex items-center gap-3">
                   <img
                     className="h-10 w-10 object-contain"
