@@ -60,9 +60,11 @@ const Home = () => {
             </div>
 
             <ul className="hidden md:flex gap-10 text-lg font-semibold">
-              <li className="hover:text-gray-300 cursor-pointer">
-                <Link to="/">Home</Link>
-              </li>
+              <a href="#home">
+                <li className="hover:text-gray-300 cursor-pointer">
+                  Home
+                </li>
+              </a>
               <a href="#about">
                 <li className="hover:text-gray-300 cursor-pointer">About</li>
               </a>
@@ -149,6 +151,10 @@ const Home = () => {
             <h1 className="text-3xl md:text-5xl font-bold">
               Welcome to Yajeb Academy Budget Tracker
             </h1>
+            <p className="text-lg md:text-xl mt-4 text-gray-300">
+              Efficiently manage and monitor your school's budgets and resources
+              with ease.
+            </p>
           </div>
           <div className="flex justify-center">
             <img src={assets.getty_5} alt="Students engaged in learning" />
@@ -156,7 +162,7 @@ const Home = () => {
         </div>
       </div>
       {/* Features Section */}
-      <div id="features" className="bg-gray-100 py-12 px-6">
+      <div id="features" className="bg-gray-100 py-20 px-6">
         <Title title="Our Features" />
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
           {features.map((feature, index) => (
