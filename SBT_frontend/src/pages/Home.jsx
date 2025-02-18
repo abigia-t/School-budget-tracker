@@ -51,8 +51,11 @@ const Home = () => {
               }}
               className="flex items-center gap-3 cursor-pointer"
             >
-              src={assets.edu_logo}
-              alt="Yajeb Academy Logo" className="h-12 w-12 object-contain"
+              <img
+                src={assets.edu_logo}
+                alt="Yajeb Academy Logo"
+                className="h-12 w-12 object-contain"
+              />
               <h1 className="text-lg md:text-xl font-bold">Yajeb Academy</h1>
             </div>
 
