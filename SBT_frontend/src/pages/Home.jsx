@@ -1,17 +1,14 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import Header from "../components/Header";
 import Modal from "../components/Modal";
 import Title from "../components/Title";
 import { assets, features } from "../assets/assets";
+import NavBar from "../components/NavBar";
 
 const Home = () => {
   const [isContactModalOpen, setContactModalOpen] = useState(false);
-  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -42,51 +39,7 @@ const Home = () => {
       {/* Toast Container */}
       <ToastContainer />
       {/* Navigation Bar */}
-      <Header
-        header={
-          <nav className="bg-blue-950 text-white fixed left-0 top-0 right-0 py-4 px-6 shadow-md flex justify-between items-center z-50">
-            <div
-              onClick={() => {
-                navigate("/");
-              }}
-              className="flex items-center gap-3 cursor-pointer"
-            >
-              <img
-                src={assets.edu_logo}
-                alt="Yajeb Academy Logo"
-                className="h-12 w-12 object-contain"
-              />
-              <h1 className="text-lg md:text-xl font-bold">Yajeb Academy</h1>
-            </div>
-
-            <ul className="hidden md:flex gap-10 text-lg font-semibold">
-              <a href="#home">
-                <li className="hover:text-gray-300 cursor-pointer">
-                  Home
-                </li>
-              </a>
-              <a href="#about">
-                <li className="hover:text-gray-300 cursor-pointer">About</li>
-              </a>
-              <li
-                onClick={() => setContactModalOpen(true)}
-                className="hover:text-gray-300 cursor-pointer"
-              >
-                Contact
-              </li>
-              <a href="#features">
-                <li className="hover:text-gray-300 cursor-pointer">Features</li>
-              </a>
-            </ul>
-            <Link to="/login">
-              <button className="flex items-center gap-2 bg-white text-blue-950 px-4 py-2 rounded-full shadow-md hover:bg-gray-200 transition">
-                Sign In
-              </button>
-            </Link>
-          </nav>
-        }
-      />
-
+      <NavBar setContactModalOpen={setContactModalOpen} />
       {/* Contact Modal */}
       <Modal
         isOpen={isContactModalOpen}

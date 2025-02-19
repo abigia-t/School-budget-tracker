@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import GM from "./pages/GM";
 import "react-toastify/dist/ReactToastify.css";
-import AccountPage from "./pages/AccountPage";
+import LoginPage from "./pages/LoginPage";
 import Footer from "./components/Footer";
 
 const App = () => {
@@ -13,7 +13,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="*" element={<GM />} />
-          <Route path="/login" element={<AccountPage/>}/>
+          <Route path="/login" element={<LoginPage/>}/>
         </Routes>
       </div>
       <Footer/>

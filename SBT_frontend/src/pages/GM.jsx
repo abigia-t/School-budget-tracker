@@ -1,8 +1,7 @@
 import React from "react";
-import Header from "../components/Header";
+import Header from "../components/NavBar";
 import { assets } from "../assets/assets";
-import {FaGraduationCap} from "react-icons/fa";
-
+import { FaGraduationCap } from "react-icons/fa";
 
 const GM = () => {
   return (
