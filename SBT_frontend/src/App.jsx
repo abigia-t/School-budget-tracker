@@ -11,8 +11,8 @@ const App = () => {
     <div className="flex flex-col min-h-screen text-blue-500">
       <div className="flex-grow flex justify-center items-center">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="*" element={<GM />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<GM />} />
           <Route path="/login" element={<LoginPage/>}/>
         </Routes>
       </div>
