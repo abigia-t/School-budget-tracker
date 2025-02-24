@@ -1,22 +1,51 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
-import GM from "./pages/GM";
-import "react-toastify/dist/ReactToastify.css";
 import LoginPage from "./pages/LoginPage";
+import SA from "./pages/SA/SA";
+import Dashboard from "./pages/SA/Dashboard";
+import ManageActors from "./pages/SA/ManageActors";
+import ManageStudents from "./pages/SA/ManageStudents";
+import SendNotifications from "./pages/SA/SendNotifications";
+import ManageChapa from "./pages/SA/ManageChapa";
+import GM from "./pages/GM/GM";
+import SD from "./pages/GM/SD";
+import HR from "./pages/GM/HRH";
+import RFH from "./pages/GM/RFH";
+import Payment from "./pages/GM/Payment";
+import ViewReport from "./pages/GM/ViewReport";
 import Footer from "./components/Footer";
+import NoPage from "./pages/NoPage";
+
 
 const App = () => {
   return (
-    <div className="flex flex-col min-h-screen text-blue-500">
-      <div className="flex-grow flex justify-center items-center">
-        <Routes>
-          <Route path="/home" element={<Home />} />
-          <Route path="/" element={<GM />} />
-          <Route path="/login" element={<LoginPage/>}/>
-        </Routes>
-      </div>
-      <Footer/>
+    <div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="*" element={<NoPage/>}/>
+        {/* System Admin Routes */}
+        <Route path="/sa" element={<SA />}>
+          <Route index element={<Navigate to="/sa/dashboard" replace />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="actors" element={<ManageActors />} />
+          <Route path="students" element={<ManageStudents />} />
+          <Route path="notifications" element={<SendNotifications />} />
+          <Route path="chapa" element={<ManageChapa />} />
+        </Route>
+        {/* General Manager Routes */}
+        <Route path="/gm" element={<GM />}>
+          <Route index element={<Navigate to="/gm/dashboard" replace />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="sd" element={<SD />} />
+          <Route path="hr" element={<HR />} />
+          <Route path="rf" element={<RFH />} />
+          <Route path="payment" element={<Payment />} />
+          <Route path="vr" element={<ViewReport />} />
+        </Route>{" "}
+      </Routes>
+      <Footer />
     </div>
   );
 };

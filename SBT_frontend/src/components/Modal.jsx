@@ -1,6 +1,13 @@
 import React from "react";
 
-const Modal = ({ isOpen, title, children, onSubmit, onClose }) => {
+const Modal = ({
+  isOpen,
+  title,
+  children,
+  onSubmit,
+  onClose,
+  submitButtonText,
+}) => {
   if (!isOpen) return null;
 
   return (
@@ -24,16 +31,17 @@ const Modal = ({ isOpen, title, children, onSubmit, onClose }) => {
         <div className="mt-6 flex justify-around">
           <button
             onClick={onClose}
-            className="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300"
+            className="text-gray-700 hover:text-gray-900 font-semibold py-2 px-4 rounded-md border border-gray-300 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             Cancel
           </button>
+
           <button
             onClick={onSubmit}
             type="submit"
-            className="bg-blue-950 text-white px-4 py-2 rounded-lg hover:bg-blue-900"
+            className="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-900"
           >
-            Submit
+            {submitButtonText || "Submit"} {/* Dynamic button text */}
           </button>
         </div>
       </div>
