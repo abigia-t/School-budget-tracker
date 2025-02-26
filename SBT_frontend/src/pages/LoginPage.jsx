@@ -5,7 +5,7 @@ const LoginPage = () => {
   return (
     <div>
      <NavBar/>
-      <div className="flex justify-center  items-center py-6 pt-10">
+      <div className="flex justify-center items-center py-6 pt-10">
         <AuthForm />
       </div>
     </div>

@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 
 const AuthForm = ({ onLoginSuccess }) => {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const navigate = useNavigate();
+
+  // Simulated registered emails
+  const registeredEmails = ["user@example.com", "admin@example.com"];
 
   // Validation schema for Login
   const loginValidationSchema = Yup.object().shape({
@@ -36,21 +41,24 @@ const AuthForm = ({ onLoginSuccess }) => {
   };
 
   // Submit handler
-  const onSubmit = (values, { resetForm }) => {
+  const onSubmit = (values, { resetForm, setFieldError }) => {
     if (isForgotPassword) {
-      // Simulate password reset process
+      // Simulated email check
+      if (!registeredEmails.includes(values.email)) {
+        setFieldError("email", "Email is not registered");
+        return;
+      }
       alert(`Password reset successfully for: ${values.email}`);
       setIsForgotPassword(false); // Redirect back to login form
+      resetForm();
     } else {
-      // Simulate login process
       alert(`Logged in as: ${values.email}`);
       if (onLoginSuccess) onLoginSuccess(); // Callback for successful login
     }
-    resetForm();
   };
 
   return (
-    <div className=" min-h-screen flex justify-center items-center bg-white">
+    <div className="min-h-screen flex justify-center items-center bg-white">
       <div className="bg-white shadow-md rounded-lg p-8 max-w-md w-full">
         <h1 className="text-2xl text-blue-600 font-bold text-center mb-4">
           {isForgotPassword ? "Reset Password" : "Sign In"}
@@ -79,7 +87,7 @@ const AuthForm = ({ onLoginSuccess }) => {
                   type="email"
                   name="email"
                   id="email"
-                  className="w-full border rounded-md p-2 mt-1 text-sm"
+                  className="w-full border rounded-md p-3 mt-1 text-sm"
                 />
                 <ErrorMessage
                   name="email"
@@ -100,7 +108,7 @@ const AuthForm = ({ onLoginSuccess }) => {
                   type="password"
                   name="password"
                   id="password"
-                  className="w-full border rounded-md p-2 mt-1 text-sm"
+                  className="w-full border rounded-md p-3 mt-1 text-sm"
                 />
                 <ErrorMessage
                   name="password"
@@ -122,7 +130,7 @@ const AuthForm = ({ onLoginSuccess }) => {
                     type="password"
                     name="confirmPassword"
                     id="confirmPassword"
-                    className="w-full border rounded-md p-2 mt-1 text-sm"
+                    className="w-full border rounded-md p-3 mt-1 text-sm"
                   />
                   <ErrorMessage
                     name="confirmPassword"
@@ -138,27 +146,17 @@ const AuthForm = ({ onLoginSuccess }) => {
                 disabled={isSubmitting}
                 className="w-full bg-blue-600 text-white p-2 rounded-md font-semibold hover:bg-blue-700 transition"
               >
-                {isForgotPassword ? "Reset Password" : "Sign In"}
+                {isForgotPassword ? " Reset Password" : " Sign In"}
               </button>
             </Form>
           )}
         </Formik>
 
-        {/* Footer Links */}
-        <div className="mt-4 text-sm text-center">
-          {isForgotPassword ? (
+        {/* Forgot Password Toggle */}
+        {!isForgotPassword && (
+          <div className="mt-4 text-sm text-center">
             <p>
-              Remembered your password?{" "}
-              <button
-                onClick={() => setIsForgotPassword(false)}
-                className="text-blue-600 text-xl hover:underline"
-              >
-                Sign In
-              </button>
-            </p>
-          ) : (
-            <p>
-              Forgot your password?{" "}
+              Forgot your password? {" "}
               <button
                 onClick={() => setIsForgotPassword(true)}
                 className="text-blue-600 text-xl hover:underline"
@@ -166,8 +164,8 @@ const AuthForm = ({ onLoginSuccess }) => {
                 Reset Password
               </button>
             </p>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
