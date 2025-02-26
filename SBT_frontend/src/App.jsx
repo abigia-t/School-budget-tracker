@@ -21,12 +21,15 @@ import ApprovedBudget from "./pages/Auditor/ApprovedBudget";
 import APB from "./pages/Auditor/ABP";
 import ParentRecipt from "./pages/Auditor/parentRecipt";
 import RequestBudget from "./pages/Auditor/RequestBudget";
+import PreparePayroll from "./pages/RFHead/PreparePayroll";
+import RFHead from "./pages/RFHead/RFHead";
+import RRequestBudget from "./pages/RFHead/RRequestBudget";
 
 const App = () => {
   return (
     <div>
       <Routes>
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<NoPage/>}/>
         {/* System Admin Routes */}
@@ -39,7 +42,7 @@ const App = () => {
           <Route path="chapa" element={<ManageChapa />} />
         </Route>
         {/* General Manager Routes */}
-        <Route path="/" element={<GM />}>
+        <Route path="/gm" element={<GM />}>
           <Route index element={<Navigate to="/gm/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="sd" element={<SD />} />
@@ -56,6 +59,13 @@ const App = () => {
           <Route path="ab" element={<ApprovedBudget />} />
           <Route path="pr" element={<ParentRecipt />} />
           <Route path="rb" element={<RequestBudget />} />
+        </Route>{""}
+        {/* Resource and finincial head Routes */}
+        <Route path="/rfhead" element={<RFHead />}>
+          <Route index element={<Navigate to="/rfhead/dashboard" replace />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="pp" element={<PreparePayroll />} />
+          <Route path="rrb" element={<RRequestBudget />} />
         </Route>{""}
       </Routes>
       <Footer />
