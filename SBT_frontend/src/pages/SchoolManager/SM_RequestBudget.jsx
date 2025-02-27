@@ -1,12 +1,29 @@
-import React from "react";
+import React, { useState } from 'react';
+import Modal from '../../components/Modal'; // Adjust path if needed
 
-const SM_RequestBudget = () => {
+function SM_RequestBudget() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div>
-      <h1 className="text-2xl font-bold">Request Budget</h1>{" "}
-      <p>Here default display</p>
+      <h2>Request for Approval</h2>
+      <button onClick={openModal}>Open Request Budget Modal</button>
+      <Modal
+        isOpen={isModalOpen}
+        title="Request for Approval"
+        onClose={closeModal}
+        submitButtonText="Submit Request"
+      />
     </div>
   );
-};
+}
 
 export default SM_RequestBudget;

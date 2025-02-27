@@ -1,4 +1,6 @@
 import React from "react";
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
 const Modal = ({
   isOpen,
@@ -8,6 +10,60 @@ const Modal = ({
   onClose,
   submitButtonText,
 }) => {
+  
+
+  const initialValues = {
+    requestCategory: '',
+    fiscalYear: '',
+    subject: '',
+    description: '',
+    amount: '',
+    attachments: [],
+  };
+
+  const validationSchema = Yup.object({
+    requestCategory: Yup.string().required('Required'),
+    fiscalYear: Yup.string().required('Required'),
+    description: Yup.string().required('Required'),
+    amount: Yup.number().positive('Must be a positive number').optional(),
+  });
+
+  const handleFileChange = (e, setFieldValue) => {
+    setFieldValue('attachments', [...e.target.files]);
+  };
+
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    const formData = new FormData();
+    formData.append('requestCategory', values.requestCategory);
+    formData.append('fiscalYear', values.fiscalYear);
+    formData.append('subject', values.subject);
+    formData.append('description', values.description);
+    if (values.amount) {
+      formData.append('amount', values.amount);
+    }
+    values.attachments.forEach((file) => {
+      formData.append('attachments', file);
+    });
+
+    try {
+      const response = await fetch('/api/school-gm-requests', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        resetForm();
+        onClose();
+      } else {
+        console.error('Failed to submit request.');
+      }
+    } catch (err) {
+      console.error('An error occurred. Please try again.', err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -25,7 +81,69 @@ const Modal = ({
         </div>
 
         {/* Modal Content */}
-        <div className="mt-6">{children}</div>
+        <div className="mt-6">
+          {children || ( // Render children if available, else render form
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}
+            >
+              {({ isSubmitting, setFieldValue }) => (
+                <Form>
+                  <div>
+                    <label>Request Category:</label>
+                    <Field as="select" name="requestCategory" required>
+                      <option value="">Select...</option>
+                      <option value="budgetAdjustment">School Budget Adjustment</option>
+                      <option value="emergencyFund">Emergency Fund Request</option>
+                      <option value="largePurchase">Large Purchase Approval</option>
+                      <option value="contractApproval">Contract Approval</option>
+                    </Field>
+                    <ErrorMessage name="requestCategory" component="div" className="text-red-500" />
+                  </div>
+                  <div>
+                    <label>Fiscal Year:</label>
+                    <Field as="select" name="fiscalYear" required>
+                      <option value="">Select...</option>
+                      <option value="2023-2024">2023-2024</option>
+                      <option value="2024-2025">2024-2025</option>
+                    </Field>
+                    <ErrorMessage name="fiscalYear" component="div" className="text-red-500" />
+                  </div>
+                  <div>
+                    <label>Amount Involved (if applicable):</label>
+                    <Field type="number" name="amount" />
+                    <ErrorMessage name="amount" component="div" className="text-red-500" />
+                  </div>
+                  <div>
+                    <label>Detailed Description:</label>
+                    <Field as="textarea" name="description" required />
+                    <ErrorMessage name="description" component="div" className="text-red-500" />
+                  </div>
+                  <div>
+                    <label>Supporting Documents:</label>
+                    <input type="file" multiple onChange={(e) => handleFileChange(e, setFieldValue)} />
+                  </div>
+                  <div className="mt-6 flex justify-around">
+                    <button
+                      onClick={onClose}
+                      className="text-gray-700 hover:text-gray-900 font-semibold py-2 px-4 rounded-md border border-gray-300 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-900"
+                    >
+                      {submitButtonText || "Submit"}
+                    </button>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          )}
+        </div>
 
         {/* Modal Footer */}
         <div className="mt-6 flex justify-around">
@@ -37,11 +155,11 @@ const Modal = ({
           </button>
 
           <button
-            onClick={onSubmit}
+            onClick={children ? onSubmit : handleSubmit} // Use onSubmit if children, else handleSubmit
             type="submit"
             className="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-900"
           >
-            {submitButtonText || "Submit"} {/* Dynamic button text */}
+            {submitButtonText || "Submit"}
           </button>
         </div>
       </div>
