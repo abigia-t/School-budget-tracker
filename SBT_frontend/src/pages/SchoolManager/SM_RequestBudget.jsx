@@ -1,6 +1,6 @@
 import React from "react";
 
-const RRequestBudget = () => {
+const SM_RequestBudget = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold">Request Budget</h1>{" "}
@@ -9,4 +9,4 @@ const RRequestBudget = () => {
   );
 };
 
-export default RRequestBudget;
+export default SM_RequestBudget;

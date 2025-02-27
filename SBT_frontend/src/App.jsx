@@ -24,9 +24,9 @@ import RequestBudget from "./pages/Auditor/RequestBudget";
 import PreparePayroll from "./pages/RFHead/PreparePayroll";
 import RFHead from "./pages/RFHead/RFHead";
 import RRequestBudget from "./pages/RFHead/RRequestBudget";
-import Dashboard from "./pages/SchoolManager/Dashboard";
-import RequestBudget from "./pages/SchoolManager/RequestBudget";
-import SchoolManager from "./pages/SchoolManager/SchoolManager"; // Updated import path
+import SMHead from "./pages/SchoolManager/SMHead";
+import SM_Dashboard from "./pages/SchoolManager/Dashboard";
+import SM_RequestBudget from "./pages/SchoolManager/SM_RequestBudget";
 
 const App = () => {
   return (
@@ -76,10 +76,10 @@ const App = () => {
         </Route>
 
         {/* School Manager Routes */}
-        <Route path="/sm" element={<SchoolManager />}>
+        <Route path="/sm/*" element={<SMHead />}>
           <Route index element={<Navigate to="/sm/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="rrb" element={<RRequestBudget />} />
+          <Route path="dashboard" element={<SM_Dashboard />} />
+          <Route path="rrb" element={<SM_RequestBudget />} />
         </Route>
       </Routes>
       <Footer />
