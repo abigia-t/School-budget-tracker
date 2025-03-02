@@ -16,6 +16,7 @@ import Payment from "./pages/GM/Payment";
 import ViewReport from "./pages/GM/ViewReport";
 import Footer from "./components/Footer";
 import NoPage from "./pages/NoPage";
+import Parent from "./pages/Parent/Parent";
 
 
 const App = () => {
@@ -44,6 +45,7 @@ const App = () => {
           <Route path="payment" element={<Payment />} />
           <Route path="vr" element={<ViewReport />} />
         </Route>{" "}
+        <Route path="/parent" element={<Parent/> } />
       </Routes>
       <Footer />
     </div>
