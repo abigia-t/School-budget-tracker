@@ -50,14 +50,25 @@ const SideBar = ({ title, navLinks }) => {
       </div>
 
       {/* Logout Confirmation Modal */}
-      <Modal
-        isOpen={isLogoutModalOpen}
-        title="Confirm Logout"
-        onClose={() => setIsLogoutModalOpen(false)}
-        onSubmit={handleLogout}
-        submitButtonText="Yes"  /* Change button text to 'Yes' */
-      >
+      <Modal isOpen={isLogoutModalOpen} title="Confirm Logout" onClose={() => setIsLogoutModalOpen(false)}>
         <p className="text-lg text-gray-700">Are you sure you want to log out?</p>
+        {/* Modal Footer */}
+        <div className="mt-6 flex justify-around">
+          <button
+            type="button"
+            onClick={() => setIsLogoutModalOpen(false)}
+            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-900"
+          >
+            Yes
+          </button>
+        </div>
       </Modal>
     </div>
   );

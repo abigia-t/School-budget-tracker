@@ -10,7 +10,7 @@ const Modal = ({
   onClose,
   submitButtonText,
 }) => {
-  
+  if (!isOpen) return null;
 
   const initialValues = {
     requestCategory: '',
@@ -32,40 +32,6 @@ const Modal = ({
     setFieldValue('attachments', [...e.target.files]);
   };
 
-  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    const formData = new FormData();
-    formData.append('requestCategory', values.requestCategory);
-    formData.append('fiscalYear', values.fiscalYear);
-    formData.append('subject', values.subject);
-    formData.append('description', values.description);
-    if (values.amount) {
-      formData.append('amount', values.amount);
-    }
-    values.attachments.forEach((file) => {
-      formData.append('attachments', file);
-    });
-
-    try {
-      const response = await fetch('/api/school-gm-requests', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        resetForm();
-        onClose();
-      } else {
-        console.error('Failed to submit request.');
-      }
-    } catch (err) {
-      console.error('An error occurred. Please try again.', err);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  if (!isOpen) return null;
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg relative">
@@ -82,90 +48,71 @@ const Modal = ({
 
         {/* Modal Content */}
         <div className="mt-6">
-  {children || ( // Render children if available, else render form
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
-      {({ isSubmitting, setFieldValue }) => (
-        <Form>
-          <div>
-            <label>Request Category:</label>
-            <Field
-              as="select"
-              name="requestCategory"
-              required
-              style={{ backgroundColor: '#f0f0f0' }} // Gray background
+          {children || (
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={onSubmit}
             >
-              <option value="">Select...</option>
-              <option value="budgetAdjustment">School Budget Adjustment</option>
-              <option value="emergencyFund">Emergency Fund Request</option>
-              <option value="largePurchase">Large Purchase Approval</option>
-              <option value="contractApproval">Contract Approval</option>
-            </Field>
-            <ErrorMessage name="requestCategory" component="div" className="text-red-500" />
-          </div>
-          <div>
-            <label>Fiscal Year:</label>
-            <Field
-              as="select"
-              name="fiscalYear"
-              required
-              style={{ backgroundColor: '#f0f0f0' }} // Gray background
-            >
-              <option value="">Select...</option>
-              <option value="2023-2024">2023-2024</option>
-              <option value="2024-2025">2024-2025</option>
-            </Field>
-            <ErrorMessage name="fiscalYear" component="div" className="text-red-500" />
-          </div>
-          <div>
-            <label>Amount Involved (if applicable):</label>
-            <Field
-              type="number"
-              name="amount"
-              style={{ backgroundColor: '#f0f0f0' }} // Gray background
-            />
-            <ErrorMessage name="amount" component="div" className="text-red-500" />
-          </div>
-         
-          <div>
-            <label>Supporting Documents:</label>
-            <input type="file" multiple onChange={(e) => handleFileChange(e, setFieldValue)} />
-          </div>
-          <div>
-            <label>Detailed Description:</label>
-            <Field
-              as="textarea"
-              name="description"
-              required
-              style={{ backgroundColor: '#f0f0f0' }} // Gray background
-            />
-            <ErrorMessage name="description" component="div" className="text-red-500" />
-          </div>
-          <div className="mt-6 flex justify-around">
-            <button
-              onClick={onClose}
-              className="text-gray-700 hover:text-gray-900 font-semibold py-2 px-4 rounded-md border border-gray-300 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-red-700"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-900"
-            >
-              {submitButtonText || "Submit"}
-            </button>
-          </div>
-        </Form>
-      )}
-    </Formik>
-  )}
-</div>
+              {({ isSubmitting, setFieldValue }) => (
+                <Form>
+                  <div>
+                    <label>Request Category:</label>
+                    <Field as="select" name="requestCategory" required className="bg-gray-100">
+                      <option value="">Select...</option>
+                      <option value="budgetAdjustment">School Budget Adjustment</option>
+                      <option value="emergencyFund">Emergency Fund Request</option>
+                      <option value="largePurchase">Large Purchase Approval</option>
+                      <option value="contractApproval">Contract Approval</option>
+                    </Field>
+                    <ErrorMessage name="requestCategory" component="div" className="text-red-500" />
+                  </div>
+                  <div>
+                    <label>Fiscal Year:</label>
+                    <Field as="select" name="fiscalYear" required className="bg-gray-100">
+                      <option value="">Select...</option>
+                      <option value="2023-2024">2023-2024</option>
+                      <option value="2024-2025">2024-2025</option>
+                    </Field>
+                    <ErrorMessage name="fiscalYear" component="div" className="text-red-500" />
+                  </div>
+                  <div>
+                    <label>Amount Involved (if applicable):</label>
+                    <Field type="number" name="amount" className="bg-gray-100" />
+                    <ErrorMessage name="amount" component="div" className="text-red-500" />
+                  </div>
+                  <div>
+                    <label>Supporting Documents:</label>
+                    <input type="file" multiple onChange={(e) => handleFileChange(e, setFieldValue)} />
+                  </div>
+                  <div>
+                    <label>Detailed Description:</label>
+                    <Field as="textarea" name="description" required className="bg-gray-100" />
+                    <ErrorMessage name="description" component="div" className="text-red-500" />
+                  </div>
 
-        
+                  {/* Modal Footer */}
+                  <div className="mt-6 flex justify-around">
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      className="text-gray-700 hover:text-gray-900 font-semibold py-2 px-4 rounded-md border border-gray-300 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-red-700"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-900"
+                    >
+                      {submitButtonText || "Submit"}
+                    </button>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          )}
+        </div>
       </div>
     </div>
   );
