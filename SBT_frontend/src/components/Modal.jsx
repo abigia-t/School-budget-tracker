@@ -19,6 +19,7 @@ const Modal = ({
     description: '',
     amount: '',
     attachments: [],
+    approver: '',
   };
 
   const validationSchema = Yup.object({
@@ -26,6 +27,7 @@ const Modal = ({
     fiscalYear: Yup.string().required('Required'),
     description: Yup.string().required('Required'),
     amount: Yup.number().positive('Must be a positive number').optional(),
+    approver: Yup.string().required('Required'),
   });
 
   const handleFileChange = (e, setFieldValue) => {
@@ -89,6 +91,15 @@ const Modal = ({
                     <label>Detailed Description:</label>
                     <Field as="textarea" name="description" required className="bg-gray-100" />
                     <ErrorMessage name="description" component="div" className="text-red-500" />
+                  </div>
+                  <div>
+                    <label>Approver:</label>
+                    <Field as="select" name="approver" required className="bg-gray-100">
+                      <option value="">Select...</option>
+                      <option value="generalManager">General Manager</option>
+                      <option value="auditor">Auditor</option>
+                    </Field>
+                    <ErrorMessage name="approver" component="div" className="text-red-500" />
                   </div>
 
                   {/* Modal Footer */}
