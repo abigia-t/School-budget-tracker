@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Modal from "./Modal"; // Import your reusable modal component
+import DashboardIcon from "../assets/Dashboard.png"; // Import the dashboard icon
+import RequestBudgetIcon from "../assets/request.png"; // Import the request budget icon
 
 const SideBar = ({ title, navLinks }) => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
@@ -27,11 +29,17 @@ const SideBar = ({ title, navLinks }) => {
               key={path}
               to={path}
               className={({ isActive }) =>
-                `py-2 px-4 rounded-md my-1 transition ${
+                `flex items-center gap-2 py-2 px-4 rounded-md my-1 transition ${
                   isActive ? "bg-blue-500" : "hover:bg-gray-700"
                 }`
               }
             >
+              {label === "Dashboard" && (
+                <img src={DashboardIcon} alt="Dashboard Icon" className="w-6 h-6" />
+              )}
+              {label === "Request Budget" && (
+                <img src={RequestBudgetIcon} alt="Request Budget Icon" className="w-6 h-6" />
+              )}
               {label}
             </NavLink>
           ))}
