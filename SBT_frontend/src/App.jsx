@@ -17,7 +17,11 @@ import ViewReport from "./pages/GM/ViewReport";
 import Footer from "./components/Footer";
 import NoPage from "./pages/NoPage";
 import Parent from "./pages/Parent/Parent";
-
+import ParentLayout from "./layout/ParentLayout";
+import ParentDashboard from "./components/parent/Dashbord";
+import ParentPayment from "./components/parent/Payment";
+import PaymentHistory from "./components/parent/PaymentHistory";
+import Notifications from "./components/parent/Notifications";
 
 const App = () => {
   return (
@@ -25,7 +29,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="*" element={<NoPage/>}/>
+        <Route path="*" element={<NoPage />} />
         {/* System Admin Routes */}
         <Route path="/sa" element={<SA />}>
           <Route index element={<Navigate to="/sa/dashboard" replace />} />
@@ -45,7 +49,14 @@ const App = () => {
           <Route path="payment" element={<Payment />} />
           <Route path="vr" element={<ViewReport />} />
         </Route>{" "}
-        <Route path="/parent" element={<Parent/> } />
+        <Route>
+          <Route path="/parent" element={<ParentLayout />}>
+            <Route index path="dashboard" element={<ParentDashboard />} />
+            <Route path="payment" element={<ParentPayment />} />
+            <Route path="pyament-history" element={<PaymentHistory />} />
+            <Route path="notfication" element={<Notifications />} />
+          </Route>
+        </Route>
       </Routes>
       <Footer />
     </div>
