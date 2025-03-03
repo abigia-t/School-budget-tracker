@@ -11,7 +11,11 @@ import ResourceManagementIcon from "../assets/resourse mngt.png";
 import SchoolDirectorIcon from "../assets/school director.png";
 import SendNotificationIcon from "../assets/send notification.png";
 import ManageStudentsIcon from "../assets/student mngt.png";
-
+import ParentReceiptIcon from "../assets/receipt.png";
+import ApproveBudgetIcon from "../assets/approve budget.png";
+import ApprovePerformanceIcon from "../assets/Aperformance.png";
+import PaymentIcon from "../assets/payment.png";
+import ChapaIntegrationIcon from "../assets/chapa integration.png";
 
 
 const SideBar = ({ title, navLinks }) => {
@@ -73,6 +77,21 @@ const SideBar = ({ title, navLinks }) => {
               )}
                {label === "Manage Students" && (
                 <img src={ManageStudentsIcon} alt="Manage Students Icon" className="w-6 h-6" />
+              )}
+               {label === "Parent Receipt" && (
+                <img src={ParentReceiptIcon} alt="Parent Receipt Icon" className="w-6 h-6" />
+              )}
+               {label === "Approve Budget" && (
+                <img src={ApproveBudgetIcon} alt="Approve Budget Icon" className="w-6 h-6" />
+              )}
+              {label === "Approve Performance" && (
+                <img src={ApprovePerformanceIcon} alt="Approve Performance Icon" className="w-6 h-6" />
+              )}
+              {label === "Payment" && (
+                <img src={PaymentIcon} alt="Payment Icon" className="w-6 h-6" />
+              )}
+               {label === "Manage Chapa" && (
+                <img src={ChapaIntegrationIcon} alt="Chapa Integration Icon" className="w-6 h-6" />
               )}
               {label}
             </NavLink>

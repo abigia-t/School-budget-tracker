@@ -9,7 +9,7 @@ const adminLinks = [
   { path: "/sa/actors", label: "Manage Actors" },
   { path: "/sa/students", label: "Manage Students" },
   { path: "/sa/notifications", label: "Send Notifications" },
-  { path: "/sa/chapa", label: "Manage Chapa Integration" },
+  { path: "/sa/chapa", label: "Manage Chapa" },
 ];
 const SA = () => {
   return (
