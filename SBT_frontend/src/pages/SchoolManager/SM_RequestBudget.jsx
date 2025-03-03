@@ -1,42 +1,28 @@
-import React, { useState } from 'react';
-import Modal from '../../components/Modal'; // Adjust path if needed
+import React, { useState } from "react";
+import Modal from "../../components/Modal";
 
-function SM_RequestBudget() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const SM_RequestBudget = () => {
+  const [isModalOpen, setIsModalOpen] = useState(true);
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const handleSubmit = (values, { setSubmitting }) => {
+    console.log("Form submitted with values:", values);
+    setSubmitting(false);
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '300px' }}>
-      <h2 style={{ fontSize: '24px', marginBottom: '20px' }}>Request for Approval</h2>
-      <button
-        onClick={openModal}
-        style={{
-          padding: '10px 20px',
-          fontSize: '16px',
-          backgroundColor: '#007bff',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-        }}
-      >
-        Open Request Budget
-      </button>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Request Budget</h1>
+      <p className="text-gray-600 mb-4">Submit your budget request here.</p>
+      
       <Modal
         isOpen={isModalOpen}
-        title="Request for Approval"
-        onClose={closeModal}
+        title="Request Budget"
+        onSubmit={handleSubmit}
+        onClose={() => setIsModalOpen(false)}
         submitButtonText="Submit Request"
       />
     </div>
   );
-}
+};
 
 export default SM_RequestBudget;
