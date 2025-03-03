@@ -3,6 +3,16 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Modal from "./Modal"; // Import your reusable modal component
 import DashboardIcon from "../assets/Dashboard.png"; // Import the dashboard icon
 import RequestBudgetIcon from "../assets/request.png"; // Import the request budget icon
+import PayrollIcon from "../assets/payroll.png"; 
+import ManageAccountIcon from "../assets/manage account.png";
+import ReportIcon from "../assets/report.png";
+import HrManagementIcon from "../assets/HRmngr.png";
+import ResourceManagementIcon from "../assets/resourse mngt.png";
+import SchoolDirectorIcon from "../assets/school director.png";
+import SendNotificationIcon from "../assets/send notification.png";
+import ManageStudentsIcon from "../assets/student mngt.png";
+
+
 
 const SideBar = ({ title, navLinks }) => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
@@ -39,6 +49,30 @@ const SideBar = ({ title, navLinks }) => {
               )}
               {label === "Request Budget" && (
                 <img src={RequestBudgetIcon} alt="Request Budget Icon" className="w-6 h-6" />
+              )}
+              {label === "Prepare Payroll" && (
+                <img src={PayrollIcon} alt="Payroll Icon" className="w-6 h-6" />
+              )}
+              {label === "Manage Actors" && (
+                <img src={ManageAccountIcon} alt="Manage Account Icon" className="w-6 h-6" />
+              )}
+              {label === "View Report" && (
+                <img src={ReportIcon} alt="Report Icon" className="w-6 h-6" />
+              )}
+              {label === "Human Resources Head" && (
+                <img src={HrManagementIcon} alt="Hr Management Icon" className="w-6 h-6" />
+              )}
+              {label === "Resource and Finance Head" && (
+                <img src={ResourceManagementIcon} alt="Resource Management Icon" className="w-6 h-6" />
+              )}
+              {label === "School Director" && (
+                <img src={SchoolDirectorIcon} alt="School Director Icon" className="w-6 h-6" />
+              )}
+              {label === "Send Notifications" && (
+                <img src={SendNotificationIcon} alt="Send Notification Icon" className="w-6 h-6" />
+              )}
+               {label === "Manage Students" && (
+                <img src={ManageStudentsIcon} alt="Manage Students Icon" className="w-6 h-6" />
               )}
               {label}
             </NavLink>
