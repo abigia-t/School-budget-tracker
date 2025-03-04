@@ -1,53 +1,57 @@
-import User from "../modals/userModal.js";
+import Actor from "../models/actorModel.js";
+import Student from "../models/studentModel.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
-// Register User
+// Generate JWT Token
+const generateToken = (id, role) => {
+  return jwt.sign({ id, role }, process.env.JWT_SECRET || "default_secret", {
+    expiresIn: process.env.JWT_EXPIRES || "1d",
+  });
+};
+
+// Register User (Actor or Student)
 export const register = async (req, res) => {
   try {
-    const { fullName, email, password, phoneNumber, address, role } = req.body;
-
-    console.log("🔹 Registering user:", { fullName, email, phoneNumber, address, role });
+    const { firstName, lastName, email, password, phoneNumber, address, role, studentId, middleName } = req.body;
 
     // Validate required fields
-    if (!fullName || !email || !password || !phoneNumber || !address || !role) {
-      return res.status(400).json({ error: "All fields are required: fullName, email, password, phoneNumber, address, role" });
+    if (!firstName || !lastName || !email || !password || !phoneNumber || !address || !role) {
+      return res.status(400).json({ error: "All fields are required" });
     }
 
-    // Validate role
-    const validRoles = ["General Manager", "Auditor", "Finance And Resource Head", "School Director", "HR Head", "Student"];
-    if (!validRoles.includes(role)) {
-      return res.status(400).json({ error: `Invalid role. Allowed roles are: ${validRoles.join(", ")}` });
+    let user;
+    if (role === "Student") {
+      if (!studentId || !middleName) {
+        return res.status(400).json({ error: "Student ID and Middle Name are required for students" });
+      }
+
+      user = await Student.findOne({ email });
+      if (user) return res.status(400).json({ error: "Email already registered" });
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      user = new Student({ studentId, firstName, middleName, lastName, email, password: hashedPassword, phoneNumber, address, role });
+
+    } else {
+      const validRoles = ["General Manager", "School Director", "System Admin", "Auditor", "Human Resource Head", "Resource and Finance Head"];
+      if (!validRoles.includes(role)) {
+        return res.status(400).json({ error: "Invalid role" });
+      }
+
+      user = await Actor.findOne({ email });
+      if (user) return res.status(400).json({ error: "Email already registered" });
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      user = new Actor({ firstName, lastName, email, password: hashedPassword, phoneNumber, address, role });
     }
 
-    // Check if user already exists
-    let user = await User.findOne({ email });
-    if (user) {
-      console.log("❌ Email already exists:", email);
-      return res.status(400).json({ error: "Email already registered" });
-    }
+    await user.save();
+    const token = generateToken(user._id, user.role);
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create new user
-    const newUser = new User({ fullName, email, password: hashedPassword, phoneNumber, address, role });
-
-    await newUser.save();
-    console.log("✅ User registered:", newUser);
-
-    // Generate JWT token
-    const token = jwt.sign(
-      { id: newUser._id, role: newUser.role },
-      process.env.JWT_SECRET,  // Your JWT secret
-      { expiresIn: process.env.JWT_EXPIRES || '1d' }  // Token expiry (1 day by default)
-    );
-
-    // Respond with the token and user info
     res.status(201).json({
       message: "User registered successfully",
       token,
-      user: { id: newUser._id, fullName: newUser.fullName, email: newUser.email, role: newUser.role }
+      user: { id: user._id, firstName: user.firstName, email: user.email, role: user.role },
     });
 
   } catch (error) {
@@ -60,39 +64,54 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    if (!email || !password) return res.status(400).json({ error: "Email and password are required" });
 
-    // Check if the user exists
-    let user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ error: "Invalid credentials" });
-    }
+    let user = await Actor.findOne({ email }) || await Student.findOne({ email });
+    if (!user) return res.status(400).json({ error: "Invalid credentials" });
 
-    // Compare password with hashed password in DB
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ error: "Invalid credentials" });
+    if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
+
+    const token = generateToken(user._id, user.role);
+    let redirectUrl = "/";
+
+    switch (user.role) {
+      case "General Manager":
+        redirectUrl = "/general-manager";
+        break;
+      case "Auditor":
+        redirectUrl = "/auditor";
+        break;
+      case "Finance And Resource Head":
+        redirectUrl = "/finance";
+        break;
+      case "School Director":
+        redirectUrl = "/school-director";
+        break;
+      case "Human Resource Head":
+        redirectUrl = "/hr-head";
+        break;
+      case "Student":
+        redirectUrl = "/student";
+        break;
+      default:
+        redirectUrl = "/";
     }
 
-    // Generate JWT token
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,  // Your JWT secret
-      { expiresIn: process.env.JWT_EXPIRES || '1d' }  // Token expiry (1 day by default)
-    );
-
-    // Respond with the token and user data
     res.status(200).json({
+      message: "Login successful",
       token,
-      user: {
-        id: user._id,
-        fullName: user.fullName,
-        email: user.email,
-        role: user.role,
-      },
+      user: { id: user._id, firstName: user.firstName, email: user.email, role: user.role },
+      redirectUrl,
     });
 
   } catch (error) {
     console.error("❌ Error in login:", error);
     res.status(500).json({ error: "Server error", details: error.message });
   }
+};
+
+// Logout User
+export const logout = (req, res) => {
+  res.status(200).json({ message: "Logged out successfully" });
 };

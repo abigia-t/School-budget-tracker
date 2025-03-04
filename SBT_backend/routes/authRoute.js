@@ -1,21 +1,76 @@
 import express from 'express';
-import { register, login } from "../controllers/authController.js"; // Fixed import
-import { protect, authorize } from '../middleware/authMiddleware.js'; // Ensure file extension
+import { register, login, logout } from "../controllers/authController.js";
+import { protect, authorize } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Register a user
+// Register and Login routes
 router.post("/register", register);
-router.post('/login', login);
-router.get('/profile', protect, (req, res) => res.json({ user: req.user }));
+router.post("/login", login);
+router.post("/logout", logout);
 
-// Admin panel route - accessible to multiple roles
+// Profile route (accessible to all authenticated users)
+router.get("/profile", protect, (req, res) => {
+  res.json({ user: req.user });
+});
+
+// General Manager page (Only accessible by General Manager)
 router.get(
-  "/admin",
+  "/general-manager",
   protect,
-  authorize("general_manager", "auditor", "finance_and_resource_head", "school_director", "hr_head"),
+  authorize("general_manager"),
   (req, res) => {
-    res.send("Admin Panel - Authorized Access");
+    res.send("Welcome to the General Manager Page!");
+  }
+);
+
+// Auditor page (Only accessible by Auditor)
+router.get(
+  "/auditor",
+  protect,
+  authorize("auditor"),
+  (req, res) => {
+    res.send("Welcome to the Auditing Page!");
+  }
+);
+
+// Finance & Resource Head page
+router.get(
+  "/finance",
+  protect,
+  authorize("finance_and_resource_head"),
+  (req, res) => {
+    res.send("Welcome to the Finance & Resource Head Page!");
+  }
+);
+
+// School Director page
+router.get(
+  "/school-director",
+  protect,
+  authorize("school_director"),
+  (req, res) => {
+    res.send("Welcome to the School Director Page!");
+  }
+);
+
+// HR Head page
+router.get(
+  "/hr-head",
+  protect,
+  authorize("hr_head"),
+  (req, res) => {
+    res.send("Welcome to the HR Head Page!");
+  }
+);
+
+// Student page
+router.get(
+  "/student",
+  protect,
+  authorize("student"),
+  (req, res) => {
+    res.send("Welcome to the Student Page!");
   }
 );
 
