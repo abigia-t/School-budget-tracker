@@ -1,30 +1,39 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import connectDB from "./config/db.js"; // Import database connection
-import userRoute from "./routes/userRoute.js"; // Uncomment once userRoute is ready
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import connectDB from "./configs/db.js";
+import actorRoute from "./routes/actorRoute.js";
 
 // Load environment variables
 dotenv.config();
 
-// Connect to MongoDB
+// Initialize Express app
+const app = express(); // ✅ This was missing
+
+app.use(express.json()); // Body parser middleware
+app.use(cors()); // Enable CORS
+app.use(helmet()); // Security headers
+
+// Connect to Database
 connectDB();
 
-const app = express();
+// Rate limiting (Prevent brute-force attacks)
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Max 100 requests per 15 min
+  message: "Too many requests from this IP, please try again later.",
+});
+app.use(limiter);
 
-// Middleware
-app.use(express.json());
-app.use(cors());
+// **Use routes**
+app.use("/api/actors", actorRoute);
 
-// Routes
 app.get("/", (req, res) => {
-  res.send("Welcome to Budget Tracking System API!");
+  res.send("API is running...");
 });
 
-app.use("/api/auth", userRoute); // Enable user routes
-
-// Start Server
+// Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-  console.log(`🚀 Server running on http://localhost:${PORT}`)
-);
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
