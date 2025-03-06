@@ -23,6 +23,7 @@ import HR from "./pages/GM/HRH";
 import RFH from "./pages/GM/RFH";
 import Payment from "./pages/GM/Payment";
 import ViewReport from "./pages/GM/ViewReport";
+import { ToastContainer } from "react-toastify";
 //school director routes
 // import SD from "./pages/SD/SD";
 //human resource head routes
@@ -103,7 +104,7 @@ const App = () => {
           <Route path="payment" element={<Payment />} />
         </Route>{" "} */}
 </Routes>
-
+<ToastContainer/>
       <Footer />
     </div>
   );

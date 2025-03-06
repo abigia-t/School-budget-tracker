@@ -1,6 +1,6 @@
 import express from "express";
 import {registerActor,loginActor,getAllActors,getActorById,updateActor,deleteActor,changePassword,} from "../controllers/actorController.js";
-import authMiddleware  from "../middleware/auth.js";
+// import authMiddleware  from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -11,16 +11,16 @@ router.post("/register", registerActor);
 router.post("/login", loginActor);
 
 // Get all actors (only System Admin)
-router.get("/", authMiddleware, getAllActors);
+router.get("/", getAllActors);
 
 // Get an actor by ID
-router.get("/:id", authMiddleware, getActorById);
+router.get("/:id", getActorById);
 
 // Update an actor's details
-router.put("/:id", authMiddleware, updateActor);
+router.put("/:id", updateActor);
 
 // Delete an actor
-router.delete("/:id", authMiddleware, deleteActor);
+router.delete("/:id",deleteActor);
 
 // Change password
 router.put("/change-password", changePassword);
