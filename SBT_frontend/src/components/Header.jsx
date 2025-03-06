@@ -7,8 +7,7 @@ const Header = () => {
     <header className="bg-blue-600 text-white py-4 px-6 flex flex-col md:flex-row justify-between items-center shadow-md">
       {/* Logo & Academy Name */}
       <div className="flex items-center gap-3">
-        <img className="h-12 w-12 object-contain" src={assets.edu_logo} alt="Yajeb Academy Logo" />
-        <h2 className="text-2xl md:text-3xl font-semibold">Yajeb Academy</h2>
+        <img className="h-12 w-12 object-contain" src={assets.Logo} alt="Yajeb Academy Logo" />
       </div>
 
       {/* System Title */}

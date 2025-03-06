@@ -12,18 +12,21 @@ const SMHeadLinks = [
 const SMHead = () => {
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar */}
-      <SideBar title={"School Manager"} navLinks={SMHeadLinks} />
+      {/* Sidebar (Fixed Width) */}
+      <div className="w-64"> {/* Adjust the width of the sidebar here */}
+      <SideBar
+  title="School Director"
+  subtitle="Budget Tracking" // Pass the subtitle here
+  navLinks={SMHeadLinks}
+/>
+      </div>
 
-      {/* Main Content */}
+      {/* Main Content (Flex Column) */}
       <div className="flex-1 flex flex-col">
-        {/* TopBar spanning full width */}
-        <div className="fixed top-0 left-0 right-0 w-full z-10">
-          <TopBar />
-        </div>
+        <TopBar /> {/* Ensure TopBar is at the top */}
 
-        {/* Main section with correct padding to align with sidebar */}
-        <main className="pt-16 pl-[200px] bg-gray-200 min-h-screen">
+        {/* Main Content */}
+        <main className="bg-gray-200 min-h-screen pt-16">
           <Outlet />
         </main>
       </div>

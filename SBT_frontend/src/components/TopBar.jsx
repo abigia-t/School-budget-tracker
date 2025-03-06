@@ -4,18 +4,22 @@ import { assets } from "../assets/assets";
 
 const TopBar = () => {
   return (
-    <header className="bg-blue-950 text-white fixed top-0 w-full h-16 flex items-center justify-around px-6 shadow-md">
+    <header className="bg-blue-950 text-white h-16 flex items-center justify-between px-4 shadow-md w-full relative">
+      {/* Left Section (Logo) */}
       <div className="flex items-center gap-3 cursor-pointer">
         <Link to={"/"} className="flex items-center gap-2">
-          <img
-            src={assets.edu_logo}
+          {/* <img
+            src={assets.Logo}
             alt="Yajeb Academy Logo"
             className="h-12 w-12 object-contain"
-          />
-          <p className="text-lg md:text-xl font-bold">Yajeb Academy</p>
+          /> */}
         </Link>
       </div>
-       <h1 className="text-2xl font-bold">Budget Tracking System</h1>
+
+      {/* Centered Title */}
+      <div className="absolute left-1/2 transform -translate-x-1/2">
+        <h1 className="text-2xl font-bold">Budget Tracking System</h1>
+      </div>
     </header>
   );
 };
