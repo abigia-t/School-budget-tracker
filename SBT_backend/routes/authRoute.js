@@ -4,7 +4,7 @@ import { protect, authorize } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Register and Login routes
+// Logout,Register and Login routes
 router.post("/register", register);
 router.post("/login", login);
 router.post("/logout", logout);

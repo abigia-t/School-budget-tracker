@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import SA from "./pages/SA/SA";
-import Dashboard from "./pages/SA/Dashboard";
+import Dashboard from "./pages/Auditor/Dashboard";
 import ManageActors from "./pages/SA/ManageActors";
 import ManageStudents from "./pages/SA/ManageStudents";
 import SendNotifications from "./pages/SA/SendNotifications";
