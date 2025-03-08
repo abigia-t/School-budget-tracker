@@ -36,36 +36,39 @@ const SideBar = ({ title, subtitle = "", navLinks }) => {
   return (
 <div className={`fixed top-0 h-screen bg-blue-950 text-white flex flex-col justify-between shadow-lg transition-all duration-300 ${isSidebarOpen ? "left-0 w-64" : "-left-64 w-64"}`}>
 <div>
-          {/* Menu Toggle Section */}
-          <div className="fixed top-4 left-4 z-50 cursor-pointer bg-blue-950 p-2 rounded-md shadow-lg" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+        {/* Menu Toggle Section */}
+<div 
+  className="fixed top-4 left-4 z-50 cursor-pointer bg-blue-950 p-2 rounded-md shadow-lg mb-6" 
+  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+>
   <img src={MenuIcon} alt="Menu Icon" className="w-8 h-8" />
 </div>
 
 
         {/* Logo & Title Section */}
-        <div className="flex items-center justify-start p-4 gap-2">
+        {/*  <div className="flex items-center justify-start p-4 gap-2">
           <img src={LogoIcon} alt="Logo" className="w-full h-16" /> {/* Adjust the width and height of the logo */}
-          <div className="flex flex-col">
+          {/* <div className="flex flex-col">
             <span className="text-lg font-bold whitespace-nowrap">{title}</span>
             <span className="text-sm text-gray-300">{subtitle}</span> {/* Subtitle next to title */}
-          </div>
-        </div>
+          {/* </div>
+        </div>*/}
 
       
 
-        {/* Navigation Links */}
-        {navLinksVisible && (
-          <nav className="flex flex-col p-6 mt-2">
-            {navLinks.map(({ path, label }) => (
-              <NavLink
-                key={path}
-                to={path}
-                className={({ isActive }) =>
-                  `flex items-center gap-2 py-2 px-4 rounded-md transition ${
-                    isActive ? "bg-blue-500" : "hover:bg-gray-700"
-                  }`
-                }
-              >
+       {/* Navigation Links */}
+{navLinksVisible && (
+  <nav className="flex flex-col p-6 mt-20"> {/* Increased top margin */}
+    {navLinks.map(({ path, label }) => (
+      <NavLink
+        key={path}
+        to={path}
+        className={({ isActive }) =>
+          `flex items-center gap-2 py-2 px-4 rounded-md transition mb-2 ${
+            isActive ? "bg-gray-500" : "hover:bg-[rgb(0,157,255)]"
+          }`
+        }
+      >
                 {label === "Dashboard" && (
                   <img src={DashboardIcon} alt="Dashboard Icon" className="w-6 h-6" />
                 )}

@@ -31,10 +31,10 @@ const SM_RequestBudget = () => {
 
       {/* Button to generate the form */}
       <div className="text-center mb-6">
-        <button
-          onClick={() => setIsModalOpen(true)} // Open the form modal when clicked
-          className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
-        >
+      <button
+  onClick={() => setIsModalOpen(true)} // Open the form modal when clicked
+  className="bg-[rgb(0,157,255)] px-6 py-2 rounded-lg hover:bg-[rgb(0,157,255)] hover:text-white"
+>
           Add Budget Request Here
         </button>
       </div>

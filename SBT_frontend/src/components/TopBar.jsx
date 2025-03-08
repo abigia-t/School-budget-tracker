@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import LogoIcon from "../assets/Logo.png"; // Adjust the path if necessary
 
 const TopBar = () => {
   return (
@@ -7,11 +8,11 @@ const TopBar = () => {
       {/* Left Section (Logo) */}
       <div className="flex items-center gap-3 cursor-pointer">
         <Link to={"/"} className="flex items-center gap-2">
-          {/* <img
-            src={assets.Logo}
+          <img
+            src={LogoIcon} // Fixed the incorrect reference
             alt="Yajeb Academy Logo"
-            className="h-14 w-14 object-contain"
-          /> */}
+            className="h-30 w-20 object-contain"
+          />
         </Link>
       </div>
 
