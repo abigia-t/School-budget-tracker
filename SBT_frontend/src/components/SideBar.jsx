@@ -23,6 +23,7 @@ import { LogOut } from "lucide-react";
 
 const SideBar = ({ title, subtitle = "", navLinks }) => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [navLinksVisible, setNavLinksVisible] = useState(true); // To control nav links visibility
   const navigate = useNavigate();
 
@@ -33,8 +34,14 @@ const SideBar = ({ title, subtitle = "", navLinks }) => {
   };
 
   return (
-    <div className="fixed left-0 top-0 w-64 h-screen bg-blue-950 text-white flex flex-col justify-between shadow-lg">
-      <div>
+<div className={`fixed top-0 h-screen bg-blue-950 text-white flex flex-col justify-between shadow-lg transition-all duration-300 ${isSidebarOpen ? "left-0 w-64" : "-left-64 w-64"}`}>
+<div>
+          {/* Menu Toggle Section */}
+          <div className="fixed top-4 left-4 z-50 cursor-pointer bg-blue-950 p-2 rounded-md shadow-lg" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+  <img src={MenuIcon} alt="Menu Icon" className="w-8 h-8" />
+</div>
+
+
         {/* Logo & Title Section */}
         <div className="flex items-center justify-start p-4 gap-2">
           <img src={LogoIcon} alt="Logo" className="w-full h-16" /> {/* Adjust the width and height of the logo */}
@@ -44,11 +51,7 @@ const SideBar = ({ title, subtitle = "", navLinks }) => {
           </div>
         </div>
 
-        {/* Menu Toggle Section */}
-        <div className="flex items-center justify-between p-4 mt-4 cursor-pointer" onClick={() => setNavLinksVisible(!navLinksVisible)}>
-          <span className="text-sm text-gray-300">Menu</span>
-          <img src={MenuIcon} alt="Menu Icon" className="w-6 h-6" />
-        </div>
+      
 
         {/* Navigation Links */}
         {navLinksVisible && (
