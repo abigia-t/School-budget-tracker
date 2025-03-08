@@ -22,4 +22,8 @@ const StudentSchema = new mongoose.Schema(
 const studentModel =
   mongoose.models.Student || mongoose.model("Student", StudentSchema);
 
+<<<<<<< HEAD
 export default studentModel;
+=======
+export default studentModel;
+>>>>>>> 0843dfc8de6351e51fe10f1378eae429a33d62fb

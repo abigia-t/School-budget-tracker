@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Table from "../../components/Table";
@@ -263,6 +264,15 @@ const ManageStudents = () => {
       >
         <p>Are you sure you want to delete {currentStudent?.fullName}?</p>
       </Modal>
+=======
+import React from "react";
+
+const ManageStudents = () => {
+  return (
+    <div>
+      <h1 className="text-2xl font-bold">Manage Students</h1>
+      <p>Manage student accounts and records.</p>
+>>>>>>> 0843dfc8de6351e51fe10f1378eae429a33d62fb
     </div>
   );
 };
