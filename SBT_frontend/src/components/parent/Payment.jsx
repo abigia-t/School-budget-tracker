@@ -1,57 +1,41 @@
-import { useState } from "react";
-
-// Mock Chapa SDK import (replace with actual Chapa SDK import)
-const Chapa = {
-  initialize: ({
-    tx_ref,
-    amount,
-    currency,
-    callback_url,
-    return_url,
-    customer,
-  }) =>
-    new Promise((resolve) => {
-      // Simulate Chapa payment initialization
-      setTimeout(() => resolve({ status: "success", tx_ref }), 1000);
-    }),
-  verify: (tx_ref) =>
-    new Promise((resolve) => {
-      // Simulate payment verification
-      setTimeout(() => resolve({ status: "success" }), 1000);
-    }),
-};
+// frontend/src/components/ParentPayment.jsx
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const ParentPayment = () => {
-  const [paymentData, setPaymentData] = useState({
-    children: [
-      {
-        id: 1,
-        name: "Emma",
-        amountDue: 50.0,
-        dueDate: "2025-03-10",
-        paid: false,
-      },
-      {
-        id: 2,
-        name: "Liam",
-        amountDue: 50.0,
-        dueDate: "2025-03-15",
-        paid: false,
-      },
-    ],
-  });
-
+  const [paymentData, setPaymentData] = useState({ children: [] });
   const [selectedPayments, setSelectedPayments] = useState([]);
   const [submissionStatus, setSubmissionStatus] = useState(null);
 
-  // Handle checkbox selection
+  useEffect(() => {
+    const fetchPayments = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/payments", {
+          timeout: 5000, // Add a timeout to catch slow responses
+        });
+        console.log("Response data:", response.data); // Log successful response
+        setPaymentData(response.data);
+      } catch (error) {
+        console.error("Error fetching payments:", error.message);
+        if (error.response) {
+          console.error("Response status:", error.response.status);
+          console.error("Response data:", error.response.data);
+        } else if (error.request) {
+          console.error("No response received:", error.request);
+        } else {
+          console.error("Error details:", error);
+        }
+      }
+    };
+    fetchPayments();
+  }, []);
+
   const handleCheckboxChange = (id) => {
     setSelectedPayments((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
-  // Handle payment with Chapa
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
     if (selectedPayments.length === 0) {
@@ -59,50 +43,22 @@ const ParentPayment = () => {
       return;
     }
 
-    const totalAmount = paymentData.children
-      .filter((child) => selectedPayments.includes(child.id))
-      .reduce((sum, child) => sum + child.amountDue, 0);
-
-    const tx_ref = `tx-${Date.now()}`; // Unique transaction reference
-    const paymentDetails = {
-      tx_ref,
-      amount: totalAmount,
-      currency: "ETB", // Ethiopian Birr
-      callback_url: "https://yourdomain.com/callback", // Replace with your callback URL
-      return_url: "https://yourdomain.com/return", // Replace with your return URL
-      customer: {
-        name: "Parent Name", // Replace with dynamic parent data
-        email: "parent@example.com",
-      },
-    };
-
     setSubmissionStatus("Initializing payment with Chapa...");
 
     try {
-      // Initialize payment with Chapa
-      const initResponse = await Chapa.initialize(paymentDetails);
-      if (initResponse.status === "success") {
-        setSubmissionStatus("Processing payment...");
-
-        // Simulate redirect or handle payment flow (Chapa typically provides a checkout URL)
-        // For real integration, redirect to initResponse.checkout_url or use Chapa's JS SDK
-
-        // Verify payment (after user completes payment)
-        const verifyResponse = await Chapa.verify(tx_ref);
-        if (verifyResponse.status === "success") {
-          setPaymentData((prev) => ({
-            ...prev,
-            children: prev.children.map((child) =>
-              selectedPayments.includes(child.id)
-                ? { ...child, paid: true }
-                : child
-            ),
-          }));
-          setSubmissionStatus("Payment successful!");
-          setSelectedPayments([]);
-        } else {
-          setSubmissionStatus("Payment verification failed.");
+      const response = await axios.post(
+        "http://localhost:5000/api/payments/initialize",
+        {
+          selectedPayments,
+          parentEmail: "parent@example.com", // Replace with dynamic data
+          parentName: "Parent Name",
+          parentPhone: "0912345678",
         }
+      );
+
+      if (response.data.status === "success") {
+        setSubmissionStatus("Redirecting to Chapa payment...");
+        window.location.href = response.data.checkout_url; // Redirect to Chapa checkout
       } else {
         setSubmissionStatus("Payment initialization failed.");
       }
@@ -122,7 +78,6 @@ const ParentPayment = () => {
         Make a Payment with Chapa
       </h1>
 
-      {/* Payment List Card */}
       <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
         <h2 className="text-xl font-semibold text-gray-700 mb-4">
           Select Payments
@@ -165,7 +120,6 @@ const ParentPayment = () => {
         )}
       </div>
 
-      {/* Payment Form Card */}
       {!paymentData.children.every((child) => child.paid) && (
         <div className="bg-white rounded-xl shadow-lg p-6">
           <h2 className="text-xl font-semibold text-gray-700 mb-4">
@@ -173,8 +127,7 @@ const ParentPayment = () => {
           </h2>
           <form onSubmit={handlePaymentSubmit} className="space-y-6">
             <p className="text-gray-600">
-              Click "Pay Now" to proceed with payment via Chapa's secure
-              gateway.
+              Click Pay Now to proceed with payment via Chapa secure gateway.
             </p>
             <button
               type="submit"

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react/prop-types */
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Modal from "./Modal"; // Import your reusable modal component
 

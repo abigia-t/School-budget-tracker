@@ -1,10 +1,16 @@
-/* eslint-disable react/prop-types */
 import { useState } from "react";
-import { FiChevronDown, FiDollarSign, FiHome, FiMonitor } from "react-icons/fi";
+import {
+  FiDollarSign,
+  FiHome,
+  FiLogOut,
+  FiMonitor,
+  FiUser,
+} from "react-icons/fi";
 import { motion } from "framer-motion";
-import Logo from "./Logo";
 import ToggleClose from "./ToggleClose";
 import Option from "./Option";
+import TitleSection from "./TitleSection";
+import LogoutButton from "./LogoutButton";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
@@ -24,6 +30,13 @@ const Sidebar = () => {
         <Option
           Icon={FiHome}
           title="Dashboard"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+        />
+        <Option
+          Icon={FiUser}
+          title="Profile"
           selected={selected}
           setSelected={setSelected}
           open={open}
@@ -50,6 +63,14 @@ const Sidebar = () => {
           setSelected={setSelected}
           open={open}
         />
+        <LogoutButton
+          Icon={FiLogOut}
+          title="Logout"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+          // onLogout={handleLogout}
+        />
       </div>
 
       <ToggleClose open={open} setOpen={setOpen} />
@@ -57,27 +78,3 @@ const Sidebar = () => {
   );
 };
 export default Sidebar;
-
-const TitleSection = ({ open }) => {
-  return (
-    <div className="mb-3 border-b border-slate-300 pb-3">
-      <div className="flex cursor-pointer items-center justify-between rounded-md transition-colors hover:bg-slate-100">
-        <div className="flex items-center gap-2">
-          <Logo />
-          {open && (
-            <motion.div
-              layout
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.125 }}
-            >
-              <span className="block text-xs font-semibold">TomIsLoading</span>
-              <span className="block text-xs text-slate-500">Pro Plan</span>
-            </motion.div>
-          )}
-        </div>
-        {open && <FiChevronDown className="mr-2" />}
-      </div>
-    </div>
-  );
-};

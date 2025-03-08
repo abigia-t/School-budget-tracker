@@ -1,0 +1,6 @@
+SBT_backend/node_modules/
+
+SBT_backend/node_modules/*
+SBT_backend/node_modules/.package-lock.json
+SBT_backend/.env
+SBT_backend/.env

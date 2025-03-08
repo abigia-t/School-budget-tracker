@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
@@ -17,11 +16,14 @@ import ViewReport from "./pages/GM/ViewReport";
 import Footer from "./components/Footer";
 import NoPage from "./pages/NoPage";
 import Parent from "./pages/Parent/Parent";
-import ParentLayout from "./layout/ParentLayout";
+
 import ParentDashboard from "./components/parent/Dashbord";
 import ParentPayment from "./components/parent/Payment";
 import PaymentHistory from "./components/parent/PaymentHistory";
 import Notifications from "./components/parent/Notifications";
+import ParentProfile from "./components/parent/Profile";
+import PaymentReturn from "./components/PaymentReturn";
+import Wellcome from "./components/parent/Wellcome";
 
 const App = () => {
   return (
@@ -48,13 +50,17 @@ const App = () => {
           <Route path="rf" element={<RFH />} />
           <Route path="payment" element={<Payment />} />
           <Route path="vr" element={<ViewReport />} />
-        </Route>{" "}
+        </Route>
+        {/* parent route */}
         <Route>
-          <Route path="/parent" element={<ParentLayout />}>
-            <Route index path="dashboard" element={<ParentDashboard />} />
+          <Route path="/parent" element={<Parent />}>
+            <Route index element={<Wellcome />} />
+            <Route path="dashboard" element={<ParentDashboard />} />
+            <Route path="profile" element={<ParentProfile />} />
             <Route path="payment" element={<ParentPayment />} />
             <Route path="pyament-history" element={<PaymentHistory />} />
             <Route path="notfication" element={<Notifications />} />
+            <Route path="payment-return" element={<PaymentReturn />} />
           </Route>
         </Route>
       </Routes>
