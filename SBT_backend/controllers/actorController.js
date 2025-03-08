@@ -13,36 +13,39 @@ export const registerActor = async (req, res) => {
   try {
     const { firstName, lastName, email, password, phoneNumber, address, role } = req.body;
 
-    // Check if the email already exists
-    const actorExists = await Actor.findOne({ email: email.toLowerCase() });
-    if (actorExists) return res.json({status:false, message: "User already exists." });
-
     // Validate email format
     if (!validator.isEmail(email)) {
-      return res.json({status:false, message: "Please enter a valid email." });
+      return res.json({status: false, message: "Please enter a valid email." });
+    }
+
+    // Check if the email already exists
+    const actorExists = await Actor.findOne({ email: email.toLowerCase() });
+    if (actorExists) {
+      return res.json({status: false, message: "User already exists." });
     }
 
     // Ensure password length > 8
     if (!password || password.length < 8) {
-      return res.json({status:false, message: "Password must be at least 8 characters long." });
+      return res.json({status: false, message: "Password must be at least 8 characters long." });
     }
 
     // Hash password
     const hashedPassword = await hashPassword(password);
 
-    const actor = new Actor({firstName,lastName,email: email.toLowerCase(),password: hashedPassword,phoneNumber,address,role, });
+    const actor = new Actor({ firstName, lastName, email: email.toLowerCase(), password: hashedPassword, phoneNumber, address, role });
 
     const savedActor = await actor.save();
 
     res.json({
-      status:true,
+      status: true,
       message: "User registered successfully",
       actor: { ...savedActor._doc, password: undefined },
     });
   } catch (error) {
-    res.json({status:false, message: error.message || "Server error" });
+    res.json({ status: false, message: error.message || "Server error" });
   }
 };
+
 
 export const loginActor = async (req, res) => {
   try {

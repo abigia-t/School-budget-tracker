@@ -122,21 +122,27 @@ const ManageActors = () => {
     
     
     else if (modalType === "update") {
-      axios.put(`http://localhost:5000/api/actors/${currentActor._id}`, newActor)
-      .then(() => {
-        setActors((prev) =>
-          prev.map((actor) =>
-            actor._id === currentActor._id ? { ...actor, ...newActor } : actor
-          )
-        );
-        setIsModalOpen(false);
-        toast.success("Actor updated successfully!"); // Toast for success
-      })
-      .catch((error) => {
-        console.error("Error updating actor:", error);
-        toast.error("Failed to update actor."); // Toast for error
-      }); 
+      const { _id, createdAt, updatedAt, ...filteredActor } = newActor;
+    
+      axios
+        .put(`http://localhost:5000/api/actors/${currentActor._id}`, filteredActor)
+        .then((res) => {
+          const updatedActor = res.data.actor; // Get updated data from the server
+          setActors((prev) =>
+            prev.map((actor) =>
+              actor._id === currentActor._id ? updatedActor : actor
+            )
+          );
+          setIsModalOpen(false);
+          toast.success("Actor updated successfully!");
+        })
+        .catch((error) => {
+          console.error("Error updating actor:", error);
+          toast.error("Failed to update actor.");
+        });
     }
+    
+    
 
 
 
