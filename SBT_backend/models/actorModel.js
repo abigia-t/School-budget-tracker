@@ -13,11 +13,7 @@ const actorSchema = new mongoose.Schema(
       required: true,
       enum: [
         "General Manager",
-<<<<<<< HEAD
         "School Director", 
-=======
-        "School Director",
->>>>>>> 0843dfc8de6351e51fe10f1378eae429a33d62fb
         "System Admin",
         "Auditor",
         "Human Resource Head",  // Standardized naming
@@ -29,8 +25,4 @@ const actorSchema = new mongoose.Schema(
 );
 
 const Actor = mongoose.models.Actor || mongoose.model("Actor", actorSchema);
-<<<<<<< HEAD
 export default Actor;
-=======
-export default Actor;
->>>>>>> 0843dfc8de6351e51fe10f1378eae429a33d62fb

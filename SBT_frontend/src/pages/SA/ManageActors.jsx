@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ActorTable from "../../components/ActorTable";
@@ -225,21 +224,8 @@ const ManageActors = () => {
             .catch((error) => console.error("Error deleting actor:", error));
         }} 
       />
-=======
-import React from "react";
-
-const ManageActors = () => {
-  return (
-    <div>
-      <h1 className="text-2xl font-bold">Manage Actors</h1>
-      <p>Here you can add, update, and remove system actors.</p>
->>>>>>> 0843dfc8de6351e51fe10f1378eae429a33d62fb
     </div>
   );
 };
 
-<<<<<<< HEAD
 export default ManageActors;
-=======
-export default ManageActors;
->>>>>>> 0843dfc8de6351e51fe10f1378eae429a33d62fb
