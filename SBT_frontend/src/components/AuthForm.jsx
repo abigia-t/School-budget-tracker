@@ -55,23 +55,24 @@ const AuthForm = () => {
           if (rolePath) {
             navigate(rolePath); // Navigate to the correct dashboard
           } else {
-            navigate("/"); // Default to home if role is unknown
             toast.error("Invalid role detected. Redirecting to home.");
+            navigate("/"); // Default to home if role is unknown
           }
         }
         
       }
     } catch (error) {
-      // Log the full error object for debugging
       console.error("Login error:", error);
-  
-      // Check if response exists in error
+    
       if (error.response) {
-        setFieldError("email", error.response.data.message || "An error occurred. Please try again.");
+        setFieldError("email", error.response.data?.message || "An error occurred. Please try again.");
+      } else if (error.request) {
+        setFieldError("email", "No response from the server. Check your connection.");
       } else {
-        setFieldError("email", "An unknown error occurred. Please try again.");
+        setFieldError("email", `Request error: ${error.message}`);
       }
     }
+    
   };
   
   

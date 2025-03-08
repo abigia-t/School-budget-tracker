@@ -1,5 +1,4 @@
 import React from "react";
-import { toast } from "react-toastify";
 
 const ActorTable = ({ actors = [], columns, handleEditActor, handleDeleteActor }) => {
   if (!Array.isArray(actors)) {
@@ -35,7 +34,6 @@ const ActorTable = ({ actors = [], columns, handleEditActor, handleDeleteActor }
                       <button
                         onClick={() => {
                           handleDeleteActor(actor);
-                          toast.success("Actor deleted successfully!");
                         }}
                         className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
                       >

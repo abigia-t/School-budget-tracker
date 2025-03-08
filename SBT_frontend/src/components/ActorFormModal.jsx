@@ -51,7 +51,7 @@ const ActorFormModal = ({
       title={modalType === "create" ? "Register New Actor" : "Update Actor"}
       onClose={handleModalClose}
       onSubmit={handleFormSubmit}
-      submitButtonText={modalType === "create" ? "Save" : "Update"}
+      submitButtonText={modalType === "create" ? "Register" : "Update"}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">

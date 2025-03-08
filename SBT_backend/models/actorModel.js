@@ -13,7 +13,7 @@ const actorSchema = new mongoose.Schema(
       required: true,
       enum: [
         "General Manager",
-        "School Director",
+        "School Director", 
         "System Admin",
         "Auditor",
         "Human Resource Head",  // Standardized naming
