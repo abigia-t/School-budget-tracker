@@ -6,10 +6,9 @@ import SideBar from "../../components/SideBar";
 // Define Auditor-specific navigation links
 const auditorLinks = [
   { path: "/auditor/dashboard", label: "Dashboard" },
-  { path: "/auditor/ab", label: "Approve Budget" },
-  { path: "/auditor/pr", label: "Parent Receipt" },
-  { path: "/auditor/abp", label: "Approve Budget Performance" },
-  { path: "/auditor/rb", label: "Request Budget" },
+  { path: "/auditor/ab", label: "Approved Expenditure" },
+  { path: "/auditor/pr", label: "Approved Revenue" },
+  { path: "/auditor/abp", label: "Auditing" },
 ];
 
 const Auditor = () => {

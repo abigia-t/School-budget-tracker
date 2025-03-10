@@ -9,7 +9,7 @@ const actorSchema = new mongoose.Schema(
     phoneNumber: { type: String, required: true, unique: true, index: true },
     address: { type: String, required: true },
     role: {
-      type: String, 
+      type: String,
       required: true,
       enum: [
         "General Manager",
@@ -17,7 +17,7 @@ const actorSchema = new mongoose.Schema(
         "System Admin",
         "Auditor",
         "Human Resource Head",  // Standardized naming
-        "Resource and Finance Head"
+        "Resource and Finance Head",
       ],
     },
   },
