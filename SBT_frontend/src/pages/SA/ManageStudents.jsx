@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import StudentTable from "../../components/StudentTable";  // Custom table component
 import axios from "axios";
+import StudentTable from "../../components/StudentTable";  // Custom table component
 import StudentFormModal from "../../components/StudentFormModal"; // Reusable form modal
+import DeleteStudentConfirmationModal from "../../components/DeleteStudentConfirmationModal ";  // Import the new delete modal
 
 const ManageStudents = () => {
   const [students, setStudents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState("create"); // Can be "create" or "edit"
   const [currentStudent, setCurrentStudent] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);  // Track delete modal state
 
   useEffect(() => {
     fetchStudents();
@@ -39,10 +41,16 @@ const ManageStudents = () => {
     setIsModalOpen(true);
   };
 
-  const handleDeleteStudent = async (student) => {
+  const handleDeleteStudent = (student) => {
+    setCurrentStudent(student);  // Set current student to delete
+    setIsDeleteModalOpen(true);  // Open delete confirmation modal
+  };
+
+  const confirmDeleteStudent = async () => {
     try {
-      await axios.delete(`/api/students/${student._id}`);
-      setStudents((prev) => prev.filter((s) => s._id !== student._id));
+      await axios.delete(`/api/students/${currentStudent._id}`);
+      setStudents((prev) => prev.filter((s) => s._id !== currentStudent._id));
+      setIsDeleteModalOpen(false);  // Close the delete confirmation modal
       toast.success("Student deleted successfully!");
     } catch (error) {
       toast.error("Failed to delete student.");
@@ -51,6 +59,7 @@ const ManageStudents = () => {
 
   const handleModalClose = () => {
     setIsModalOpen(false);
+    setIsDeleteModalOpen(false);  // Close delete confirmation modal
   };
 
   const handleSubmit = async (newStudent) => {
@@ -98,6 +107,12 @@ const ManageStudents = () => {
         currentStudent={currentStudent}
         handleModalClose={handleModalClose}
         handleSubmit={handleSubmit}
+      />
+      <DeleteStudentConfirmationModal
+        isOpen={isDeleteModalOpen}
+        student={currentStudent}
+        handleModalClose={handleModalClose}
+        handleDelete={confirmDeleteStudent}
       />
     </div>
   );
