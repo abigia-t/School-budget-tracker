@@ -1,6 +1,6 @@
 import React from "react";
 
-const HRH = () => {
+const HumanResourceHeadRequested = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold">Human Resource Head</h1>
@@ -9,4 +9,4 @@ const HRH = () => {
   );
 };
 
-export default HRH;
+export default HumanResourceHeadRequested;

@@ -1,6 +1,6 @@
 import React from "react";
 
-const Dashboard = () => {
+const GeneralManagerDashboard = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold">Dashboard</h1>{" "}
@@ -9,4 +9,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default GeneralManagerDashboard;

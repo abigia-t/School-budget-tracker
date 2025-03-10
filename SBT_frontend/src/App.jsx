@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Routes, Route,useNavigate } from "react-router-dom";
 import { StoreContext } from "./context/StoreContext"; // Context API for global auth state
+import { ToastContainer } from "react-toastify";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import Footer from "./components/Footer";
@@ -8,33 +9,53 @@ import NoPage from "./pages/NoPage";
 import RoleRoute from "./config/RoleRoute";
 
 // system admin routes
-import SA from "./pages/SA/SA";
-import Dashboard from "./pages/SA/Dashboard";
+import SystemAdminPage from "./pages/SA/SystemAdminPage";
+import SystemAdminDashboard from "./pages/SA/SystemAdminDashboard";
 import ManageActors from "./pages/SA/ManageActors";
 import ManageStudents from "./pages/SA/ManageStudents";
 import SendNotifications from "./pages/SA/SendNotifications";
 import ManageChapa from "./pages/SA/ManageChapa";
 
 //general manager routes
-// import Dashboard from "./pages/GM/Dashboard";
-import GM from "./pages/GM/GM";
-import SD from "./pages/GM/SD";
-import HR from "./pages/GM/HRH";
-import RFH from "./pages/GM/RFH";
-import Payment from "./pages/GM/Payment";
+import GeneralManagerPage from "./pages/GM/GeneralManagerPage";
+import GeneralManagerDashboard from "./pages/GM/GeneralManagerDashboard";
+import SchoolDirectorRequested from "./pages/GM/SchoolDirectorRequested";
+import HumanResourceHeadRequested from "./pages/GM/HumanResourceHeadRequested";
+import ResourceAndFinanceHeadRequested from "./pages/GM/ResourceAndFinanceHeadRequested";
+import PaymentRequested from "./pages/GM/PaymentRequested";
 import ViewReport from "./pages/GM/ViewReport";
-import { ToastContainer } from "react-toastify";
-//school director routes
-// import SD from "./pages/SD/SD";
-//human resource head routes
-// import HR from "./pages/HR/HRH";
-//resource and finance head
-// import RFH from "./pages/RFH/RFH";
-//auditor routes
-// import AU from "./pages/AU/AU";
-//parents routes
-// import PA from "./pages/PA/PA";
 
+//school director routes
+import SchoolDirectorPage from "./pages/SD/SchoolDirectorPage";
+import SchoolDirectorDashboard from "./pages/SD/SchoolDirectorDashboard";
+import SchoolDirectorRequest from "./pages/SD/SchoolDirectorRequest";
+
+//auditor routes
+import AuditorPage from "./pages/AU/AuditorPage";
+import AuditorDashboard from "./pages/AU/AuditorDashboard";
+import ABP from './pages/AU/ABP'
+import ApprovedRequest from './pages/AU/ApprovedRequest'
+import ParentReceipt from './pages/AU/ParentReceipt'
+import AuditorRequest from './pages/AU/AuditorRequest'
+
+//resource and finance head
+import ResourceAndFinanceHeadPage from "./pages/RFH/ResourceAndFinanceHeadPage";
+import ResourceAndFinanceHeadDashboard from './pages/RFH/ResourceAndFinanceHeadDashboard'
+import ResourceAndFinanceHeadRequest from "./pages/GM/ResourceAndFinanceHeadRequested";
+import PreparePayroll from './pages/RFH/PreparePayroll'
+//human resource head routes
+import HumanResourcePage from "./pages/HR/HumanResourcePage";
+import HumanResourceDashboard from "./pages/HR/HumanResourceDashboard";
+import HumanResourceRequest from "./pages/HR/HumanResourceRequest";
+//parents routes
+import Parent from "./pages/Parent/Parent";
+import ParentDashboard from "./components/parent/Dashboard";
+import ParentPayment from "./components/parent/Payment";
+import PaymentHistory from "./components/parent/PaymentHistory";
+import Notification from "./components/parent/Notification";
+import ParentProfile from "./components/parent/Profile";
+import PaymentReturn from "./components/PaymentReturn";
+import Wellcome from "./components/parent/Welcome";
 
 const App = () => {
   const { userRole } = useContext(StoreContext); // Get role from Context API
@@ -49,6 +70,7 @@ const App = () => {
 
   return (
     <div>
+      <ToastContainer/>
       <Routes>
   <Route path="/" element={<Home />} />
   <Route path="/login" element={<LoginPage />} />
@@ -56,55 +78,60 @@ const App = () => {
 
   
         {/* System Admin Routes */}
-        <Route path="/sa" element={<SA />}>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="actors" element={<ManageActors />} />
-          <Route path="students" element={<ManageStudents />} />
-          <Route path="notifications" element={<SendNotifications />} />
-          <Route path="chapa" element={<ManageChapa />} />
+        <Route path="/system-admin-page" element={<SystemAdminPage />}>
+          <Route path="system-admin-dashboard" element={<SystemAdminDashboard />} />
+          <Route path="manage-actors" element={<ManageActors />} />
+          <Route path="manage-students" element={<ManageStudents />} />
+          <Route path="send-notifications" element={<SendNotifications />} />
+          <Route path="manage-chapa" element={<ManageChapa />} />
         </Route>
   {/* General Manager Routes */}
-  <Route path="/gm" element={<GM />}>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="sd" element={<SD />} />
-          <Route path="hr" element={<HR />} />
-          <Route path="rf" element={<RFH />} />
-          <Route path="payment" element={<Payment />} />
-          <Route path="vr" element={<ViewReport />} />
+  <Route path="/general-manager-page" element={<GeneralManagerPage />}>
+          <Route path="general-manager-dashboard" element={<GeneralManagerDashboard />} />
+          <Route path="school-director-requested" element={<SchoolDirectorRequested />} />
+          <Route path="human-resource-head-requested" element={<HumanResourceHeadRequested />} />
+          <Route path="resource-and-finance-head-requested" element={<ResourceAndFinanceHeadRequested />} />
+          <Route path="payment-requested" element={<PaymentRequested />} />
+          <Route path="veiw-report" element={<ViewReport />} />
         </Route>
         {/* school director Routes */}
-        {/* <Route path="/sd" element={<SD />}>
-          <Route index element={<Navigate to="/sd/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="dd" element={<DD />} />
-        </Route> */}
-        {/* human resource head Routes */}
-        {/* <Route path="/hr" element={<HR />}>
-          <Route index element={<Navigate to="/hr/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="ad" element={<AD />} />
-        </Route> */}
-        
-        {/* finance and resource head Routes */}
-        {/* <Route path="/fr" element={<FR />}>
-          <Route index element={<Navigate to="/fr/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="er" element={<ER />} />
-        </Route> */}
+        <Route path="/school-director-page" element={ <SchoolDirectorPage/>}>
+          <Route path="school-director-dashboard" element={<SchoolDirectorDashboard />} />
+          <Route path="school-director-request" element={<SchoolDirectorRequest />} />
+        </Route>
         {/* auditor head Routes */}
-        {/* <Route path="/au" element={<AU />}>
-          <Route index element={<Navigate to="/au/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="ny" element={<NY />} />
-        </Route> */}
-         {/* parent Routes */}
-         {/* <Route path="/pa" element={<PA />}>
-          <Route index element={<Navigate to="/pa/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="payment" element={<Payment />} />
-        </Route>{" "} */}
+        <Route path="/auditor-page" element={<AuditorPage />}>
+          <Route path="auditor-dashboard" element={<AuditorDashboard />} />
+          <Route path="abp" element={<ABP />} />
+          <Route path="approved-request" element={<ApprovedRequest />} />
+          <Route path="parent-receipt" element={<ParentReceipt />} />
+          <Route path="auditor-request" element={<AuditorRequest/>} />
+        </Route>
+        {/* resource and finance head Routes */}
+        <Route path="/resource-and-finance-head-page" element={<ResourceAndFinanceHeadPage.jsx />}>
+          <Route path="resource-and-finance-head-page-dashboard" element={<ResourceAndFinanceHeadDashboard />} />
+          <Route path="resource-and-finance-head-request" element={<ResourceAndFinanceHeadRequest />} />
+          <Route path="prepare-payroll" element={<PreparePayroll />} />
+        </Route>
+        {/* human resource head Routes */}
+        <Route path="/human-resource-page" element={<HumanResourcePage />}>
+        <Route path="human-resource-dashboard" element={<HumanResourceDashboard />} />
+        <Route path="human-resource-request" element={<HumanResourceRequest />} />
+        </Route>
+
+        {/* parent route */}
+        <Route>
+          <Route path="/parent-page" element={<Parent />}>
+            <Route index element={<Wellcome />} />
+            <Route path="parent-dashboard" element={<ParentDashboard />} />
+            <Route path="profile" element={<ParentProfile />} />
+            <Route path="payment" element={<ParentPayment />} />
+            <Route path="pyament-history" element={<PaymentHistory />} />
+            <Route path="notfication" element={<Notification />} />
+            <Route path="payment-return" element={<PaymentReturn />} />
+          </Route>
+        </Route>
 </Routes>
-<ToastContainer/>
       <Footer />
     </div>
   );

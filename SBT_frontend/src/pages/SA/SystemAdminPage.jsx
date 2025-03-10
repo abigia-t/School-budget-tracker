@@ -5,13 +5,14 @@ import SideBar from "../../components/SideBar";
 
 // Define System Admin-specific navigation links
 const adminLinks = [
-  { path: "/sa/dashboard", label: "Dashboard" },
-  { path: "/sa/actors", label: "Manage Actors" },
-  { path: "/sa/students", label: "Manage Students" },
-  { path: "/sa/notifications", label: "Send Notifications" },
-  { path: "/sa/chapa", label: "Manage Chapa Integration" },
+  { path: "/system-admin-page/system-admin-dashboard", label: "Dashboard" },
+  { path: "/system-admin-page/manage-actors", label: "Manage Actors" },
+  { path: "/system-admin-page/manage-students", label: "Manage Students" },
+  { path: "/system-admin-page/send-notifications", label: "Send Notifications" },
+  { path: "/system-admin-page/manage-chapa", label: "Manage Chapa Integration" },
 ];
-const SA = () => {
+
+const SystemAdminPage = () => {
   return (
     <div className="flex min-h-screen">
       <SideBar title="System Admin" navLinks={adminLinks} />
@@ -25,4 +26,4 @@ const SA = () => {
   );
 };
 
-export default SA;
+export default SystemAdminPage;

@@ -78,7 +78,7 @@ const AuthForm = () => {
   
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-white">
+    <div className="min-h-screen flex justify-center items-center bg-gray-200">
       <div className="bg-white shadow-md rounded-lg p-8 max-w-md w-full">
         <h1 className="text-2xl text-blue-600 font-bold text-center mb-4">
           {isForgotPassword ? "Reset Password" : "Sign In"}
@@ -117,7 +117,7 @@ const AuthForm = () => {
               )}
 
               <button type="submit" disabled={isSubmitting} className="w-full bg-blue-600 text-white p-2 rounded-md font-semibold hover:bg-blue-700 transition">
-                {isForgotPassword ? "Reset Password" : "Sign In"}
+                {isForgotPassword ? "Reset Password" : "Login"}
               </button>
             </Form>
           )}

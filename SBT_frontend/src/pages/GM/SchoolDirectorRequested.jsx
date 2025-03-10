@@ -1,6 +1,6 @@
 import React from "react";
 
-const SD = () => {
+const SchoolDirectorRequested = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold">School Director Content Here</h1>
@@ -8,4 +8,4 @@ const SD = () => {
   );
 };
 
-export default SD;
+export default SchoolDirectorRequested;

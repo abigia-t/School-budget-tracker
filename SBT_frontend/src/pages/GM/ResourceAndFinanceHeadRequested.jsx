@@ -1,6 +1,6 @@
 import React from "react";
 
-const RFH = () => {
+const ResourceAndFinanceHeadRequested = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold">Resource and Finance Head</h1>
@@ -8,4 +8,4 @@ const RFH = () => {
   );
 };
 
-export default RFH;
+export default ResourceAndFinanceHeadRequested;

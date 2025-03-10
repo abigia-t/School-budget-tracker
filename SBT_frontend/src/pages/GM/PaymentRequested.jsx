@@ -1,6 +1,6 @@
 import React from "react";
 
-const Payment = () => {
+const PaymentRequest = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold">Payments</h1>
@@ -8,4 +8,4 @@ const Payment = () => {
   );
 };
 
-export default Payment;
+export default PaymentRequest;
