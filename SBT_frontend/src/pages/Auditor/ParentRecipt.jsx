@@ -55,6 +55,7 @@ const ParentRecipt = () => {
           )}
         </div>
       </div>
+
     </div>
   );
 };

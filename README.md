@@ -14,9 +14,11 @@ Features
 
 . Frontend: React, Vite, Tailwind CSS
 
+<<<<<<< HEAD
 . Backend: Node.js, Express.js, MongoDB 
 
 . Database: MongoDB
+
 
 . Authentication: JWT for user authentication
 

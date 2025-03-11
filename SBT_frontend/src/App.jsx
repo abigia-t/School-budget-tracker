@@ -24,6 +24,9 @@ import RequestBudget from "./pages/Auditor/RequestBudget";
 import PreparePayroll from "./pages/RFHead/PreparePayroll";
 import RFHead from "./pages/RFHead/RFHead";
 import RRequestBudget from "./pages/RFHead/RRequestBudget";
+import SMHead from "./pages/SchoolManager/SMHead";
+import SM_Dashboard from "./pages/SchoolManager/Dashboard";
+import SM_RequestBudget from "./pages/SchoolManager/SM_RequestBudget";
 
 const App = () => {
   return (
@@ -31,7 +34,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="*" element={<NoPage/>}/>
+        <Route path="*" element={<NoPage />} />
+
         {/* System Admin Routes */}
         <Route path="/sa" element={<SA />}>
           <Route index element={<Navigate to="/sa/dashboard" replace />} />
@@ -41,6 +45,7 @@ const App = () => {
           <Route path="notifications" element={<SendNotifications />} />
           <Route path="chapa" element={<ManageChapa />} />
         </Route>
+
         {/* General Manager Routes */}
         <Route path="/gm" element={<GM />}>
           <Route index element={<Navigate to="/gm/dashboard" replace />} />
@@ -51,6 +56,7 @@ const App = () => {
           <Route path="payment" element={<Payment />} />
           <Route path="vr" element={<ViewReport />} />
         </Route>
+
         {/* Auditor Routes */}
         <Route path="/auditor" element={<Auditor />}>
           <Route index element={<Navigate to="/auditor/dashboard" replace />} />
@@ -59,14 +65,22 @@ const App = () => {
           <Route path="ab" element={<ApprovedBudget />} />
           <Route path="pr" element={<ParentRecipt />} />
           <Route path="rb" element={<RequestBudget />} />
-        </Route>{""}
-        {/* Resource and finincial head Routes */}
+        </Route>
+
+        {/* Resource and Financial Head Routes */}
         <Route path="/rfhead" element={<RFHead />}>
           <Route index element={<Navigate to="/rfhead/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="pp" element={<PreparePayroll />} />
           <Route path="rrb" element={<RRequestBudget />} />
-        </Route>{""}
+        </Route>
+
+        {/* School Manager Routes */}
+        <Route path="/sm/*" element={<SMHead />}>
+          <Route index element={<Navigate to="/sm/dashboard" replace />} />
+          <Route path="dashboard" element={<SM_Dashboard />} />
+          <Route path="rrb" element={<SM_RequestBudget />} />
+        </Route>
       </Routes>
       <Footer />
     </div>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -22,6 +23,23 @@ app.use(bodyParser.urlencoded({ extended: true })); // Handles URL-encoded form 
 app.use("/api/auth", authRoute);
 app.use("/api/request", requestRoute);
 app.use("/api/approved-budget", approvedBudgetRoute);
+=======
+import express from 'express'
+const dotenv = require("dotenv");
+const connectDB = require("./configs/db");
+const userRoutes = require("./routes/userRoutes");
+
+dotenv.config();
+connectDB();
+
+const app = express();
+
+// Middleware
+app.use(express.json());
+
+// Routes
+app.use("/api/users", userRoutes);
+>>>>>>> master
 
 // Start server
 const PORT = process.env.PORT || 5000;
