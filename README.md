@@ -15,9 +15,13 @@ Features
 . Frontend: React, Vite, Tailwind CSS
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 . Backend: Node.js, Express.js, MongoDB 
+=======
+. Backend: Node.js, Express.js, MongoDB / postgress...
+>>>>>>> zekariyas
 
-. Database: MongoDB
+. Database: MongoDB / postgress...
 
 
 . Authentication: JWT for user authentication

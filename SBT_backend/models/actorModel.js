@@ -12,12 +12,12 @@ const actorSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: [
-        "General Manager",
-        "School Director",
         "System Admin",
+        "General Manager",
+        "School Director", 
         "Auditor",
-        "Human Resource Head",  // Standardized naming
-        "Resource and Finance Head",
+        "Resource and Finance",
+        "Human Resource " // Standardized naming
       ],
     },
   },

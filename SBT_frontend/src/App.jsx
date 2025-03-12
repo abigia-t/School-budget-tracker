@@ -1,87 +1,138 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { Routes, Route,useNavigate } from "react-router-dom";
+import { StoreContext } from "./context/StoreContext"; // Context API for global auth state
+import { ToastContainer } from "react-toastify";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
-import SA from "./pages/SA/SA";
-import Dashboard from "./pages/Auditor/Dashboard";
+import Footer from "./components/Footer";
+import NoPage from "./pages/NoPage";
+import RoleRoute from "./config/RoleRoute";
+
+// system admin routes
+import SystemAdminPage from "./pages/SA/SystemAdminPage";
+import SystemAdminDashboard from "./pages/SA/SystemAdminDashboard";
 import ManageActors from "./pages/SA/ManageActors";
 import ManageStudents from "./pages/SA/ManageStudents";
 import SendNotifications from "./pages/SA/SendNotifications";
 import ManageChapa from "./pages/SA/ManageChapa";
-import GM from "./pages/GM/GM";
-import SD from "./pages/GM/SD";
-import HR from "./pages/GM/HRH";
-import RFH from "./pages/GM/RFH";
-import Payment from "./pages/GM/Payment";
+
+//general manager routes
+import GeneralManagerPage from "./pages/GM/GeneralManagerPage";
+import GeneralManagerDashboard from "./pages/GM/GeneralManagerDashboard";
+import SchoolDirectorRequested from "./pages/GM/SchoolDirectorRequested";
+import HumanResourceHeadRequested from "./pages/GM/HumanResourceHeadRequested";
+import ResourceAndFinanceHeadRequested from "./pages/GM/ResourceAndFinanceHeadRequested";
+import PaymentRequested from "./pages/GM/PaymentRequested";
 import ViewReport from "./pages/GM/ViewReport";
-import Footer from "./components/Footer";
-import NoPage from "./pages/NoPage";
-import Auditor from "./pages/Auditor/Auditor";
-import ApprovedBudget from "./pages/Auditor/ApprovedBudget";
-import APB from "./pages/Auditor/ABP";
-import ParentRecipt from "./pages/Auditor/parentRecipt";
-import RequestBudget from "./pages/Auditor/RequestBudget";
-import PreparePayroll from "./pages/RFHead/PreparePayroll";
-import RFHead from "./pages/RFHead/RFHead";
-import RRequestBudget from "./pages/RFHead/RRequestBudget";
-import SMHead from "./pages/SchoolManager/SMHead";
-import SM_Dashboard from "./pages/SchoolManager/Dashboard";
-import SM_RequestBudget from "./pages/SchoolManager/SM_RequestBudget";
+
+//school director routes
+import SchoolDirectorPage from "./pages/SD/SchoolDirectorPage";
+import SchoolDirectorDashboard from "./pages/SD/SchoolDirectorDashboard";
+import SchoolDirectorRequest from "./pages/SD/SchoolDirectorRequest";
+
+//auditor routes
+import AuditorDashboard from "./pages/AU/AuditorDashboard";
+import AuditorPage from "./pages/AU/AuditorPage";
+import ApprovedBudget from "./pages/AU/ApprovedBudget";
+import ABP from "./pages/AU/ABP";
+import ParentReceipt from "./pages/AU/ParentReceipt";
+
+//resource and finance head
+import ResourceAndFinanceHeadPage from "./pages/RFH/ResourceAndFinanceHeadPage";
+import ResourceAndFinanceHeadDashboard from './pages/RFH/ResourceAndFinanceHeadDashboard'
+import ResourceAndFinanceHeadRequest from "./pages/GM/ResourceAndFinanceHeadRequested";
+import PreparePayroll from './pages/RFH/PreparePayroll'
+//human resource head routes
+import HumanResourcePage from "./pages/HR/HumanResourcePage";
+import HumanResourceDashboard from "./pages/HR/HumanResourceDashboard";
+import HumanResourceRequest from "./pages/HR/HumanResourceRequest";
+//parents routes
+import Parent from "./pages/Parent/Parent";
+import ParentDashboard from "./components/parent/Dashboard";
+import ParentPayment from "./components/parent/Payment";
+import PaymentHistory from "./components/parent/PaymentHistory";
+import Notification from "./components/parent/Notification";
+import ParentProfile from "./components/parent/Profile";
+import PaymentReturn from "./components/PaymentReturn";
+import Wellcome from "./components/parent/Welcome";
+
 
 const App = () => {
+  const { userRole } = useContext(StoreContext); // Get role from Context API
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userRole) {
+      const redirectPath = RoleRoute[userRole] || "/";
+      navigate(redirectPath);
+    }
+  }, [userRole, navigate]);
+
   return (
     <div>
+      <ToastContainer/>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="*" element={<NoPage />} />
+  <Route path="/" element={<Home />} />
+  <Route path="/login" element={<LoginPage />} />
+  <Route path="*" element={<NoPage />} />
 
+  
         {/* System Admin Routes */}
-        <Route path="/sa" element={<SA />}>
-          <Route index element={<Navigate to="/sa/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="actors" element={<ManageActors />} />
-          <Route path="students" element={<ManageStudents />} />
-          <Route path="notifications" element={<SendNotifications />} />
-          <Route path="chapa" element={<ManageChapa />} />
+        <Route path="/system-admin-page" element={<SystemAdminPage />}>
+          <Route path="system-admin-dashboard" element={<SystemAdminDashboard />} />
+          <Route path="manage-actors" element={<ManageActors />} />
+          <Route path="manage-students" element={<ManageStudents />} />
+          <Route path="send-notifications" element={<SendNotifications />} />
+          <Route path="manage-chapa" element={<ManageChapa />} />
         </Route>
 
-        {/* General Manager Routes */}
-        <Route path="/gm" element={<GM />}>
-          <Route index element={<Navigate to="/gm/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="sd" element={<SD />} />
-          <Route path="hr" element={<HR />} />
-          <Route path="rf" element={<RFH />} />
-          <Route path="payment" element={<Payment />} />
-          <Route path="vr" element={<ViewReport />} />
+  {/* General Manager Routes */}
+  <Route path="/general-manager-page" element={<GeneralManagerPage />}>
+          <Route path="general-manager-dashboard" element={<GeneralManagerDashboard />} />
+          <Route path="school-director-requested" element={<SchoolDirectorRequested />} />
+          <Route path="human-resource-head-requested" element={<HumanResourceHeadRequested />} />
+          <Route path="resource-and-finance-head-requested" element={<ResourceAndFinanceHeadRequested />} />
+          <Route path="payment-requested" element={<PaymentRequested />} />
+          <Route path="veiw-report" element={<ViewReport />} />
         </Route>
-
-        {/* Auditor Routes */}
-        <Route path="/auditor" element={<Auditor />}>
-          <Route index element={<Navigate to="/auditor/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="abp" element={<APB />} />
+        {/* school director Routes */}
+        <Route path="/school-director-page" element={ <SchoolDirectorPage/>}>
+          <Route path="school-director-dashboard" element={<SchoolDirectorDashboard />} />
+          <Route path="school-director-request" element={<SchoolDirectorRequest />} />
+        </Route>
+        {/* auditor head Routes */}
+        <Route path="/auditor-page" element={<AuditorPage />}>
+          <Route path="auditor-dashboard" element={<AuditorDashboard />} />
+          <Route path="abp" element={<ABP />} />
           <Route path="ab" element={<ApprovedBudget />} />
-          <Route path="pr" element={<ParentRecipt />} />
-          <Route path="rb" element={<RequestBudget />} />
+          <Route path="pr" element={<ParentReceipt />} />
+        </Route>
+        {/* resource and finance head Routes */}
+        <Route path="/resource-and-finance-head-page" element={<ResourceAndFinanceHeadPage.jsx />}>
+          <Route path="resource-and-finance-head-page-dashboard" element={<ResourceAndFinanceHeadDashboard />} />
+          <Route path="resource-and-finance-head-request" element={<ResourceAndFinanceHeadRequest />} />
+          <Route path="prepare-payroll" element={<PreparePayroll />} />
+        </Route>
+        {/* human resource head Routes */}
+        <Route path="/human-resource-page" element={<HumanResourcePage />}>
+        <Route path="human-resource-dashboard" element={<HumanResourceDashboard />} />
+        <Route path="human-resource-request" element={<HumanResourceRequest />} />
         </Route>
 
-        {/* Resource and Financial Head Routes */}
-        <Route path="/rfhead" element={<RFHead />}>
-          <Route index element={<Navigate to="/rfhead/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="pp" element={<PreparePayroll />} />
-          <Route path="rrb" element={<RRequestBudget />} />
+        {/* parent route */}
+        <Route>
+          <Route path="/parent-page" element={<Parent />}>
+            <Route index element={<Wellcome />} />
+            <Route path="parent-dashboard" element={<ParentDashboard />} />
+            <Route path="profile" element={<ParentProfile />} />
+            <Route path="payment" element={<ParentPayment />} />
+            <Route path="pyament-history" element={<PaymentHistory />} />
+            <Route path="notfication" element={<Notification />} />
+            <Route path="payment-return" element={<PaymentReturn />} />
+          </Route>
         </Route>
+</Routes>
 
-        {/* School Manager Routes */}
-        <Route path="/sm/*" element={<SMHead />}>
-          <Route index element={<Navigate to="/sm/dashboard" replace />} />
-          <Route path="dashboard" element={<SM_Dashboard />} />
-          <Route path="rrb" element={<SM_RequestBudget />} />
-        </Route>
-      </Routes>
       <Footer />
     </div>
   );
