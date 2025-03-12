@@ -7,10 +7,10 @@ import { Menu } from "lucide-react"; // Sidebar toggle icon
 
 // Auditor-specific navigation links
 const auditorLinks = [
-  { path: "/auditor/auditor-dashboard", label: "Dashboard" },
-  { path: "/auditor/ab", label: "Approved Expenditure" },
-  { path: "/auditor/pr", label: "Approved Revenue" },
-  { path: "/auditor/abp", label: "Auditing" },
+  { path: "/auditor-page/auditor-dashboard", label: "Dashboard" },
+  { path: "/auditor-page/ab", label: "Approved Expenditure" },
+  { path: "/auditor-page/pr", label: "Approved Revenue" },
+  { path: "/auditor-page/abp", label: "Auditing" },
 ];
 
 const AuditorPage = () => {

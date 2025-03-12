@@ -13,8 +13,9 @@ const adminLinks = [
   { path: "/system-admin-page/manage-chapa", label: "Manage Chapa Integration" },
 ];
 
-
 const SystemAdminPage = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Define state for sidebar
+
   return (
     <div className="flex min-h-screen transition-all duration-300">
       {/* Sidebar (Collapsible) */}

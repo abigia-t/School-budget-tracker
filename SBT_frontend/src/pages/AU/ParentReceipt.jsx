@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const ParentRecipt = () => {
+const ParentReceipt = () => {
   const [approvedReceipts, setApprovedReceipts] = useState([]);
   const [schoolFunds, setSchoolFunds] = useState([]);
 
@@ -60,4 +60,4 @@ const ParentRecipt = () => {
   );
 };
 
-export default ParentRecipt;
+export default ParentReceipt;

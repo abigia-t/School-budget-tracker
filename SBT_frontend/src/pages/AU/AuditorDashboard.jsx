@@ -1,6 +1,6 @@
 import React from "react";
 
-const AuditorDashboard = () => {
+const Dashboard = () => {
   const auditData = {
     totalExpenditureItems: 10, // example number of expenditure items
     totalRevenueItems: 15,     // example number of revenue items
@@ -50,4 +50,4 @@ const AuditorDashboard = () => {
   );
 };
 
-export default AuditorDashboard;
+export default Dashboard;

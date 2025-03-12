@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const ApprovedBudget = () => {
+const ApprovedExpenditure = () => {
   const [approvedBudgets, setApprovedBudgets] = useState({
     "School Director": [],
     "Human Resource Head": [],
@@ -58,4 +58,4 @@ const ApprovedBudget = () => {
   );
 };
 
-export default ApprovedBudget;
+export default ApprovedExpenditure;

@@ -4,24 +4,23 @@ import TopBar from "../../components/TopBar";
 import SideBar from "../../components/SideBar";
 import { Menu } from "lucide-react"; // Sidebar toggle icon
 
-const RFHeadLinks = [
+// Navigation links for Resource & Finance Head
+const financeHeadLinks = [
   { path: "/resource-and-finance-head-page/resource-and-finance-head-dashboard", label: "Dashboard" },
-  { path: "/resource-and-finance-head-page/prepare-payroll", label: "Prepare Payroll" },
   { path: "/resource-and-finance-head-page/resource-and-finance-head-request", label: "Request Budget" },
+  { path: "/resource-and-finance-head-page/prepare-payroll", label: "Prepare Payroll" },
 ];
 
-
-const RFH = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Sidebar state
-
+const ResourceAndFinanceHeadPage = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
 
   return (
     <div className="flex min-h-screen transition-all duration-300">
       {/* Sidebar (Collapsible) */}
-      <div className={`fixed top-0 h-screen bg-blue-950 text-white shadow-lg transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-16"}`}>
+      <div className={`fixed top-0 left-0 h-screen bg-blue-950 text-white shadow-lg transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-16"}`}>
         {/* Sidebar Content (Hidden when collapsed) */}
         <div className={`${isSidebarOpen ? "block" : "hidden"} transition-opacity duration-300`}>
-          <SideBar title="Resource & Finance Head" navLinks={RFHeadLinks} />
+          <SideBar title="Resource & Finance Head" navLinks={financeHeadLinks} />
         </div>
 
         {/* Sidebar Toggle Button */}
@@ -46,4 +45,4 @@ const RFH = () => {
   );
 };
 
-export default RFH;
+export default ResourceAndFinanceHeadPage;
