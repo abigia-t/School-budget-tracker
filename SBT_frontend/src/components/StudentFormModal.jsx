@@ -39,10 +39,10 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
 
   return isOpen ? (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-md w-96">
+      <div className="bg-white p-6 rounded-md w-96 mt-10">
         <h3 className="text-xl font-semibold mb-4">{modalType === "create" ? "Add Student" : "Edit Student"}</h3>
-        <form onSubmit={onSubmit}>
-          <div className="mb-4">
+        <form onSubmit={onSubmit} className="grid grid-cols-2 gap-4">
+          <div className="col-span-2">
             <label htmlFor="studentId" className="block text-sm font-medium">Student ID</label>
             <input
               type="text"
@@ -55,7 +55,7 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
             />
           </div>
 
-          <div className="mb-4">
+          <div>
             <label htmlFor="firstName" className="block text-sm font-medium">First Name</label>
             <input
               type="text"
@@ -68,7 +68,7 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
             />
           </div>
 
-          <div className="mb-4">
+          <div>
             <label htmlFor="middleName" className="block text-sm font-medium">Middle Name</label>
             <input
               type="text"
@@ -81,7 +81,7 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
             />
           </div>
 
-          <div className="mb-4">
+          <div>
             <label htmlFor="lastName" className="block text-sm font-medium">Last Name</label>
             <input
               type="text"
@@ -94,7 +94,7 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
             />
           </div>
 
-          <div className="mb-4">
+          <div>
             <label htmlFor="email" className="block text-sm font-medium">Email</label>
             <input
               type="email"
@@ -108,7 +108,7 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
           </div>
 
           {modalType === "create" && (
-            <div className="mb-4">
+            <div className="col-span-2">
               <label htmlFor="password" className="block text-sm font-medium">Password</label>
               <input
                 type="password"
@@ -122,7 +122,7 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
             </div>
           )}
 
-          <div className="mb-4">
+          <div>
             <label htmlFor="phoneNumber" className="block text-sm font-medium">Phone Number</label>
             <input
               type="text"
@@ -135,7 +135,7 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
             />
           </div>
 
-          <div className="mb-4">
+          <div>
             <label htmlFor="address" className="block text-sm font-medium">Address</label>
             <input
               type="text"
@@ -148,7 +148,7 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
             />
           </div>
 
-          <div className="flex justify-between">
+          <div className="col-span-2 flex justify-between">
             <button
               type="button"
               onClick={handleModalClose}

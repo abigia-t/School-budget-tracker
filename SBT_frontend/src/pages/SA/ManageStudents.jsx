@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import StudentTable from "../../components/StudentTable";  // Custom table component
 import StudentFormModal from "../../components/StudentFormModal"; // Reusable form modal
-import DeleteStudentConfirmationModal from "../../components/DeleteStudentConfirmationModal ";  // Import the new delete modal
+import DeleteStudentConfirmationModal from "../../components/DeleteStudentConfirmationModal "
 
 const ManageStudents = () => {
   const [students, setStudents] = useState([]);
@@ -22,7 +22,7 @@ const ManageStudents = () => {
       if (Array.isArray(res.data)) {
         setStudents(res.data);
       } else {
-        toast.error("Invalid data format from API");
+        toast.error(error.response?.data?.message || "Failed to fetch students.");
       }
     } catch (error) {
       toast.error("Failed to fetch students.");
@@ -65,7 +65,7 @@ const ManageStudents = () => {
   const handleSubmit = async (newStudent) => {
     if (modalType === "create") {
       try {
-        const res = await axios.post("/api/students", newStudent);
+        const res = await axios.post("/api/students/register", newStudent);
         setStudents((prev) => [...prev, res.data]);
         toast.success("Student added successfully!");
       } catch (error) {
@@ -94,7 +94,7 @@ const ManageStudents = () => {
         onClick={handleAddStudent}
         className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mb-4"
       >
-        Add Student
+        Register Students
       </button>
       <StudentTable
         students={students}

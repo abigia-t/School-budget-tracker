@@ -3,11 +3,11 @@ import {registerActor,loginActor,getAllActors,getActorById,updateActor,deleteAct
 
 const router = express.Router();
 router.post("/register", registerActor);
-router.post("/login", loginActor);
 router.get("/", getAllActors);
+router.post("/login", loginActor);
+router.put("/change-password", changePassword);
 router.get("/:id", getActorById);
 router.put("/:id", updateActor);
 router.delete("/:id", deleteActor);
-router.put("/change-password", changePassword);
 
 export default router;

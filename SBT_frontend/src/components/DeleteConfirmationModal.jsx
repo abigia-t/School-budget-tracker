@@ -11,7 +11,7 @@ const DeleteConfirmationModal = ({ isOpen, actor, handleModalClose, handleDelete
       submitButtonText="Delete"
     >
       <div className="text-center">
-        <p>Are you sure you want to delete the actor {actor?.fullName}?</p>
+        <p>Are you sure you want to delete the actor {actor?.firstName}?</p>
       </div>
     </Modal>
   );
