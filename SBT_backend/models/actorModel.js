@@ -17,7 +17,7 @@ const actorSchema = new mongoose.Schema(
         "School Director", 
         "Auditor",
         "Resource and Finance",
-        "Human Resource " // Standardized naming
+        "Human Resource" // Standardized naming
       ],
     },
   },

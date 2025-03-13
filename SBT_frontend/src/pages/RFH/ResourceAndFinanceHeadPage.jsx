@@ -5,12 +5,12 @@ import SideBar from "../../components/SideBar";
 
 const RFHeadLinks = [
   { path: "/resource-and-finance-head-page/resource-and-finance-head-dashboard", label: "Dashboard" },
-  { path: "/resource-and-finance-head-page/prepare-payroll", label: "Prepare Payroll" },
   { path: "/resource-and-finance-head-page/resource-and-finance-head-request", label: "Request Budget" },
+  { path: "/resource-and-finance-head-page/prepare-payroll", label: "Prepare Payroll" },
 ];
 
 
-const RFH = () => {
+const ResourceAndFinanceHeadPage = () => {
   return (
     <div className="flex min-h-screen">
       <SideBar title={"Resource & Finance\nHead"} navLinks={RFHeadLinks} />
@@ -24,4 +24,4 @@ const RFH = () => {
   );
 };
 
-export default RFH;
+export default ResourceAndFinanceHeadPage;

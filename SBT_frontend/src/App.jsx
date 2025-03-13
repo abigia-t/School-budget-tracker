@@ -108,8 +108,8 @@ const App = () => {
           <Route path="auditor-request" element={<AuditorRequest/>} />
         </Route>
         {/* resource and finance head Routes */}
-        <Route path="/resource-and-finance-head-page" element={<ResourceAndFinanceHeadPage.jsx />}>
-          <Route path="resource-and-finance-head-page-dashboard" element={<ResourceAndFinanceHeadDashboard />} />
+        <Route path="/resource-and-finance-head-page" element={<ResourceAndFinanceHeadPage />}>
+          <Route path="resource-and-finance-head-dashboard" element={<ResourceAndFinanceHeadDashboard />} />
           <Route path="resource-and-finance-head-request" element={<ResourceAndFinanceHeadRequest />} />
           <Route path="prepare-payroll" element={<PreparePayroll />} />
         </Route>
