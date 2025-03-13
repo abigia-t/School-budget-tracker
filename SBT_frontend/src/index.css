@@ -41,4 +41,5 @@ a {
 
 .fade-in {
   animation: fadeIn 1.5s ease-in-out;
+  color:rgb(0, 157, 255)
 }
