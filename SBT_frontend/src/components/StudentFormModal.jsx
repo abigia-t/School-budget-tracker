@@ -160,7 +160,7 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
               type="submit"
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
             >
-              {modalType === "create" ? "Add Student" : "Update Student"}
+              {modalType === "create" ? "Register" : "Update"}
             </button>
           </div>
         </form>

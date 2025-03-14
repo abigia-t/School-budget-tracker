@@ -14,7 +14,6 @@ export const registerPayment = async (req, res) => {
     if (!student) {
       return res.json({ status: false, message: "Student not found." });
     }
-
     // Add payment data inside the student's model
     student.paymentData.push({
       amount,

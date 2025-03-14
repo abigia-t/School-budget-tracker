@@ -13,7 +13,6 @@ import SystemAdminPage from "./pages/SA/SystemAdminPage";
 import SystemAdminDashboard from "./pages/SA/SystemAdminDashboard";
 import ManageActors from "./pages/SA/ManageActors";
 import ManageStudents from "./pages/SA/ManageStudents";
-import SendNotifications from "./pages/SA/SendNotifications";
 import ManageChapa from "./pages/SA/ManageChapa";
 
 //general manager routes
@@ -82,7 +81,6 @@ const App = () => {
           <Route path="system-admin-dashboard" element={<SystemAdminDashboard />} />
           <Route path="manage-actors" element={<ManageActors />} />
           <Route path="manage-students" element={<ManageStudents />} />
-          <Route path="send-notifications" element={<SendNotifications />} />
           <Route path="manage-chapa" element={<ManageChapa />} />
         </Route>
   {/* General Manager Routes */}

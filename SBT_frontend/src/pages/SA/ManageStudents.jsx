@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import StudentTable from "../../components/StudentTable";  // Custom table component
 import StudentFormModal from "../../components/StudentFormModal"; // Reusable form modal
-import DeleteStudentConfirmationModal from "../../components/DeleteStudentConfirmationModal "
+import DeleteConfirmationModal from "../../components/DeleteConfirmationModal"
 
 const ManageStudents = () => {
   const [students, setStudents] = useState([]);
@@ -18,7 +18,7 @@ const ManageStudents = () => {
 
   const fetchStudents = async () => {
     try {
-      const res = await axios.get("/api/students");
+      const res = await axios.get("http://localhost:5000/api/students");
       if (Array.isArray(res.data)) {
         setStudents(res.data);
       } else {
@@ -48,7 +48,7 @@ const ManageStudents = () => {
 
   const confirmDeleteStudent = async () => {
     try {
-      await axios.delete(`/api/students/${currentStudent._id}`);
+      await axios.delete(`http://localhost:5000/api/students/${currentStudent._id}`);
       setStudents((prev) => prev.filter((s) => s._id !== currentStudent._id));
       setIsDeleteModalOpen(false);  // Close the delete confirmation modal
       toast.success("Student deleted successfully!");
@@ -63,17 +63,28 @@ const ManageStudents = () => {
   };
 
   const handleSubmit = async (newStudent) => {
+    console.log("Submitting student:", newStudent); // Debugging output
+    
     if (modalType === "create") {
       try {
-        const res = await axios.post("/api/students/register", newStudent);
+        const res = await axios.post("http://localhost:5000/api/students/register", newStudent);
+        console.log("Server response:", res.data); // Check backend response
         setStudents((prev) => [...prev, res.data]);
         toast.success("Student added successfully!");
       } catch (error) {
-        toast.error("Failed to add student.");
+        console.error("Register Error:", error.response?.data || error.message);
+        
+        // Show detailed error in toast
+        if (error.response) {
+          toast.error(`Error: ${error.response.status} - ${error.response.data.message || "Failed to add student."}`);
+        } else {
+          toast.error("Failed to connect to server.");
+        }
       }
-    } else if (modalType === "edit") {
+    }
+   else if (modalType === "edit") {
       try {
-        const res = await axios.put(`/api/students/${currentStudent._id}`, newStudent);
+        const res = await axios.put(`http://localhost:5000/api/students/${currentStudent._id}`, newStudent);
         setStudents((prev) =>
           prev.map((student) =>
             student._id === currentStudent._id ? res.data : student
@@ -89,13 +100,14 @@ const ManageStudents = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-semibold mb-4">Manage Students</h2>
+      <div className="flex justify-between"> <h2 className="text-2xl font-semibold mb-4">Manage Students</h2>
       <button
         onClick={handleAddStudent}
         className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mb-4"
       >
-        Register Students
-      </button>
+        Register Student
+      </button></div>
+     
       <StudentTable
         students={students}
         handleEditStudent={handleEditStudent}
@@ -108,7 +120,7 @@ const ManageStudents = () => {
         handleModalClose={handleModalClose}
         handleSubmit={handleSubmit}
       />
-      <DeleteStudentConfirmationModal
+      <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}
         student={currentStudent}
         handleModalClose={handleModalClose}

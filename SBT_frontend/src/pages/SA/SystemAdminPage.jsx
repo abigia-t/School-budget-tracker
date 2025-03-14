@@ -8,7 +8,6 @@ const adminLinks = [
   { path: "/system-admin-page/system-admin-dashboard", label: "Dashboard" },
   { path: "/system-admin-page/manage-actors", label: "Manage Actors" },
   { path: "/system-admin-page/manage-students", label: "Manage Students" },
-  { path: "/system-admin-page/send-notifications", label: "Send Notifications" },
   { path: "/system-admin-page/manage-chapa", label: "Manage Chapa Integration" },
 ];
 

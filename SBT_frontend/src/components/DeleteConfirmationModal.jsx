@@ -5,7 +5,7 @@ const DeleteConfirmationModal = ({ isOpen, actor, handleModalClose, handleDelete
   return (
     <Modal
       isOpen={isOpen}
-      title="Delete Actor"
+      title="Delete"
       onClose={handleModalClose}
       onSubmit={handleDelete}
       submitButtonText="Delete"
