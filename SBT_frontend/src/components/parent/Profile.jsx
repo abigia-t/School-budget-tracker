@@ -13,10 +13,14 @@ const ParentProfile = () => {
       .catch((err) => setError(err.message))
       .catch((error) => console.log("parent fetch error", error))
       .finally(() => setLoading(false));
-  },[]);
+  }, []);
 
   if (loading)
-    return <p className="text-3xl text-gray-500">Loading please wait...</p>;
+    return (
+      <div className="h-screen w-full flex item-center justify-center">
+        <p className="text-3xl text-gray-500">Loading please wait...</p>
+      </div>
+    );
   if (error) return <p className="text-3xl text-red-400">error {error}</p>;
 
   console.log(parentData);
@@ -36,9 +40,9 @@ const ParentProfile = () => {
             <p className="text-gray-600 mt-1 text-sm">{parentData.email}</p>
           </div>
         </div>
-        <button className="mt-4 sm:mt-0 px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-md">
+        {/* <button className="mt-4 sm:mt-0 px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-md">
           Edit Profile
-        </button>
+        </button> */}
       </div>
 
       {/* Personal Info & Budget Grid */}
@@ -97,41 +101,8 @@ const ParentProfile = () => {
               ))}
             </div>
           </div>
-          {/* <div className="flex items-center space-x-2">
-            <dt className="font-medium text-gray-700">Grade:</dt>
-            <dd className="text-gray-600">{grade}</dd>
-          </div>
-          <div className="flex items-center space-x-2">
-            <dt className="font-medium text-gray-700">Account:</dt>
-            <dd className="text-gray-600 font-mono">{accountNumber}</dd>
-          </div>
-          <div className="flex items-center space-x-2">
-            <dt className="font-medium text-gray-700">Last Transaction:</dt>
-            <dd className="text-gray-600">{lastTransaction}</dd>
-          </div> */}
         </dl>
       </div>
-
-      {/* Progress Bar 
-      <div className="mt-8">
-        <h3 className="text-xl font-semibold text-gray-800 mb-3">
-          Monthly Budget Usage
-        </h3>
-        <div className="relative w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-          <div
-            className="absolute h-4 bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-500 ease-in-out"
-            style={{ width: `ETB {budgetPercentage}%` }}
-          />
-        </div>
-        <div className="flex justify-between mt-2 text-sm">
-          <span className="text-gray-600">
-            {budgetPercentage.toFixed(1)}% Used
-          </span>
-          <span className="text-gray-600">
-            ETB {spentThisMonth.toFixed(2)} / ETB {monthlyBudget.toFixed(2)}
-          </span>
-        </div>
-      </div>*/}
     </div>
   );
 };
