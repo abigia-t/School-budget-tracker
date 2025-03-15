@@ -4,6 +4,7 @@ import { assets } from "../../assets/assets";
 import { FiMenu } from "react-icons/fi";
 import { MdCancel } from "react-icons/md";
 import { useState } from "react";
+import { FaUser } from "react-icons/fa";
 
 const NavBar = ({ onLogout }) => {
   const [isOpen, SetIsOpen] = useState(false);
@@ -32,9 +33,6 @@ const NavBar = ({ onLogout }) => {
           <Link to={"dashboard"}>
             <li className="hover:text-yellow-300 cursor-pointer">Dashboard</li>
           </Link>
-          <Link to={"profile"}>
-            <li className="hover:text-yellow-300 cursor-pointer">Profile</li>
-          </Link>
           <Link to={"payment"}>
             <li className="hover:text-yellow-300 cursor-pointer">Payment</li>
           </Link>
@@ -51,16 +49,24 @@ const NavBar = ({ onLogout }) => {
         </ul>
 
         {/* Log out button */}
-        <button
-          onClick={onLogout}
-          className="flex items-center gap-2 bg-red-300 text-blue-950 px-4 py-2 rounded-full shadow-md hover:bg-gray-200 transition"
-        >
-          {/* <span className="rotate-180">
+        <div className="flex gap-8">
+          <button
+            onClick={onLogout}
+            className="flex items-center gap-2 bg-red-300 text-blue-950 px-4 py-2 rounded-full shadow-md hover:bg-gray-200 transition"
+          >
+            {/* <span className="rotate-180">
             <FiLogOut />
           </span> */}
-          Log Out
-        </button>
+            Log Out
+          </button>
 
+          <Link
+            to="profile"
+            className="w-12 h-12 bg-gray-200  text-blue-500 hover:text-blue-600 flex items-center justify-center rounded-3xl"
+          >
+            <FaUser size={32} className=" cursor-pointer" />
+          </Link>
+        </div>
         {/* mobile menu togler */}
         <button
           className="flex md:hidden items-center gap-2 bg-blue-400 text-blue-950 px-4 py-2 rounded-full shadow-md hover:bg-gray-200 transition "

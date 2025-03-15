@@ -83,20 +83,22 @@ const ParentProfile = () => {
                 >
                   <div className="flex items-center">
                     <div>
-                      <p className="font-medium text-gray-800">{child.name}</p>
+                      <p className="font-medium text-gray-800">
+                        {child.firstName} {child.lastName}
+                      </p>
                       <p className="text-sm text-gray-600">
                         Due: {child.dueDate}
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
+                  {/* <div className="text-right">
                     <p className="font-semibold text-green-600">
-                      ETB {child.amountDue.toFixed(2)}
+                       {child.amountDue?.toFixed(2)}
                     </p>
                     {child.paid && (
                       <p className="text-sm text-gray-500">Paid</p>
                     )}
-                  </div>
+                  </div> */}
                 </div>
               ))}
             </div>
