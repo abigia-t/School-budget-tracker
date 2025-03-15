@@ -5,9 +5,9 @@ import connectDB from "./configs/db.js";
 import actorRoute from "./routes/actorRoute.js"; // Import actor routes
 import studentRoute from "./routes/studentRoute.js"; // Import student routes
 import paymentRoute from "./routes/paymentRoute.js"; // Import payment routes
-import notificationRoutes from "./routes/notificationRoutes.js";
+import contactMessageRoutes from "./routes/contactMessageRoutes.js";
+import adminMessageRoutes from "./routes/adminMessageRoutes.js";
 
-// Load environment variables
 dotenv.config();
 
 // Initialize Express app
@@ -24,8 +24,8 @@ connectDB();
 app.use("/api/actors", actorRoute);   // Actor related routes
 app.use("/api/students", studentRoute); // Student related routes
 app.use("/api/payments", paymentRoute); // Payment related routes
-app.use("/api/notifications", notificationRoutes);
-
+app.use("/api/contact-messages", contactMessageRoutes);
+app.use("/api/admin-messages", adminMessageRoutes)
 // **Default Route**
 app.get("/", (req, res) => {
   res.send("🚀 API is running...");

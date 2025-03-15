@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
+import {toast} from "react-toastify"
 import Modal from "../components/Modal";
 import Title from "../components/Title";
 import { assets, features } from "../assets/assets";
@@ -9,6 +10,7 @@ import NavBar from "../components/NavBar";
 
 const Home = () => {
   const [isContactModalOpen, setContactModalOpen] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -17,34 +19,41 @@ const Home = () => {
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Name is required"),
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
+      email: Yup.string().email("Invalid email address").required("Email is required"),
       message: Yup.string().required("Message is required"),
     }),
-    onSubmit: (values, { resetForm }) => {
-      toast.success("Message submitted successfully!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-        autoClose: 3000,
-      });
-      setTimeout(() => {
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.post("http://localhost:5000/api/contact-messages/send", {
+          recipientType: "specific_actor", // Ensure the backend supports this
+          recipientDetail: "systemadmin@actor.com",
+          userName: values.name,
+          userEmail: values.email,
+          userMessage: values.message, // Match with backend
+        });
+    
         setContactModalOpen(false);
-        resetForm();
-      }, 3000); // Close modal after toast duration
-    },
+        toast("Message sent successfully!");
+      } catch (error) {
+        console.error("Error sending message:", error);
+        alert("Failed to send the message.");
+      }
+    }
   });
 
   return (
     <div className="min-h-screen w-full flex flex-col">
-      {/* Toast Container */}
-      <ToastContainer />
       {/* Navigation Bar */}
+      {/* Assuming you have a NavBar component */}
       <NavBar setContactModalOpen={setContactModalOpen} />
+
       {/* Contact Modal */}
       <Modal
         isOpen={isContactModalOpen}
         title="Contact Us"
         onClose={() => setContactModalOpen(false)}
+        onSubmit={formik.handleSubmit} // Pass formik handleSubmit
+        submitButtonText="Send Message" // Optional dynamic button text
       >
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-4">

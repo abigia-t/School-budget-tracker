@@ -9,56 +9,71 @@ const SystemAdminDashboard = () => {
   const [notifications, setNotifications] = useState([]);
   const [messages, setMessages] = useState([]); // ✅ Added missing messages state
 
-  useEffect(() => {
-    fetchNotifications();
-    fetchMessages(); // ✅ Fetch user messages
-  }, []);
-
-  // Fetch notifications
-  const fetchNotifications = async () => {
-    try {
-      const res = await axios.get("http://localhost:5000/api/notifications");
-      setNotifications(Array.isArray(res.data) ? res.data : []);
-    } catch (error) {
-      console.error("Fetch Notifications Error:", error);
-      toast.error("Failed to fetch notifications.");
-      setNotifications([]);
-    }
-  };
-
-  // ✅ Fetch user messages
-  const fetchMessages = async () => {
-    try {
-      const res = await axios.get("http://localhost:5000/api/messages");
-      setMessages(Array.isArray(res.data) ? res.data : []);
-    } catch (error) {
-      console.error("Fetch Messages Error:", error);
-      toast.error("Failed to fetch user messages.");
-      setMessages([]);
-    }
-  };
-
-  // Send notification
   const handleSendNotification = async () => {
     if (!message.trim()) {
-      toast.error("Message cannot be empty.");
-      return;
+      return toast.error("Message cannot be empty!");
     }
-
+  
     try {
-      const res = await axios.post("http://localhost:5000/api/notifications/send", {
+      const response = await axios.post("http://localhost:5000/api/admin-messages/send", {
         recipientType,
-        recipientDetail: recipientDetail.trim() || null,
+        recipientDetail,
         message,
       });
-
-      toast.success(res.data.message);
-      setMessage("");
-      setRecipientDetail("");
-      fetchNotifications();
+  
+      toast.success(response.data.message);
+      setMessage(""); // Clear input after sending
+      fetchNotifications(); // Refresh notifications
     } catch (error) {
-      console.error("Send Notification Error:", error);
-      toast.error("Failed to send notification.");
+      toast.error(error.response?.data?.message || "Failed to send notification.");
+    }
+  };
+
+  // Fetch notifications (useEffect hook to load on mount)
+const fetchNotifications = async () => {
+  try {
+    const response = await axios.get("http://localhost:5000/api/admin-messages/all");
+    setNotifications(response.data);
+  } catch (error) {
+    toast.error("Failed to load notifications.");
+  }
+};
+
+  const handleDeleteNotification = async (messageId) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/admin-messages/${messageId}`);
+      toast.success("Notification deleted!");
+      fetchNotifications(); // Refresh notifications
+    } catch (error) {
+      toast.error("Failed to delete notification.");
+    }
+  };
+   // Fetch messages from user backend
+   useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/contact-messages");
+        setMessages(response.data);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+        toast.error("Failed to fetch messages.");
+      }
+    };
+
+    fetchMessages();
+  }, []);
+
+  // Delete a message
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this message?")) return;
+
+    try {
+      await axios.delete(`http://localhost:5000/api/contact-messages/${id}`);
+      setMessages(messages.filter((msg) => msg._id !== id));
+      toast.success("Message deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting message:", error);
+      toast.error("Failed to delete message.");
     }
   };
 
@@ -139,59 +154,74 @@ const SystemAdminDashboard = () => {
             <h3 className="text-lg font-semibold">Notification History</h3>
             <div className="border rounded p-4 mt-2">
               {notifications.length > 0 ? (
-                notifications.map((notification, index) => (
-                  <div key={index} className="border-b py-2">
-                    <p>
-                      <strong>Type:</strong> {notification.recipientType}
-                    </p>
-                    {notification.recipientDetail && (
-                      <p>
-                        <strong>Recipient:</strong> {notification.recipientDetail}
-                      </p>
-                    )}
-                    <p>
-                      <strong>Message:</strong> {notification.message}
-                    </p>
-                    <p className="text-gray-500 text-sm">
-                      Sent by {notification.sentBy?.email || "Unknown"} -{" "}
-                      {notification.createdAt ? new Date(notification.createdAt).toLocaleString() : "N/A"}
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <p>No notifications found.</p>
-              )}
+  notifications.map((notification, index) => (
+    <div key={index} className="border-b py-2 flex justify-between items-center">
+      <div>
+        <p>
+          <strong>Type:</strong> {notification.recipientType}
+        </p>
+        {notification.recipientDetail && (
+          <p>
+            <strong>Recipient:</strong> {notification.recipientDetail}
+          </p>
+        )}
+        <p>
+          <strong>Message:</strong> {notification.message}
+        </p>
+        <p className="text-gray-500 text-sm">
+          Sent by {notification.sentBy?.email || "Unknown"} -{" "}
+          {notification.createdAt ? new Date(notification.createdAt).toLocaleString() : "N/A"}
+        </p>
+      </div>
+      <button
+        onClick={() => handleDeleteNotification(notification._id)}
+        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+      >
+        Delete
+      </button>
+    </div>
+  ))
+) : (
+  <p>No notifications found.</p>
+)}
+
             </div>
           </div>
         </div>
 
         {/* User Messages Section */}
         <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">User Messages</h2>
+      <h2 className="text-2xl font-semibold mb-4 text-gray-800">User Messages</h2>
 
-          <div className="space-y-4">
-            {messages.length > 0 ? (
-              messages.map((msg, index) => (
-                <div key={index} className="bg-white p-4 rounded-lg shadow">
-                  <p className="text-gray-600">
-                    <span className="font-semibold text-gray-800">Name:</span> {msg.name}
-                  </p>
-                  <p className="text-gray-600">
-                    <span className="font-semibold text-gray-800">Email:</span> {msg.email}
-                  </p>
-                  <p className="text-gray-600">
-                    <span className="font-semibold text-gray-800">Message:</span> {msg.text}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-2">
-                    Sent on: {msg.createdAt ? new Date(msg.createdAt).toLocaleString() : "N/A"}
-                  </p>
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-500">No messages received yet.</p>
-            )}
-          </div>
-        </div>
+      <div className="space-y-4">
+        {messages.length > 0 ? (
+          messages.map((msg) => (
+            <div key={msg._id} className="bg-white p-4 rounded-lg shadow">
+              <p className="text-gray-600">
+                <span className="font-semibold text-gray-800">Name:</span> {msg.userName}
+              </p>
+              <p className="text-gray-600">
+                <span className="font-semibold text-gray-800">Email:</span> {msg.userEmail}
+              </p>
+              <p className="text-gray-600">
+                <span className="font-semibold text-gray-800">Message:</span> {msg.userMessage}
+              </p>
+              <p className="text-xs text-gray-500 mt-2">
+                Sent on: {new Date(msg.createdAt).toLocaleString()}
+              </p>
+              <button
+                onClick={() => handleDelete(msg._id)}
+                className="mt-2 bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
+              >
+                Delete
+              </button>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500">No messages received yet.</p>
+        )}
+      </div>
+    </div>
       </div>
     </div>
   );
