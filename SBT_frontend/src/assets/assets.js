@@ -1,4 +1,5 @@
-import edu_logo from "./edu_logo.jpg";
+
+import Logo from "./Logo.png";
 import profile_image from "./profile_image.png";
 import getty_1 from "./getty_1.jpg";
 import getty_2 from "./getty_2.jpg";
@@ -11,7 +12,7 @@ import feature_icon2 from "./feature_icon2.jpg";
 import feature_icon3 from "./feature_icon3.jpg";
 
 export const assets = {
-  edu_logo,
+  Logo,
   profile_image,
   getty_1,
   getty_2,
