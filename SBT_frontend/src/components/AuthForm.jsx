@@ -1,173 +1,81 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import { StoreContext } from "../context/StoreContext";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
+import RoleRoute from "../config/RoleRoute";
 
-const AuthForm = ({ onLoginSuccess }) => {
-  const [isForgotPassword, setIsForgotPassword] = useState(false);
+const AuthForm = () => {
+  const { login } = useContext(StoreContext);
+  const navigate = useNavigate();
 
-  // Validation schema for Login
+  // Validation Schema
   const loginValidationSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string()
-      .required("Password is required")
-      .min(8, "Password must be at least 8 characters"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    password: Yup.string().min(8, "Password must be at least 8 characters").required("Password is required"),
   });
 
-  // Validation schema for Forgot Password
-  const forgotPasswordValidationSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string()
-      .required("Password is required")
-      .min(8, "Password must be at least 8 characters"),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password"), null], "Passwords must match")
-      .required("Confirm Password is required"),
-  });
+  const initialValues = { email: "", password: "" };
 
-  // Initial form values
-  const initialValues = {
-    email: "",
-    password: "",
-    confirmPassword: "",
-  };
-
-  // Submit handler
-  const onSubmit = (values, { resetForm }) => {
-    if (isForgotPassword) {
-      // Simulate password reset process
-      alert(`Password reset successfully for: ${values.email}`);
-      setIsForgotPassword(false); // Redirect back to login form
-    } else {
-      // Simulate login process
-      alert(`Logged in as: ${values.email}`);
-      if (onLoginSuccess) onLoginSuccess(); // Callback for successful login
+  // Handle Login Submission
+  const onSubmit = async (values, { resetForm, setFieldError }) => {
+    try {
+      const endpoint = values.email.includes("@actor")
+        ? "http://localhost:5000/api/actors/login"
+        : "http://localhost:5000/api/students/login";
+  
+      const { data } = await axios.post(endpoint, values);
+      const user = data.actor || data.student;
+  
+      if (!user) {
+        setFieldError("email", "Invalid credentials. Please try again.");
+        return;
+      }
+  
+      login(user); // Store user in context
+      const rolePath = RoleRoute[user.role] || "/"; // Get role-based route
+  
+      toast.success("Login successful!");
+      navigate(rolePath); // Redirect user
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "Login failed. Please try again.";
+      setFieldError("email", errorMessage);
+      toast.error(errorMessage);
     }
-    resetForm();
   };
 
   return (
-    <div className=" min-h-screen flex justify-center items-center bg-white">
-      <div className="bg-white shadow-md rounded-lg p-8 max-w-md w-full">
-        <h1 className="text-2xl text-blue-600 font-bold text-center mb-4">
-          {isForgotPassword ? "Reset Password" : "Sign In"}
-        </h1>
+    <div className="min-h-screen flex justify-center items-center bg-gray-200 p-4">
+      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-sm">
+        <h1 className="text-2xl text-blue-600 font-bold text-center mb-6">Sign In</h1>
 
-        <Formik
-          initialValues={initialValues}
-          validationSchema={
-            isForgotPassword
-              ? forgotPasswordValidationSchema
-              : loginValidationSchema
-          }
-          onSubmit={onSubmit}
-        >
+        <Formik initialValues={initialValues} validationSchema={loginValidationSchema} onSubmit={onSubmit}>
           {({ isSubmitting }) => (
             <Form className="space-y-4">
-              {/* Email Field */}
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-blue-500 text-sm font-medium"
-                >
+                <label htmlFor="email" className="block text-gray-600 text-sm font-medium">
                   Email Address
                 </label>
-                <Field
-                  type="email"
-                  name="email"
-                  id="email"
-                  className="w-full border rounded-md p-2 mt-1 text-sm"
-                />
-                <ErrorMessage
-                  name="email"
-                  component="div"
-                  className="text-red-500 text-sm"
-                />
+                <Field type="email" name="email" id="email" className="w-full border rounded-md p-3 mt-1 text-sm" />
+                <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
               </div>
 
-              {/* Password Field */}
               <div>
-                <label
-                  htmlFor="password"
-                  className="block text-blue-500 text-sm font-medium"
-                >
-                  {isForgotPassword ? "New Password" : "Password"}
+                <label htmlFor="password" className="block text-gray-600 text-sm font-medium">
+                  Password
                 </label>
-                <Field
-                  type="password"
-                  name="password"
-                  id="password"
-                  className="w-full border rounded-md p-2 mt-1 text-sm"
-                />
-                <ErrorMessage
-                  name="password"
-                  component="div"
-                  className="text-red-500 text-sm"
-                />
+                <Field type="password" name="password" id="password" className="w-full border rounded-md p-3 mt-1 text-sm" />
+                <ErrorMessage name="password" component="div" className="text-red-500 text-sm mt-1" />
               </div>
 
-              {/* Confirm Password Field (Only visible in Forgot Password mode) */}
-              {isForgotPassword && (
-                <div>
-                  <label
-                    htmlFor="confirmPassword"
-                    className="block text-blue-500 text-sm font-medium"
-                  >
-                    Confirm Password
-                  </label>
-                  <Field
-                    type="password"
-                    name="confirmPassword"
-                    id="confirmPassword"
-                    className="w-full border rounded-md p-2 mt-1 text-sm"
-                  />
-                  <ErrorMessage
-                    name="confirmPassword"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-              )}
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-blue-600 text-white p-2 rounded-md font-semibold hover:bg-blue-700 transition"
-              >
-                {isForgotPassword ? "Reset Password" : "Sign In"}
+              <button type="submit" disabled={isSubmitting} className="w-full bg-blue-600 text-white p-2 rounded-md font-semibold hover:bg-blue-700 transition">
+                {isSubmitting ? "Logging in..." : "Login"}
               </button>
             </Form>
           )}
         </Formik>
-
-        {/* Footer Links */}
-        <div className="mt-4 text-sm text-center">
-          {isForgotPassword ? (
-            <p>
-              Remembered your password?{" "}
-              <button
-                onClick={() => setIsForgotPassword(false)}
-                className="text-blue-600 text-xl hover:underline"
-              >
-                Sign In
-              </button>
-            </p>
-          ) : (
-            <p>
-              Forgot your password?{" "}
-              <button
-                onClick={() => setIsForgotPassword(true)}
-                className="text-blue-600 text-xl hover:underline"
-              >
-                Reset Password
-              </button>
-            </p>
-          )}
-        </div>
       </div>
     </div>
   );

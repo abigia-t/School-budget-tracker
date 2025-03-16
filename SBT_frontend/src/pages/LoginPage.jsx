@@ -10,9 +10,9 @@ const LoginPage = () => {
   };
   return (
     <div>
-      <NavBar />
-      <div className="flex justify-center  items-center py-6 pt-10">
-        <AuthForm onLoginSuccess={handleLogin} />
+     <NavBar/>
+      <div className="bg-gray-200 flex justify-center items-center py-6 pt-10">
+        <AuthForm />
       </div>
     </div>
   );

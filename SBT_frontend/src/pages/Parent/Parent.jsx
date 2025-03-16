@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom";
 import NavBar from "../../components/parent/Navbar";
 
 const Parent = () => {
-  // return <ParentLayout />;
   return (
     <>
       <NavBar />
