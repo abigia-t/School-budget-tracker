@@ -6,24 +6,6 @@ dotenv.config();
 
 const router = express.Router();
 
-// Static student data (move to a database in production)
-const students = [
-  {
-    id: 1,
-    name: "Emma",
-    amountDue: 50.0,
-    dueDate: "2025-03-10",
-    paid: false,
-  },
-  {
-    id: 2,
-    name: "Liam",
-    amountDue: 50.0,
-    dueDate: "2025-03-15",
-    paid: false,
-  },
-];
-
 // Chapa API configuration
 const CHAPA_SECRET_KEY = process.env.CHAPA_SECRET_KEY;
 const CHAPA_API_URL = "https://api.chapa.co/v1/transaction";

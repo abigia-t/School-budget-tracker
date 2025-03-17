@@ -54,9 +54,6 @@ const NavBar = ({ onLogout }) => {
             onClick={onLogout}
             className="flex items-center gap-2 bg-red-300 text-blue-950 px-4 py-2 rounded-full shadow-md hover:bg-gray-200 transition"
           >
-            {/* <span className="rotate-180">
-            <FiLogOut />
-          </span> */}
             Log Out
           </button>
 

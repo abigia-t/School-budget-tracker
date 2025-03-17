@@ -72,7 +72,7 @@ const ManageStudents = () => {
       try {
         const res = await axios.post(
           "http://localhost:5000/api/students/register",
-          { ...newStudent, grade: "ke2" }
+          { ...newStudent }
         );
         console.log("Server response:", res.data); // Check backend response
         setStudents((prev) => [...prev, res.data]);

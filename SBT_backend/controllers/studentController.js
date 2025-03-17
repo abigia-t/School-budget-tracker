@@ -136,7 +136,9 @@ export const getAllStudents = async (req, res) => {
 export const getStudentById = async (req, res) => {
   try {
     const { id } = req.params;
-    const student = await Student.findById(id).select("-password");
+    const student = await Student.findOne({ studentId: id }).select(
+      "-password"
+    );
     if (!student)
       return res
         .status(404)

@@ -1,28 +1,35 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
+
 const ParentDashboard = () => {
-  // Sample data for a parent's dashboard
-  const parentData = {
-    children: [
-      { id: 1, name: "Emma", age: 8 },
-      { id: 2, name: "Liam", age: 6 },
-    ],
-    upcomingPayments: [
-      { id: 1, childName: "Emma", dueDate: "2025-03-10", amount: 50.0 },
-      { id: 2, childName: "Liam", dueDate: "2025-03-15", amount: 50.0 },
-    ],
-    notifications: [
-      { id: 1, message: "Emma's payment due soon", date: "2025-03-02" },
-      { id: 2, message: "Liam's school event tomorrow", date: "2025-03-01" },
-    ],
-  };
+  const [parentData, setParentData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchParentData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/parent"); // Update with your actual API URL
+        setParentData(response.data);
+      } catch (error) {
+        setError("Failed to fetch parent data.", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchParentData();
+  }, []);
+
+  if (loading) return <p className="text-center text-gray-700">Loading...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
     <div className="max-w-5xl mx-auto p-6 bg-gray-100 min-h-screen">
-      {/* Header */}
       <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
         Parent Dashboard
       </h1>
 
-      {/* Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* My Children Card */}
         <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
@@ -66,13 +73,13 @@ const ParentDashboard = () => {
                   </p>
                 </div>
                 <p className="font-semibold text-green-600">
-                  ${payment.amount.toFixed(2)}
+                  ETB {payment.amount.toFixed(2)}
                 </p>
               </div>
             ))}
           </div>
           <p className="mt-4 text-sm text-gray-500">
-            Total due: $
+            Total due: ETB{" "}
             {parentData.upcomingPayments
               .reduce((sum, p) => sum + p.amount, 0)
               .toFixed(2)}

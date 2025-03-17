@@ -1,3 +1,4 @@
+// ParentPayment.jsx
 import { useState } from "react";
 import axios from "axios";
 
@@ -9,7 +10,6 @@ const ParentPayment = () => {
   const [lateFee, setLateFee] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
 
-  // Function to determine the base tuition fee based on grade
   const calculatePaymentAmount = (grade) => {
     if (grade === "KG1") return 500;
     if (["KG2", "KG3"].includes(grade)) return 350;
@@ -22,7 +22,6 @@ const ParentPayment = () => {
     return 0;
   };
 
-  // Function to fetch student details
   const handleFetchStudent = async (e) => {
     e.preventDefault();
     const id = e.target.id.value.trim();
@@ -39,20 +38,70 @@ const ParentPayment = () => {
       );
       const student = response.data;
 
-      // Calculate base fee
       const baseFee = calculatePaymentAmount(student.grade);
-
-      // Calculate late fee (if past 10th day of the month)
       const today = new Date().getDate();
       const penalty = today > 10 ? 50 : 0;
+
+      // Log the fetched student data to check its structure
+      console.log("Fetched student data:", student);
 
       setStudentData(student);
       setPaymentAmount(baseFee);
       setLateFee(penalty);
       setTotalAmount(baseFee + penalty);
     } catch (error) {
-      setError("Student not found.");
+      setError(error.response?.data?.error || "Student not found.");
       console.error("Fetch error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePayment = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      // Ensure studentData exists and has all required fields
+      if (!studentData) {
+        throw new Error("No student data available");
+      }
+
+      const paymentData = {
+        studentId: studentData._id || studentData.id, // Handle both _id and id
+        amount: totalAmount,
+        email: studentData.email,
+        firstName: studentData.firstName,
+        lastName: studentData.lastName,
+      };
+
+      // Log the payment data to verify all fields
+      console.log("Payment data being sent:", paymentData);
+
+      // Validate all fields before sending
+      if (
+        !paymentData.studentId ||
+        !paymentData.amount ||
+        !paymentData.email ||
+        !paymentData.firstName ||
+        !paymentData.lastName
+      ) {
+        throw new Error("Missing required payment fields");
+      }
+
+      const response = await axios.post(
+        `http://localhost:5000/api/payments/initialize`,
+        paymentData
+      );
+
+      window.location.href = response.data.checkoutUrl;
+    } catch (error) {
+      const errorMsg =
+        error.response?.data?.details ||
+        error.response?.data?.error ||
+        error.message ||
+        "Payment initialization failed";
+      setError(errorMsg);
+      console.error("Payment error:", error);
     } finally {
       setLoading(false);
     }
@@ -67,7 +116,6 @@ const ParentPayment = () => {
       {loading && <p className="text-center text-gray-600">Loading...</p>}
       {error && <p className="text-center text-red-500">{error}</p>}
 
-      {/* Student Search Form */}
       {!studentData && (
         <form
           onSubmit={handleFetchStudent}
@@ -85,13 +133,13 @@ const ParentPayment = () => {
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            disabled={loading}
           >
-            Submit
+            {loading ? "Fetching..." : "Submit"}
           </button>
         </form>
       )}
 
-      {/* Student Details & Payment Form */}
       {studentData && (
         <div className="bg-white rounded-xl shadow-lg p-6 mt-6">
           <h2 className="text-xl font-semibold text-gray-700 mb-4">
@@ -111,12 +159,10 @@ const ParentPayment = () => {
             <strong>Grade:</strong> {studentData.grade}
           </p>
 
-          {/* Payment Form */}
           <div className="mt-6 bg-gray-100 p-4 rounded-lg">
             <h3 className="text-lg font-semibold text-gray-700 mb-3">
               Payment Details
             </h3>
-
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="font-medium text-gray-700">
@@ -140,10 +186,11 @@ const ParentPayment = () => {
             </div>
 
             <button
-              onClick={() => alert("payment beggins")}
-              className="w-full mt-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition duration-300"
+              onClick={handlePayment}
+              disabled={loading}
+              className="w-full mt-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition duration-300 disabled:bg-gray-400"
             >
-              Proceed to Payment
+              {loading ? "Processing..." : "Proceed to Payment"}
             </button>
           </div>
         </div>
