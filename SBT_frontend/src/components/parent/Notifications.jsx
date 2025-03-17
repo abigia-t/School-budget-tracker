@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
 const Notifications = () => {
   // Sample notification data (replace with real data from props or API)
@@ -26,17 +26,13 @@ const Notifications = () => {
   // Mark notification as read
   const markAsRead = (id) => {
     setNotifications((prev) =>
-      prev.map((notif) =>
-        notif.id === id ? { ...notif, read: true } : notif
-      )
+      prev.map((notif) => (notif.id === id ? { ...notif, read: true } : notif))
     );
   };
 
   // Mark all notifications as read
   const markAllAsRead = () => {
-    setNotifications((prev) =>
-      prev.map((notif) => ({ ...notif, read: true }))
-    );
+    setNotifications((prev) => prev.map((notif) => ({ ...notif, read: true })));
   };
 
   // Clear all notifications
@@ -56,7 +52,9 @@ const Notifications = () => {
       {/* Notifications Card */}
       <div className="bg-white rounded-xl shadow-lg p-6">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-gray-700">Your Notifications</h2>
+          <h2 className="text-xl font-semibold text-gray-700">
+            Your Notifications
+          </h2>
           {notifications.length > 0 && (
             <div className="space-x-4">
               <button
@@ -77,20 +75,24 @@ const Notifications = () => {
         </div>
 
         {notifications.length === 0 ? (
-          <p className="text-gray-600 text-center py-4">No notifications available.</p>
+          <p className="text-gray-600 text-center py-4">
+            No notifications available.
+          </p>
         ) : (
           <div className="space-y-4">
             {notifications.map((notification) => (
               <div
                 key={notification.id}
                 className={`flex justify-between items-center p-4 rounded-lg ${
-                  notification.read ? 'bg-gray-50' : 'bg-blue-50'
+                  notification.read ? "bg-gray-50" : "bg-blue-50"
                 } hover:bg-gray-100 transition-colors`}
               >
                 <div className="flex-1">
                   <p
                     className={`${
-                      notification.read ? 'text-gray-600' : 'text-gray-800 font-medium'
+                      notification.read
+                        ? "text-gray-600"
+                        : "text-gray-800 font-medium"
                     }`}
                   >
                     {notification.message}

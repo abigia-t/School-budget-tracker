@@ -16,7 +16,7 @@ const NavBar = ({ onLogout }) => {
     <>
       <nav className="bg-blue-950 flex justify-between items-center text-white fixed left-0 top-0 right-0 py-1 px-6 shadow-md z-50">
         <div className="flex  items-center gap-3 cursor-pointer">
-          <Link to={""} className="flex items-center gap-1">
+          <Link to={"/parent-page"} className="flex items-center gap-1">
             <img
               src={assets.edu_logo}
               alt="Yajeb Academy Logo"
@@ -30,18 +30,18 @@ const NavBar = ({ onLogout }) => {
 
         {/* Desktop Navigation */}
         <ul className="hidden md:flex gap-10 text-lg font-semibold">
-          <Link to={"dashboard"}>
+          <Link to={"/parent/dashboard"}>
             <li className="hover:text-yellow-300 cursor-pointer">Dashboard</li>
           </Link>
-          <Link to={"payment"}>
+          <Link to={"/parent/payment"}>
             <li className="hover:text-yellow-300 cursor-pointer">Payment</li>
           </Link>
-          <Link to="pyament-history">
+          <Link to="/parent/pyament-history">
             <li className="hover:text-yellow-300 cursor-pointer">
               Payment History
             </li>
           </Link>
-          <Link to="notfication">
+          <Link to="/parent/notification">
             <li className="hover:text-yellow-300 cursor-pointer">
               Notification
             </li>
@@ -61,7 +61,7 @@ const NavBar = ({ onLogout }) => {
           </button>
 
           <Link
-            to="profile"
+            to="/parent/profile"
             className="w-12 h-12 bg-gray-200  text-blue-500 hover:text-blue-600 flex items-center justify-center rounded-3xl"
           >
             <FaUser size={32} className=" cursor-pointer" />
@@ -79,27 +79,27 @@ const NavBar = ({ onLogout }) => {
       {/* Mobile Navigation */}
       {isOpen && (
         <ul className="flex flex-col fixed top-10 w-full bg-blue-900/85   gap-4 text-lg font-semibold px-6 py-8">
-          <Link to={"dashboard"}>
+          <Link to={"/parent/dashboard"}>
             <li onClick={toggleMenu} className="text-gray-300 cursor-pointer ">
               Dashboard
             </li>
           </Link>
-          <Link to={"profile"}>
+          <Link to={"/parent/profile"}>
             <li onClick={toggleMenu} className="text-gray-300 cursor-pointer ">
               Profile
             </li>
           </Link>
-          <Link to={"payment"}>
+          <Link to={"/parent/payment"}>
             <li onClick={toggleMenu} className="text-gray-300 cursor-pointer ">
               Payment
             </li>
           </Link>
-          <Link to="pyament-history">
+          <Link to="/parent/pyament-history">
             <li onClick={toggleMenu} className="text-gray-300 cursor-pointer ">
               Payment History
             </li>
           </Link>
-          <Link to="notfication">
+          <Link to="/parent/notfication">
             <li onClick={toggleMenu} className="text-gray-300 cursor-pointer ">
               Notfication
             </li>

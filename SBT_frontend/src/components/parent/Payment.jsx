@@ -1,153 +1,151 @@
-// frontend/src/components/ParentPayment.jsx
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 const ParentPayment = () => {
-  const [paymentData, setPaymentData] = useState({ children: [] });
-  const [selectedPayments, setSelectedPayments] = useState([]);
-  const [submissionStatus, setSubmissionStatus] = useState(null);
+  const [studentData, setStudentData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [paymentAmount, setPaymentAmount] = useState(0);
+  const [lateFee, setLateFee] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
 
-  useEffect(() => {
-    const fetchPayments = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/api/payments", {
-          timeout: 5000, // Add a timeout to catch slow responses
-        });
-        console.log("Response data:", response.data); // Log successful response
-        setPaymentData(response.data);
-      } catch (error) {
-        console.error("Error fetching payments:", error.message);
-        if (error.response) {
-          console.error("Response status:", error.response.status);
-          console.error("Response data:", error.response.data);
-        } else if (error.request) {
-          console.error("No response received:", error.request);
-        } else {
-          console.error("Error details:", error);
-        }
-      }
-    };
-    fetchPayments();
-  }, []);
-
-  const handleCheckboxChange = (id) => {
-    setSelectedPayments((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
+  // Function to determine the base tuition fee based on grade
+  const calculatePaymentAmount = (grade) => {
+    if (grade === "KG1") return 500;
+    if (["KG2", "KG3"].includes(grade)) return 350;
+    if (
+      ["Grade1", "Grade2", "Grade3", "Grade4", "Grade5", "Grade6"].includes(
+        grade
+      )
+    )
+      return 300;
+    return 0;
   };
 
-  const handlePaymentSubmit = async (e) => {
+  // Function to fetch student details
+  const handleFetchStudent = async (e) => {
     e.preventDefault();
-    if (selectedPayments.length === 0) {
-      setSubmissionStatus("Please select at least one payment.");
+    const id = e.target.id.value.trim();
+    if (!id) {
+      setError("Please enter a valid Student ID.");
       return;
     }
-
-    setSubmissionStatus("Initializing payment with Chapa...");
+    setLoading(true);
+    setError(null);
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/payments/initialize",
-        {
-          selectedPayments,
-          parentEmail: "parent@example.com", // Replace with dynamic data
-          parentName: "Parent Name",
-          parentPhone: "0912345678",
-        }
+      const response = await axios.get(
+        `http://localhost:5000/api/students/${id}`
       );
+      const student = response.data;
 
-      if (response.data.status === "success") {
-        setSubmissionStatus("Redirecting to Chapa payment...");
-        window.location.href = response.data.checkout_url; // Redirect to Chapa checkout
-      } else {
-        setSubmissionStatus("Payment initialization failed.");
-      }
+      // Calculate base fee
+      const baseFee = calculatePaymentAmount(student.grade);
+
+      // Calculate late fee (if past 10th day of the month)
+      const today = new Date().getDate();
+      const penalty = today > 10 ? 50 : 0;
+
+      setStudentData(student);
+      setPaymentAmount(baseFee);
+      setLateFee(penalty);
+      setTotalAmount(baseFee + penalty);
     } catch (error) {
-      setSubmissionStatus("An error occurred during payment processing.");
-      console.error(error);
+      setError("Student not found.");
+      console.error("Fetch error:", error);
+    } finally {
+      setLoading(false);
     }
   };
-
-  const totalAmount = paymentData.children
-    .filter((child) => selectedPayments.includes(child.id))
-    .reduce((sum, child) => sum + child.amountDue, 0);
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-        Make a Payment with Chapa
+      <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">
+        Parent Payment Portal
       </h1>
 
-      <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">
-          Select Payments
-        </h2>
-        <div className="space-y-4">
-          {paymentData.children.map((child) => (
-            <div
-              key={child.id}
-              className={`flex justify-between items-center p-4 rounded-lg ${
-                child.paid ? "bg-gray-200" : "bg-green-50"
-              }`}
-            >
-              <div className="flex items-center">
-                {!child.paid && (
-                  <input
-                    type="checkbox"
-                    checked={selectedPayments.includes(child.id)}
-                    onChange={() => handleCheckboxChange(child.id)}
-                    className="mr-3 h-5 w-5 text-green-600"
-                  />
-                )}
-                <div>
-                  <p className="font-medium text-gray-800">{child.name}</p>
-                  <p className="text-sm text-gray-600">Due: {child.dueDate}</p>
-                </div>
+      {loading && <p className="text-center text-gray-600">Loading...</p>}
+      {error && <p className="text-center text-red-500">{error}</p>}
+
+      {/* Student Search Form */}
+      {!studentData && (
+        <form
+          onSubmit={handleFetchStudent}
+          className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6 space-y-4"
+        >
+          <label htmlFor="id" className="block text-gray-700 font-medium">
+            Enter Student ID
+          </label>
+          <input
+            name="id"
+            type="text"
+            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="e.g., 1"
+          />
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+          >
+            Submit
+          </button>
+        </form>
+      )}
+
+      {/* Student Details & Payment Form */}
+      {studentData && (
+        <div className="bg-white rounded-xl shadow-lg p-6 mt-6">
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">
+            Student Details
+          </h2>
+          <p className="text-gray-800">
+            <strong>Name:</strong> {studentData.firstName}{" "}
+            {studentData.middleName} {studentData.lastName}
+          </p>
+          <p className="text-gray-800">
+            <strong>Email:</strong> {studentData.email}
+          </p>
+          <p className="text-gray-800">
+            <strong>Phone:</strong> {studentData.phoneNumber}
+          </p>
+          <p className="text-gray-800">
+            <strong>Grade:</strong> {studentData.grade}
+          </p>
+
+          {/* Payment Form */}
+          <div className="mt-6 bg-gray-100 p-4 rounded-lg">
+            <h3 className="text-lg font-semibold text-gray-700 mb-3">
+              Payment Details
+            </h3>
+
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-700">
+                  Base Tuition Fee:
+                </span>
+                <span className="font-semibold">ETB {paymentAmount}</span>
               </div>
-              <div className="text-right">
-                <p className="font-semibold text-green-600">
-                  ETB {child.amountDue.toFixed(2)}
-                </p>
-                {child.paid && <p className="text-sm text-gray-500">Paid</p>}
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-700">
+                  Late Fee (if applicable):
+                </span>
+                <span className="font-semibold text-red-500">
+                  ETB {lateFee}
+                </span>
+              </div>
+              <hr className="border-gray-300" />
+              <div className="flex justify-between text-lg font-semibold">
+                <span>Total Amount:</span>
+                <span>ETB {totalAmount}</span>
               </div>
             </div>
-          ))}
-        </div>
-        {selectedPayments.length > 0 && (
-          <p className="mt-4 text-lg font-semibold text-gray-800">
-            Total: ETB {totalAmount.toFixed(2)}
-          </p>
-        )}
-      </div>
 
-      {!paymentData.children.every((child) => child.paid) && (
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">
-            Pay with Chapa
-          </h2>
-          <form onSubmit={handlePaymentSubmit} className="space-y-6">
-            <p className="text-gray-600">
-              Click Pay Now to proceed with payment via Chapa secure gateway.
-            </p>
             <button
-              type="submit"
-              className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400"
-              disabled={selectedPayments.length === 0}
+              onClick={() => alert("payment beggins")}
+              className="w-full mt-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition duration-300"
             >
-              Pay Now
+              Proceed to Payment
             </button>
-          </form>
-          {submissionStatus && (
-            <p
-              className={`mt-4 text-center ${
-                submissionStatus.includes("successful")
-                  ? "text-green-600"
-                  : "text-red-600"
-              }`}
-            >
-              {submissionStatus}
-            </p>
-          )}
+          </div>
         </div>
       )}
     </div>

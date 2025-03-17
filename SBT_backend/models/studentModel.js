@@ -6,6 +6,7 @@ const StudentSchema = new mongoose.Schema(
     firstName: { type: String, required: true, trim: true },
     middleName: { type: String, required: true, trim: true }, 
     lastName: { type: String, required: true, trim: true },  
+    grade: { type: String, required: true, trim: true },  
     email: { type: String, required: true, unique: true,index: true, lowercase: true,trim: true },
     password: { type: String, required: true, minlength: 8 },
     phoneNumber: { type: String, required: true,match: [/^\d{10}$/, "Phone number must be 10 digits"] },

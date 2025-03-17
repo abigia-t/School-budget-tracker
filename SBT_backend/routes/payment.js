@@ -1,5 +1,8 @@
-const express = require("express");
-const axios = require("axios");
+import express from "express";
+import axios from "axios";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const router = express.Router();
 
@@ -27,7 +30,7 @@ const CHAPA_API_URL = "https://api.chapa.co/v1/transaction";
 
 // Get student payment data
 router.get("/", (req, res) => {
-    console.log("Payments endpoint hit");
+  console.log("Payments endpoint hit");
   res.json({ children: students });
 });
 
@@ -49,8 +52,8 @@ router.post("/initialize", async (req, res) => {
     amount: totalAmount.toString(),
     currency: "ETB",
     email: parentEmail || "parent@example.com",
-    first_name: parentName.split(" ")[0] || "Parent",
-    last_name: parentName.split(" ")[1] || "Name",
+    first_name: parentName?.split(" ")[0] || "Parent",
+    last_name: parentName?.split(" ")[1] || "Name",
     phone_number: parentPhone || "0912345678",
     tx_ref,
     callback_url: "http://localhost:5000/api/payments/callback",
@@ -94,7 +97,6 @@ router.post("/callback", async (req, res) => {
     });
 
     if (response.data.status === "success") {
-      // Update payment status in static data (replace with DB update later)
       students.forEach((student) => {
         if (selectedPayments.includes(student.id)) {
           student.paid = true;
@@ -110,4 +112,4 @@ router.post("/callback", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
