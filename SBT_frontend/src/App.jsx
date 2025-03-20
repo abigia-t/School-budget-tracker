@@ -18,9 +18,7 @@ import ManageChapa from "./pages/SA/ManageChapa";
 //general manager routes
 import GeneralManagerPage from "./pages/GM/GeneralManagerPage";
 import GeneralManagerDashboard from "./pages/GM/GeneralManagerDashboard";
-import SchoolDirectorRequested from "./pages/GM/SchoolDirectorRequested";
-import HumanResourceHeadRequested from "./pages/GM/HumanResourceHeadRequested";
-import ResourceAndFinanceHeadRequested from "./pages/GM/ResourceAndFinanceHeadRequested";
+import BudgetRequested from "./pages/GM/BudgetRequested";
 import PaymentRequested from "./pages/GM/PaymentRequested";
 import ViewReport from "./pages/GM/ViewReport";
 
@@ -79,6 +77,7 @@ const App = () => {
 
         {/* System Admin Routes */}
         <Route path="/system-admin-page" element={<SystemAdminPage />}>
+        <Route index element={<SystemAdminDashboard />} />
           <Route path="system-admin-dashboard" element={<SystemAdminDashboard />} />
           <Route path="manage-actors" element={<ManageActors />} />
           <Route path="manage-students" element={<ManageStudents />} />
@@ -87,9 +86,7 @@ const App = () => {
   {/* General Manager Routes */}
   <Route path="/general-manager-page" element={<GeneralManagerPage />}>
           <Route path="general-manager-dashboard" element={<GeneralManagerDashboard />} />
-          <Route path="school-director-requested" element={<SchoolDirectorRequested />} />
-          <Route path="human-resource-head-requested" element={<HumanResourceHeadRequested />} />
-          <Route path="resource-and-finance-head-requested" element={<ResourceAndFinanceHeadRequested />} />
+          <Route path="budget-requested" element={<BudgetRequested />} />
           <Route path="payment-requested" element={<PaymentRequested />} />
           <Route path="veiw-report" element={<ViewReport />} />
         </Route>

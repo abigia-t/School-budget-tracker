@@ -2,24 +2,23 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import TopBar from "../../components/TopBar";
 import SideBar from "../../components/SideBar";
-import { Menu } from "lucide-react"; // Sidebar toggle icon
+import { Menu } from "lucide-react";
 
-// System Admin-specific navigation links
 const adminLinks = [
   { path: "/system-admin-page/system-admin-dashboard", label: "Dashboard" },
-  { path: "/system-admin-page/manage-actors", label: "Manage Actors" },
+  { path: "/system-admin-page/manage-actors", label: "Manage Staff" },
   { path: "/system-admin-page/manage-students", label: "Manage Students" },
   { path: "/system-admin-page/manage-chapa", label: "Manage Chapa Integration" },
 ];
 
 const SystemAdminPage = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Define state for sidebar
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen transition-all duration-300">
-      {/* Sidebar (Collapsible) */}
+      {/* Sidebar */}
       <div className={`fixed top-0 h-screen bg-blue-950 text-white shadow-lg transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-16"}`}>
-        {/* Sidebar Content (Hidden when collapsed) */}
+        {/* Sidebar Content */}
         <div className={`${isSidebarOpen ? "block" : "hidden"} transition-opacity duration-300`}>
           <SideBar title="System Admin" navLinks={adminLinks} />
         </div>
@@ -30,16 +29,16 @@ const SystemAdminPage = () => {
         </div>
       </div>
 
-      {/* Main Content (Adjusts when Sidebar is toggled) */}
+      {/* Main Content */}
       <div className={`flex-1 flex flex-col transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-16"}`}>
-        {/* TopBar (Always visible at the top) */}
+        {/* TopBar */}
         <div className="fixed w-full z-50 bg-white shadow-md">
           <TopBar />
         </div>
 
-        {/* Main Page Content */}
+        {/* Main Page Content (Outlet must be inside here) */}
         <main className="bg-gray-200 min-h-screen pt-16 pl-5">
-          <Outlet />
+          <Outlet /> {/* This will render child routes */}
         </main>
       </div>
     </div>
