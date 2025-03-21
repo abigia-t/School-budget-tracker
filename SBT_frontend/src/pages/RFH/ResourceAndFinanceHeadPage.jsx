@@ -45,4 +45,6 @@ const ResourceAndFinanceHeadPage = () => {
   );
 };
 
+
 export default ResourceAndFinanceHeadPage;
+

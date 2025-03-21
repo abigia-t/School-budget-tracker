@@ -180,7 +180,7 @@ const ManageActors = () => {
   }}
   className="bg-green-500 text-white px-4 py-1 rounded-md hover:bg-green-600"
 >
-  + New Actor
+  + New staff
 </button>
 
       </div>

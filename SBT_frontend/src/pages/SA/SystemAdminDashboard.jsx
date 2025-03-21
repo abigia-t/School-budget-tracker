@@ -1,8 +1,17 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useContext, useState, useEffect } from "react";
+import { StoreContext } from "../../context/StoreContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const SystemAdminDashboard = () => {
+
+  const { stats } = useContext(StoreContext);
+  const statsData = [
+    { title: "Total Staff", count: stats.totalActors },
+    { title: "Total Students", count: stats.totalStudents },
+    { title: "Total Registered", count: stats.totalRegistered },
+  ];
   const [recipientType, setRecipientType] = useState("actors");
   const [recipientDetail, setRecipientDetail] = useState("");
   const [message, setMessage] = useState("");
@@ -25,7 +34,7 @@ const SystemAdminDashboard = () => {
       setMessage(""); // Clear input after sending
       fetchNotifications(); // Refresh notifications
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to send notification.");
+      toast.error(error.response?.data?.message || "Failed to send message.");
     }
   };
 
@@ -35,17 +44,17 @@ const fetchNotifications = async () => {
     const response = await axios.get("http://localhost:5000/api/admin-messages/all");
     setNotifications(response.data);
   } catch (error) {
-    toast.error("Failed to load notifications.");
+    toast.error("Failed to load messages.");
   }
 };
 
   const handleDeleteNotification = async (messageId) => {
     try {
       await axios.delete(`http://localhost:5000/api/admin-messages/${messageId}`);
-      toast.success("Notification deleted!");
+      toast.success("Message deleted!");
       fetchNotifications(); // Refresh notifications
     } catch (error) {
-      toast.error("Failed to delete notification.");
+      toast.error("Failed to delete message.");
     }
   };
    // Fetch messages from user backend
@@ -78,28 +87,31 @@ const fetchNotifications = async () => {
   };
 
   return (
-    <div>
+    <div className="bg-white">
       {/* Dashboard Summary */}
-      <div className="bg-white grid grid-cols-3 gap-4 p-4">
-        {[
-          { title: "Total Actors", count: "number" },
-          { title: "Total Students", count: "number" },
-          { title: "Total Registered", count: "number" },
-        ].map((item, index) => (
-          <div
-            key={index}
-            className="flex flex-col items-center justify-center bg-gray-200 shadow-md rounded-lg p-6"
-          >
-            <h1 className="text-lg font-semibold text-gray-700">{item.title}</h1>
-            <h2 className="text-2xl font-bold text-gray-900 mt-2">{item.count}</h2>
-          </div>
-        ))}
-      </div>
+      <div className="grid grid-cols-3 gap-4 p-4">
+      {statsData.map((item, index) => (
+        <div
+          key={index}
+          className={`flex flex-col items-center justify-center shadow-md rounded-lg p-6
+          ${
+            index === 0
+              ? "bg-blue-200"
+              : index === 1
+              ? "bg-green-200"
+              : "bg-yellow-200"
+          }`}
+        >
+          <h1 className="text-lg font-semibold text-gray-700">{item.title}</h1>
+          <h2 className="text-2xl font-bold text-gray-900 mt-2">{item.count}</h2>
+        </div>
+      ))}
+    </div>
 
       <div className="bg-white grid grid-cols-2">
         {/* Send Notifications Section */}
-        <div className="bg-slate-600 p-6">
-          <h2 className="text-2xl font-semibold mb-4">Send Notifications</h2>
+        <div className="bg-gray-100 p-6">
+          <h2 className="text-2xl font-semibold mb-4">Send Messages</h2>
 
           <div className="mb-4">
             <label className="block font-medium">Recipient Type:</label>
@@ -108,10 +120,12 @@ const fetchNotifications = async () => {
               onChange={(e) => setRecipientType(e.target.value)}
               className="border rounded p-2 w-full"
             >
-              <option value="actors">All Actors</option>
-              <option value="student_parents">All Student Parents</option>
-              <option value="specific_actor">Specific Actor</option>
-              <option value="specific_student">Specific Student</option>
+
+              <option value="actors">For all Staffs</option>
+              <option value="student_parents">For all parents</option>
+              <option value="specific_actor">Specific Staff</option>
+              <option value="specific_student">Specific Parent</option>
+
             </select>
           </div>
 
@@ -146,15 +160,16 @@ const fetchNotifications = async () => {
             onClick={handleSendNotification}
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           >
-            Send Notification
+            Send Message
           </button>
 
           {/* Notification History */}
           <div className="mt-6">
-            <h3 className="text-lg font-semibold">Notification History</h3>
+            <h3 className="text-lg font-semibold">Message History</h3>
             <div className="border rounded p-4 mt-2">
               {notifications.length > 0 ? (
-  notifications.map((notification, index) => (
+               notifications.map((notification, index) => (
+
     <div key={index} className="border-b py-2 flex justify-between items-center">
       <div>
         <p>
@@ -182,7 +197,9 @@ const fetchNotifications = async () => {
     </div>
   ))
 ) : (
-  <p>No notifications found.</p>
+
+  <p>No message found.</p>
+
 )}
 
             </div>

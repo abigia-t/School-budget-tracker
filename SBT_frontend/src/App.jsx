@@ -8,20 +8,17 @@ import Footer from "./components/Footer";
 import NoPage from "./pages/NoPage";
 import RoleRoute from "./config/RoleRoute";
 
-// system admin routes
+/// system admin routes
 import SystemAdminPage from "./pages/SA/SystemAdminPage";
 import SystemAdminDashboard from "./pages/SA/SystemAdminDashboard";
 import ManageActors from "./pages/SA/ManageActors";
 import ManageStudents from "./pages/SA/ManageStudents";
-import SendNotifications from "./pages/SA/SendNotifications";
 import ManageChapa from "./pages/SA/ManageChapa";
 
-// general manager routes
+//general manager routes
 import GeneralManagerPage from "./pages/GM/GeneralManagerPage";
 import GeneralManagerDashboard from "./pages/GM/GeneralManagerDashboard";
-import SchoolDirectorRequested from "./pages/GM/SchoolDirectorRequested";
-import HumanResourceHeadRequested from "./pages/GM/HumanResourceHeadRequested";
-import ResourceAndFinanceHeadRequested from "./pages/GM/ResourceAndFinanceHeadRequested";
+import BudgetRequested from "./pages/GM/BudgetRequested";
 import PaymentRequested from "./pages/GM/PaymentRequested";
 import ViewReport from "./pages/GM/ViewReport";
 
@@ -49,14 +46,14 @@ import HumanResourceDashboard from "./pages/HR/HumanResourceDashboard";
 import HumanResourceRequest from "./pages/HR/HumanResourceRequest";
 
 // parents routes
-import Parent from "./pages/Parent/Parent";
-import ParentDashboard from "./components/parent/Dashboard";
-import ParentPayment from "./components/parent/Payment";
-import PaymentHistory from "./components/parent/PaymentHistory";
-import Notification from "./components/parent/Notification";
-import ParentProfile from "./components/parent/Profile";
-import PaymentReturn from "./components/PaymentReturn";
-import Wellcome from "./components/parent/Welcome";
+import Parent from "./pages/Parent/parent";
+import ParentDashboard from "./pages/Parent/Dashboard";
+import ParentPayment from "./pages/Parent/Payment";
+import PaymentHistory from "./pages/Parent/PaymentHistory";
+import Notification from "./pages/Parent/Notifications";
+import ParentProfile from "./pages/Parent/Profile";
+import PaymentReturn from "./pages/Parent/PaymentReturn";
+import Wellcome from "./pages/Parent/Welcome";
 
 
 const App = () => {
@@ -80,23 +77,18 @@ const App = () => {
 
         {/* System Admin Routes */}
         <Route path="/system-admin-page" element={<SystemAdminPage />}>
-          <Route index element={<SystemAdminDashboard />} />
+        <Route index element={<SystemAdminDashboard />} />
           <Route path="system-admin-dashboard" element={<SystemAdminDashboard />} />
           <Route path="manage-actors" element={<ManageActors />} />
           <Route path="manage-students" element={<ManageStudents />} />
-          <Route path="send-notifications" element={<SendNotifications />} />
           <Route path="manage-chapa" element={<ManageChapa />} />
         </Route>
-
-        {/* General Manager Routes */}
-        <Route path="/general-manager-page" element={<GeneralManagerPage />}>
-          <Route index element={<GeneralManagerDashboard />} />
+  {/* General Manager Routes */}
+  <Route path="/general-manager-page" element={<GeneralManagerPage />}>
           <Route path="general-manager-dashboard" element={<GeneralManagerDashboard />} />
-          <Route path="school-director-requested" element={<SchoolDirectorRequested />} />
-          <Route path="human-resource-head-requested" element={<HumanResourceHeadRequested />} />
-          <Route path="resource-and-finance-head-requested" element={<ResourceAndFinanceHeadRequested />} />
+          <Route path="budget-requested" element={<BudgetRequested />} />
           <Route path="payment-requested" element={<PaymentRequested />} />
-          <Route path="view-report" element={<ViewReport />} />
+          <Route path="veiw-report" element={<ViewReport />} />
         </Route>
 
         {/* School Director Routes */}
@@ -132,16 +124,17 @@ const App = () => {
         </Route>
 
         {/* Parent Routes */}
-        <Route path="/parent-page" element={<Parent />}>
+        <Route path="/parent" element={<Parent />}>
           <Route index element={<Wellcome />} />
-          <Route path="parent-dashboard" element={<ParentDashboard />} />
+          <Route path="dashboard" element={<ParentDashboard />} />
           <Route path="profile" element={<ParentProfile />} />
           <Route path="payment" element={<ParentPayment />} />
-          <Route path="payment-history" element={<PaymentHistory />} />
+          <Route path="pyament-history" element={<PaymentHistory />} />
           <Route path="notification" element={<Notification />} />
           <Route path="payment-return" element={<PaymentReturn />} />
         </Route>
       </Routes>
+      
 
       <Footer />
     </div>

@@ -1,6 +1,22 @@
-import ParentLayout from "../../layout/ParentLayout";
+import { Outlet, useNavigate } from "react-router-dom";
+import NavBar from "./Navbar"; // Adjusted path
+
 const Parent = () => {
-  return <ParentLayout />;
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    console.log("Logout");
+    navigate('/');
+  };
+
+  return (
+    <>
+      <NavBar onLogout={handleLogout} />
+      <div className="mt-20">
+        <Outlet />
+      </div>
+    </>
+  );
 };
 
 export default Parent;
