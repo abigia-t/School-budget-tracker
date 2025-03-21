@@ -46,14 +46,14 @@ import HumanResourceDashboard from "./pages/HR/HumanResourceDashboard";
 import HumanResourceRequest from "./pages/HR/HumanResourceRequest";
 
 // parents routes
-import Parent from "./pages/Parent/Parent";
-import ParentDashboard from "./components/parent/Dashboard";
-import ParentPayment from "./components/parent/Payment";
-import PaymentHistory from "./components/parent/PaymentHistory";
-import Notification from "./components/parent/Notification";
-import ParentProfile from "./components/parent/Profile";
-import PaymentReturn from "./components/PaymentReturn";
-import Wellcome from "./components/parent/Welcome";
+import Parent from "./pages/Parent/parent";
+import ParentDashboard from "./pages/Parent/Dashboard";
+import ParentPayment from "./pages/Parent/Payment";
+import PaymentHistory from "./pages/Parent/PaymentHistory";
+import Notification from "./pages/Parent/Notifications";
+import ParentProfile from "./pages/Parent/Profile";
+import PaymentReturn from "./pages/Parent/PaymentReturn";
+import Wellcome from "./pages/Parent/Welcome";
 
 
 const App = () => {
@@ -124,16 +124,17 @@ const App = () => {
         </Route>
 
         {/* Parent Routes */}
-        <Route path="/parent-page" element={<Parent />}>
+        <Route path="/parent" element={<Parent />}>
           <Route index element={<Wellcome />} />
-          <Route path="parent-dashboard" element={<ParentDashboard />} />
+          <Route path="dashboard" element={<ParentDashboard />} />
           <Route path="profile" element={<ParentProfile />} />
           <Route path="payment" element={<ParentPayment />} />
-          <Route path="payment-history" element={<PaymentHistory />} />
+          <Route path="pyament-history" element={<PaymentHistory />} />
           <Route path="notification" element={<Notification />} />
           <Route path="payment-return" element={<PaymentReturn />} />
         </Route>
       </Routes>
+      
 
       <Footer />
     </div>

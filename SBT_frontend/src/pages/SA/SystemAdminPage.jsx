@@ -15,7 +15,7 @@ const SystemAdminPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen transition-all duration-300">
+    <div className="flex h-full transition-all duration-300">
       {/* Sidebar */}
       <div className={`fixed top-0 h-screen bg-blue-950 text-white shadow-lg transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-16"}`}>
         {/* Sidebar Content */}
