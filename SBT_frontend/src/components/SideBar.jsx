@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Modal from "./Modal"; // Import your reusable modal component
-<<<<<<< HEAD
 import DashboardIcon from "../assets/icons8-dashboard-layout-24.png"; // Dashboard icon
 import RequestBudgetIcon from "../assets/icons8-service-50.png"; // Request budget icon
 import PayrollIcon from "../assets/payroll.png";
@@ -42,29 +41,6 @@ const iconMapping = {
 };
 
 const SideBar = ({ title, subtitle = "", navLinks }) => {
-=======
-import { LogOut, X } from "lucide-react"; // X icon for close button
-import MenuIcon from "../assets/icons8-menu-50.png"; // Adjust to your actual menu icon path
-
-// Import icons
-import DashboardIcon from "../assets/icons8-dashboard-layout-24.png";
-import RequestBudgetIcon from "../assets/icons8-service-50.png";
-import PayrollIcon from "../assets/payroll.png";
-import ManageAccountIcon from "../assets/manage account.png";
-import ReportIcon from "../assets/report.png";
-import HrManagementIcon from "../assets/HRmngr.png";
-import ResourceManagementIcon from "../assets/resourse mngt.png";
-import SchoolDirectorIcon from "../assets/school director.png";
-import SendNotificationIcon from "../assets/send notification.png";
-import ManageStudentsIcon from "../assets/student mngt.png";
-import ParentReceiptIcon from "../assets/receipt.png";
-import ApproveBudgetIcon from "../assets/approve budget.png";
-import ApprovePerformanceIcon from "../assets/Aperformance.png";
-import PaymentIcon from "../assets/payment.png";
-import ChapaIntegrationIcon from "../assets/chapa integration.png";
-
-const SideBar = ({ navLinks }) => {
->>>>>>> 69d30179b39cca79304f10922ab012fe0af19153
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const navigate = useNavigate();
@@ -77,7 +53,6 @@ const SideBar = ({ navLinks }) => {
 
   return (
     <div
-<<<<<<< HEAD
       className={`fixed top-0 h-screen bg-blue-950 text-white flex flex-col justify-between shadow-lg transition-all duration-300 ${isSidebarOpen ? "left-0 w-64" : "-left-64 w-64"}`}
     >
       {/* Menu Toggle Section */}
@@ -86,38 +61,13 @@ const SideBar = ({ navLinks }) => {
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
       >
         <img src={MenuIcon} alt="Menu Icon" className="w-8 h-8" />
-=======
-      className={`fixed top-0 h-screen bg-blue-950 text-white flex flex-col justify-between shadow-lg transition-all duration-300 ${
-        isSidebarOpen ? "left-0 w-64" : "-left-64 w-64"
-      }`}
-    >
-      {/* Menu Icon - Visible when sidebar is hidden */}
-      {!isSidebarOpen && (
-        <div
-          className="fixed top-4 left-4 z-50 cursor-pointer bg-blue-950 p-2 rounded-md shadow-lg"
-          onClick={() => setIsSidebarOpen(true)}
-        >
-          <img src={MenuIcon} alt="Menu Icon" className="w-8 h-8" />
-        </div>
-      )}
-
-      {/* Close Icon - Visible inside sidebar */}
-      <div className="flex justify-end p-4">
-        <button onClick={() => setIsSidebarOpen(false)} className="text-white">
-          <X className="w-6 h-6" />
-        </button>
->>>>>>> 69d30179b39cca79304f10922ab012fe0af19153
       </div>
 
       {/* Navigation Links */}
       <nav className="flex flex-col p-6 mt-20">
         {navLinks.map(({ path, label }) => (
           <NavLink
-<<<<<<< HEAD
             key={label}  // Use label here or another unique identifier
-=======
-            key={path}
->>>>>>> 69d30179b39cca79304f10922ab012fe0af19153
             to={path}
             className={({ isActive }) =>
               `flex items-center gap-2 py-2 px-4 rounded-md transition mb-2 ${
@@ -125,7 +75,6 @@ const SideBar = ({ navLinks }) => {
               }`
             }
           >
-<<<<<<< HEAD
             {/* Always show the icon */}
             <img src={iconMapping[label] || DefaultIcon} alt={`${label} Icon`} className="w-6 h-6" />
 
@@ -148,83 +97,13 @@ const SideBar = ({ navLinks }) => {
           <span className={`transition-all duration-300 ${isSidebarOpen ? "opacity-100 ml-2" : "opacity-0"}`}>
             Logout
           </span>
-=======
-                {label === "Dashboard" && (
-                  <img src={DashboardIcon} alt="Dashboard Icon" className="w-6 h-6" />
-                )}
-                {label === "Request Budget" && (
-                  <img src={RequestBudgetIcon} alt="Request Budget Icon" className="w-6 h-6" />
-                )}
-                {label === "Prepare Payroll" && (
-                  <img src={PayrollIcon} alt="Payroll Icon" className="w-6 h-6" />
-                )}
-                {label === "Manage Actors" && (
-                  <img src={ManageAccountIcon} alt="Manage Account Icon" className="w-6 h-6" />
-                )}
-                {label === "View Report" && (
-                  <img src={ReportIcon} alt="Report Icon" className="w-6 h-6" />
-                )}
-                {label === "Human Resources Head" && (
-                  <img src={HrManagementIcon} alt="Hr Management Icon" className="w-6 h-6" />
-                )}
-                {label === "Resource and Finance Head" && (
-                  <img src={ResourceManagementIcon} alt="Resource Management Icon" className="w-6 h-6" />
-                )}
-                {label === "School Director" && (
-                  <img src={SchoolDirectorIcon} alt="School Director Icon" className="w-6 h-6" />
-                )}
-                {label === "Send Notifications" && (
-                  <img src={SendNotificationIcon} alt="Send Notification Icon" className="w-6 h-6" />
-                )}
-                {label === "Manage Students" && (
-                  <img src={ManageStudentsIcon} alt="Manage Students Icon" className="w-6 h-6" />
-                )}
-                {label === "Parent Receipt" && (
-                  <img src={ParentReceiptIcon} alt="Parent Receipt Icon" className="w-6 h-6" />
-                )}
-                {label === "Approve Budget" && (
-                  <img src={ApproveBudgetIcon} alt="Approve Budget Icon" className="w-6 h-6" />
-                )}
-                {label === "Approve Performance" && (
-                  <img src={ApprovePerformanceIcon} alt="Approve Performance Icon" className="w-6 h-6" />
-                )}
-                {label === "Payment" && (
-                  <img src={PaymentIcon} alt="Payment Icon" className="w-6 h-6" />
-                )}
-                {label === "Manage Chapa" && (
-                  <img src={ChapaIntegrationIcon} alt="Chapa Integration Icon" className="w-6 h-6" />
-                )}
-                {label}
-              </NavLink>
-            ))}
-          </nav>
-        
-    
- {/* Log Out Button */}
- <div className="mt-auto p-4">
-        <hr className="border-gray-600 mb-4" />
-        <button
-          onClick={() => setIsLogoutModalOpen(true)}
-          className="flex items-center justify-center w-12 h-12 rounded-full bg-red-600 hover:bg-red-700 transition"
-        >
-          <LogOut className="w-6 h-6 text-white" />
->>>>>>> 69d30179b39cca79304f10922ab012fe0af19153
         </button>
       </div>
 
       {/* Logout Confirmation Modal */}
-<<<<<<< HEAD
       <Modal isOpen={isLogoutModalOpen} title="Confirm Logout" onClose={() => setIsLogoutModalOpen(false)}>
         <p className="text-lg text-gray-700">Are you sure you want to log out?</p>
         {/* Modal Footer */}
-=======
-      <Modal
-        isOpen={isLogoutModalOpen}
-        title="Confirm Logout"
-        onClose={() => setIsLogoutModalOpen(false)}
-      >
-        <p className="text-lg text-gray-700">Are you sure you want to log out?</p>
->>>>>>> 69d30179b39cca79304f10922ab012fe0af19153
         <div className="mt-6 flex justify-around">
           <button
             type="button"

@@ -6,7 +6,6 @@ import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import Footer from "./components/Footer";
 import NoPage from "./pages/NoPage";
-<<<<<<< HEAD
 import RoleRoute from "./config/RoleRoute";
 
 /// system admin routes
@@ -38,13 +37,12 @@ import ParentReceipt from "./pages/AU/ParentReceipt";
 // resource and finance head
 import ResourceAndFinanceHeadPage from "./pages/RFH/ResourceAndFinanceHeadPage";
 import ResourceAndFinanceHeadDashboard from './pages/RFH/ResourceAndFinanceHeadDashboard';
-import ResourceAndFinanceHeadRequest from './pages/RFH/ResourceAndFinanceHeadRequest';
+import PreparePayroll from "./pages/RFH/PreparePayroll"; // Ensure this matches the actual file nameimport ResourceAndFinanceHeadRequest from './pages/RFH/ResourceAndFinanceHeadRequest';
 
 // human resource head routes
 import HumanResourcePage from "./pages/HR/HumanResourcePage";
 import HumanResourceDashboard from "./pages/HR/HumanResourceDashboard";
 import HumanResourceRequest from "./pages/HR/HumanResourceRequest";
-import PreparePayroll from './pages/HR/PreparePayroll';
 
 // parents routes
 import Parent from "./pages/Parent/parent";
@@ -56,19 +54,6 @@ import ParentProfile from "./pages/Parent/Profile";
 import PaymentReturn from "./pages/Parent/PaymentReturn";
 import Wellcome from "./pages/Parent/Welcome";
 
-=======
-import Auditor from "./pages/Auditor/Auditor";
-import ApprovedBudget from "./pages/Auditor/ApprovedBudget";
-import APB from "./pages/Auditor/ABP";
-import ParentRecipt from "./pages/Auditor/parentRecipt";
-import RequestBudget from "./pages/Auditor/RequestBudget";
-import PreparePayroll from "./pages/RFHead/PreparePayroll";
-import RFHead from "./pages/RFHead/RFHead";
-import RRequestBudget from "./pages/RFHead/RRequestBudget";
-import SMHead from "./pages/SchoolManager/SMHead";
-import SM_Dashboard from "./pages/SchoolManager/Dashboard";
-import SM_RequestBudget from "./pages/SchoolManager/SM_RequestBudget";
->>>>>>> 69d30179b39cca79304f10922ab012fe0af19153
 
 const App = () => {
   const { userRole } = useContext(StoreContext); // Get role from Context API
@@ -97,7 +82,6 @@ const App = () => {
           <Route path="manage-students" element={<ManageStudents />} />
           <Route path="manage-chapa" element={<ManageChapa />} />
         </Route>
-<<<<<<< HEAD
   {/* General Manager Routes */}
   <Route path="/general-manager-page" element={<GeneralManagerPage />}>
           <Route path="general-manager-dashboard" element={<GeneralManagerDashboard />} />
@@ -127,6 +111,7 @@ const App = () => {
           <Route index element={<ResourceAndFinanceHeadDashboard />} /> {/* Default route */}
           <Route path="resource-and-finance-head-dashboard" element={<ResourceAndFinanceHeadDashboard />} />
           <Route path="resource-and-finance-head-request" element={<ResourceAndFinanceHeadRequest />} />
+          <Route path="prepare-payroll" element={<PreparePayroll />} />
         </Route>
 
 
@@ -135,7 +120,6 @@ const App = () => {
           <Route index element={<HumanResourceDashboard />} />
           <Route path="human-resource-dashboard" element={<HumanResourceDashboard />} />
           <Route path="human-resource-request" element={<HumanResourceRequest />} />
-          <Route path="prepare-payroll" element={<PreparePayroll />} />
         </Route>
 
         {/* Parent Routes */}
@@ -147,43 +131,6 @@ const App = () => {
           <Route path="pyament-history" element={<PaymentHistory />} />
           <Route path="notification" element={<Notification />} />
           <Route path="payment-return" element={<PaymentReturn />} />
-=======
-
-        {/* General Manager Routes */}
-        <Route path="/gm" element={<GM />}>
-          <Route index element={<Navigate to="/gm/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="sd" element={<SD />} />
-          <Route path="hr" element={<HR />} />
-          <Route path="rf" element={<RFH />} />
-          <Route path="payment" element={<Payment />} />
-          <Route path="vr" element={<ViewReport />} />
-        </Route>
-
-        {/* Auditor Routes */}
-        <Route path="/auditor" element={<Auditor />}>
-          <Route index element={<Navigate to="/auditor/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="abp" element={<APB />} />
-          <Route path="ab" element={<ApprovedBudget />} />
-          <Route path="pr" element={<ParentRecipt />} />
-          <Route path="rb" element={<RequestBudget />} />
-        </Route>
-
-        {/* Resource and Financial Head Routes */}
-        <Route path="/rfhead" element={<RFHead />}>
-          <Route index element={<Navigate to="/rfhead/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="pp" element={<PreparePayroll />} />
-          <Route path="rrb" element={<RRequestBudget />} />
-        </Route>
-
-        {/* School Manager Routes */}
-        <Route path="/sm/*" element={<SMHead />}>
-          <Route index element={<Navigate to="/sm/dashboard" replace />} />
-          <Route path="dashboard" element={<SM_Dashboard />} />
-          <Route path="rrb" element={<SM_RequestBudget />} />
->>>>>>> 69d30179b39cca79304f10922ab012fe0af19153
         </Route>
       </Routes>
       
