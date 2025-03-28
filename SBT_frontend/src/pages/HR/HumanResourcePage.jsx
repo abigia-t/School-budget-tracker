@@ -8,6 +8,7 @@ import { Menu } from "lucide-react"; // Sidebar toggle icon
 const HRheadLinks = [
   { path: "/human-resource-page/human-resource-dashboard", label: "Dashboard" },
   { path: "/human-resource-page/human-resource-request", label: "Request Budget" },
+  { path: "/human-resource-page/prepare-payroll", label: "Prepare Payroll" },
 ];
 
 const HumanResourcePage = () => {

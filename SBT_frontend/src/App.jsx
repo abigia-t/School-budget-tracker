@@ -37,13 +37,13 @@ import ParentReceipt from "./pages/AU/ParentReceipt";
 // resource and finance head
 import ResourceAndFinanceHeadPage from "./pages/RFH/ResourceAndFinanceHeadPage";
 import ResourceAndFinanceHeadDashboard from './pages/RFH/ResourceAndFinanceHeadDashboard';
-import PreparePayroll from './pages/RFH/PreparePayroll';
 import ResourceAndFinanceHeadRequest from './pages/RFH/ResourceAndFinanceHeadRequest';
 
 // human resource head routes
 import HumanResourcePage from "./pages/HR/HumanResourcePage";
 import HumanResourceDashboard from "./pages/HR/HumanResourceDashboard";
 import HumanResourceRequest from "./pages/HR/HumanResourceRequest";
+import PreparePayroll from './pages/HR/PreparePayroll';
 
 // parents routes
 import Parent from "./pages/Parent/parent";
@@ -112,7 +112,6 @@ const App = () => {
           <Route index element={<ResourceAndFinanceHeadDashboard />} /> {/* Default route */}
           <Route path="resource-and-finance-head-dashboard" element={<ResourceAndFinanceHeadDashboard />} />
           <Route path="resource-and-finance-head-request" element={<ResourceAndFinanceHeadRequest />} />
-          <Route path="prepare-payroll" element={<PreparePayroll />} />
         </Route>
 
 
@@ -121,6 +120,7 @@ const App = () => {
           <Route index element={<HumanResourceDashboard />} />
           <Route path="human-resource-dashboard" element={<HumanResourceDashboard />} />
           <Route path="human-resource-request" element={<HumanResourceRequest />} />
+          <Route path="prepare-payroll" element={<PreparePayroll />} />
         </Route>
 
         {/* Parent Routes */}

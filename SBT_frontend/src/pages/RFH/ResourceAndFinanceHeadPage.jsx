@@ -8,7 +8,6 @@ import { Menu } from "lucide-react"; // Sidebar toggle icon
 const financeHeadLinks = [
   { path: "/resource-and-finance-head-page/resource-and-finance-head-dashboard", label: "Dashboard" },
   { path: "/resource-and-finance-head-page/resource-and-finance-head-request", label: "Request Budget" },
-  { path: "/resource-and-finance-head-page/prepare-payroll", label: "Prepare Payroll" },
 ];
 
 const ResourceAndFinanceHeadPage = () => {

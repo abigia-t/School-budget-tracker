@@ -1,177 +1,162 @@
-import React, { useContext } from "react";
-import { StoreContext } from "../context/StoreContext";
+import React, { useState, useContext } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { StoreContext } from "../context/StoreContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 import RoleRoute from "../config/RoleRoute";
 
 const AuthForm = () => {
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const { login } = useContext(StoreContext);
   const navigate = useNavigate();
 
-  // Validation Schema
   const loginValidationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string().min(8, "Password must be at least 8 characters").required("Password is required"),
+    password: Yup.string().required("Password is required").min(8, "Password must be at least 8 characters"),
   });
 
-  // Initial Values
-  const initialValues = { email: "", password: "" };
+  const forgotPasswordValidationSchema = Yup.object().shape({
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    password: Yup.string().required("Password is required").min(8, "Password must be at least 8 characters"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], "Passwords must match")
+      .required("Confirm Password is required"),
+  });
 
-  // Handle Login Submission
+  const initialValues = { email: "", password: "", confirmPassword: "" };
+
   const onSubmit = async (values, { resetForm, setFieldError }) => {
     try {
-      // Try logging in as an actor first
-      let endpoint = "http://localhost:5000/api/actors/login";
-      let response = await axios.post(endpoint, values).catch(() => null);
+      if (isForgotPassword) {
+        // Password Reset Request
+        const response = await axios.post("http://localhost:5000/api/actors/change-password", {
+          email: values.email,
+          password: values.password,
+          confirmPassword: values.confirmPassword,
+        });
 
-      // If actor login fails, try logging in as a student
-      if (!response?.data?.actor) {
-        endpoint = "http://localhost:5000/api/students/login";
-        response = await axios.post(endpoint, values).catch(() => null);
+        alert(response.data.message); // Show success message
+        setIsForgotPassword(false);
+        resetForm();
+      } else {
+        // Login Request
+        const response = await axios.post("http://localhost:5000/api/actors/login", {
+          email: values.email,
+          password: values.password,
+        });
+
+        if (response.data.message === "User doesn't exist.") {
+          setFieldError("email", response.data.message); // Set error for email
+        } else if (response.data.message === "Invalid password.") {
+          setFieldError("password", response.data.message); // Set error for password
+        } else {
+          login(response.data.actor); // Store user in context
+          const rolePath = RoleRoute[response.data.actor.role]; // Get path from roleRoutes
+          if (rolePath) {
+            navigate(rolePath); // Navigate to the correct dashboard
+          } else {
+            toast.error("Invalid role detected. Redirecting to home.");
+            navigate("/"); // Default to home if role is unknown
+          }
+        }
       }
-
-      // If neither login succeeds, show an error
-      if (!response?.data?.actor && !response?.data?.student) {
-        setFieldError("email", "Invalid credentials. Please try again.");
-        toast.error("Invalid credentials. Please try again.");
-        return;
-      }
-
-      // Extract user data based on the successful login
-      const user = response.data.actor || response.data.student;
-      login(user); // Store user in context
-
-      // Redirect based on role
-      const rolePath = RoleRoute[user.role] || "/";
-      toast.success("Login successful!");
-      navigate(rolePath);
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Login failed. Please try again.";
-      setFieldError("email", errorMessage);
-      toast.error(errorMessage);
+      console.error("Login error:", error);
+
+      if (error.response) {
+        setFieldError("email", error.response.data?.message || "An error occurred. Please try again.");
+      } else if (error.request) {
+        setFieldError("email", "No response from the server. Check your connection.");
+      } else {
+        setFieldError("email", `Request error: ${error.message}`);
+
+      }
     }
   };
-
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-200 p-4">
-      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-sm">
-        <h1 className="text-2xl text-blue-600 font-bold text-center mb-6">Sign In</h1>
+    <div className="min-h-screen flex flex-col">
+      <div className="flex-grow flex justify-center items-center bg-gradient-to-r from-blue-400 to-purple-500 py-12">
+        <div className="bg-white shadow-lg rounded-lg p-8 max-w-2xl w-full">
+          <h1 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            {isForgotPassword ? "Reset Password" : "Sign In"}
+          </h1>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={isForgotPassword ? forgotPasswordValidationSchema : loginValidationSchema}
+            onSubmit={onSubmit}
+          >
+            {({ isSubmitting }) => (
+              <Form className="space-y-6">
+                <div>
+                  <label htmlFor="email" className="block text-blue-600 text-lg font-medium">
+                    Email Address
+                  </label>
+                  <Field
+                    type="email"
+                    name="email"
+                    id="email"
+                    className="w-full border-2 border-blue-200 rounded-lg p-3 mt-1 text-lg focus:outline-none focus:border-blue-500"
+                  />
+                  <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
+                </div>
 
-        <Formik initialValues={initialValues} validationSchema={loginValidationSchema} onSubmit={onSubmit}>
-          {({ isSubmitting }) => (
-            <Form className="space-y-4">
-              <div>
-                <label htmlFor="email" className="block text-gray-600 text-sm font-medium">
-                  Email Address
-                </label>
-                <Field type="email" name="email" id="email" className="w-full border rounded-md p-3 mt-1 text-sm" />
-                <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
-              </div>
+                <div>
+                  <label htmlFor="password" className="block text-blue-600 text-lg font-medium">
+                    {isForgotPassword ? "New Password" : "Password"}
+                  </label>
+                  <Field
+                    type="password"
+                    name="password"
+                    id="password"
+                    className="w-full border-2 border-blue-200 rounded-lg p-3 mt-1 text-lg focus:outline-none focus:border-blue-500"
+                  />
+                  <ErrorMessage name="password" component="div" className="text-red-500 text-sm mt-1" />
+                </div>
 
-              <div>
-                <label htmlFor="password" className="block text-gray-600 text-sm font-medium">
-                  Password
-                </label>
-                <Field type="password" name="password" id="password" className="w-full border rounded-md p-3 mt-1 text-sm" />
-                <ErrorMessage name="password" component="div" className="text-red-500 text-sm mt-1" />
-              </div>
+                {isForgotPassword && (
+                  <div>
+                    <label htmlFor="confirmPassword" className="block text-blue-600 text-lg font-medium">
+                      Confirm Password
+                    </label>
+                    <Field
+                      type="password"
+                      name="confirmPassword"
+                      id="confirmPassword"
+                      className="w-full border-2 border-blue-200 rounded-lg p-3 mt-1 text-lg focus:outline-none focus:border-blue-500"
+                    />
+                    <ErrorMessage name="confirmPassword" component="div" className="text-red-500 text-sm mt-1" />
+                  </div>
+                )}
 
-              <button type="submit" disabled={isSubmitting} className="w-full bg-blue-600 text-white p-2 rounded-md font-semibold hover:bg-blue-700 transition">
-                {isSubmitting ? "Logging in..." : "Login"}
-              </button>
-            </Form>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition"
+                >
+                  {isForgotPassword ? "Reset Password" : "Login"}
+                </button>
+              </Form>
+            )}
+          </Formik>
+          {!isForgotPassword && (
+            <div className="mt-6 text-lg text-center">
+              <p>
+                Forgot your password?{" "}
+                <button
+                  onClick={() => setIsForgotPassword(true)}
+                  className="text-blue-600 hover:text-purple-600 hover:underline"
+                >
+                  Reset password
+                </button>
+              </p>
+            </div>
           )}
-        </Formik>
+        </div>
       </div>
     </div>
   );
 };
 
 export default AuthForm;
-// import React, { useContext } from "react";
-// import { StoreContext } from "../context/StoreContext";
-// import { Formik, Form, Field, ErrorMessage } from "formik";
-// import * as Yup from "yup";
-// import { useNavigate } from "react-router-dom";
-// import axios from "axios";
-// import { toast } from "react-toastify";
-// import RoleRoute from "../config/RoleRoute";
-
-// const AuthForm = () => {
-//   const { login } = useContext(StoreContext);
-//   const navigate = useNavigate();
-
-//   // Validation Schema
-//   const loginValidationSchema = Yup.object().shape({
-//     email: Yup.string().email("Invalid email").required("Email is required"),
-//     password: Yup.string().min(8, "Password must be at least 8 characters").required("Password is required"),
-//   });
-// //Initializations
-//   const initialValues = { email: "", password: "" };
-
-//   // Handle Login Submission
-//   const onSubmit = async (values, { resetForm, setFieldError }) => {
-//     try {
-//       const endpoint = values.email.includes("@actor")
-//         ? "http://localhost:5000/api/actors/login"
-//         : "http://localhost:5000/api/students/login";
-  
-//       const { data } = await axios.post(endpoint, values);
-//       const user = data.actor || data.student;
-  
-//       if (!user) {
-//         setFieldError("email", "Invalid credentials. Please try again.");
-//         return;
-//       }
-  
-//       login(user); // Store user in context
-//       const rolePath = RoleRoute[user.role] || "/"; // Get role-based route
-  
-//       toast.success("Login successful!");
-//       navigate(rolePath); // Redirect user
-//     } catch (error) {
-//       const errorMessage = error.response?.data?.message || "Login failed. Please try again.";
-//       setFieldError("email", errorMessage);
-//       toast.error(errorMessage);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen flex justify-center items-center bg-gray-200 p-4">
-//       <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-sm">
-//         <h1 className="text-2xl text-blue-600 font-bold text-center mb-6">Sign In</h1>
-
-//         <Formik initialValues={initialValues} validationSchema={loginValidationSchema} onSubmit={onSubmit}>
-//           {({ isSubmitting }) => (
-//             <Form className="space-y-4">
-//               <div>
-//                 <label htmlFor="email" className="block text-gray-600 text-sm font-medium">
-//                   Email Address
-//                 </label>
-//                 <Field type="email" name="email" id="email" className="w-full border rounded-md p-3 mt-1 text-sm" />
-//                 <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
-//               </div>
-
-//               <div>
-//                 <label htmlFor="password" className="block text-gray-600 text-sm font-medium">
-//                   Password
-//                 </label>
-//                 <Field type="password" name="password" id="password" className="w-full border rounded-md p-3 mt-1 text-sm" />
-//                 <ErrorMessage name="password" component="div" className="text-red-500 text-sm mt-1" />
-//               </div>
-
-//               <button type="submit" disabled={isSubmitting} className="w-full bg-blue-600 text-white p-2 rounded-md font-semibold hover:bg-blue-700 transition">
-//                 {isSubmitting ? "Logging in..." : "Login"}
-//               </button>
-//             </Form>
-//           )}
-//         </Formik>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default AuthForm;
