@@ -21,11 +21,11 @@ app.use(cors());
 connectDB();
 
 // **all API Routes**
-app.use("/api/actors", actorRoute);   // Actor related routes
+app.use("/api/actors", actorRoute); // Actor related routes
 app.use("/api/students", studentRoute); // Student related routes
 app.use("/api/payments", paymentRoute); // Payment related routes
 app.use("/api/contact-messages", contactMessageRoutes);
-app.use("/api/admin-messages", adminMessageRoutes)
+app.use("/api/admin-messages", adminMessageRoutes);
 // **Default Route**
 app.get("/", (req, res) => {
   res.send("🚀 API is running...");
@@ -33,4 +33,6 @@ app.get("/", (req, res) => {
 
 // **Start Server**
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+});

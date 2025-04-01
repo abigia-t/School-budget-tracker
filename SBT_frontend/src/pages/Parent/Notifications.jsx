@@ -1,27 +1,49 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
+const notifs = [
+  {
+    id: 1,
+    message: "Emma's payment of ETB 50.00 is due on 2025-03-10",
+    date: "2025-03-02 10:30 AM",
+    read: false,
+  },
+  {
+    id: 2,
+    message: "Liam’s school event is scheduled for tomorrow",
+    date: "2025-03-01 09:15 AM",
+    read: false,
+  },
+  {
+    id: 3,
+    message: "Payment for Emma completed successfully",
+    date: "2025-02-28 02:45 PM",
+    read: true,
+  },
+];
 const Notifications = () => {
   // Sample notification data (replace with real data from props or API)
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      message: "Emma's payment of ETB 50.00 is due on 2025-03-10",
-      date: "2025-03-02 10:30 AM",
-      read: false,
-    },
-    {
-      id: 2,
-      message: "Liam’s school event is scheduled for tomorrow",
-      date: "2025-03-01 09:15 AM",
-      read: false,
-    },
-    {
-      id: 3,
-      message: "Payment for Emma completed successfully",
-      date: "2025-02-28 02:45 PM",
-      read: true,
-    },
-  ]);
+  const [notifications, setNotifications] = useState(notifs);
+  const id = JSON.parse(localStorage.getItem("currentUser"))._id;
+
+  // Fetch notifications (useEffect hook to load on mount)
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/students/messages`,
+          { params: { id } }
+        );
+        setNotifications(response.data);
+      } catch (error) {
+        console.log("Error :", error);
+        toast.error(error.message || "Failed to load notifications.");
+      }
+    };
+    fetchNotifications();
+  }, [id]);
 
   // Mark notification as read
   const markAsRead = (id) => {

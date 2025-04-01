@@ -6,7 +6,7 @@ const RoleRoute = {
   "Resource and Finance":
     "/resource-and-finance-head-page/resource-and-finance-head-dashboard",
   "Human Resource": "/human-resource-page/human-resource-dashboard",
-  Student: "/parent/dashboard", // Student route is included
+  Student: "/parent", // Student route is included
 };
 
 export default RoleRoute;

@@ -1,5 +1,9 @@
 import express from "express";
-import {sendAdminMessage,getAdminMessages,deleteAdminMessage,} from "../controllers/adminMessageController.js";
+import {
+  sendAdminMessage,
+  getAdminMessages,
+  deleteAdminMessage,
+} from "../controllers/adminMessageController.js";
 
 const router = express.Router();
 

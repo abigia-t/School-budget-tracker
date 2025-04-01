@@ -37,13 +37,11 @@ const ParentPayment = () => {
         `http://localhost:5000/api/students/${id}`
       );
       const student = response.data;
+      console.log("Fetched student data:", student);
 
       const baseFee = calculatePaymentAmount(student.grade);
       const today = new Date().getDate();
       const penalty = today > 10 ? 50 : 0;
-
-      // Log the fetched student data to check its structure
-      console.log("Fetched student data:", student);
 
       setStudentData(student);
       setPaymentAmount(baseFee);
@@ -61,23 +59,20 @@ const ParentPayment = () => {
     setLoading(true);
     setError(null);
     try {
-      // Ensure studentData exists and has all required fields
       if (!studentData) {
         throw new Error("No student data available");
       }
 
       const paymentData = {
-        studentId: studentData._id || studentData.id, // Handle both _id and id
+        studentId: studentData._id || studentData.id,
         amount: totalAmount,
         email: studentData.email,
         firstName: studentData.firstName,
         lastName: studentData.lastName,
       };
 
-      // Log the payment data to verify all fields
       console.log("Payment data being sent:", paymentData);
 
-      // Validate all fields before sending
       if (
         !paymentData.studentId ||
         !paymentData.amount ||
@@ -95,11 +90,12 @@ const ParentPayment = () => {
 
       window.location.href = response.data.checkoutUrl;
     } catch (error) {
-      const errorMsg =
-        error.response?.data?.details ||
-        error.response?.data?.error ||
-        error.message ||
-        "Payment initialization failed";
+      const errorMsg = error.response?.data?.details?.includes("ENOTFOUND")
+        ? "Unable to connect to payment service. Please check your internet connection."
+        : error.response?.data?.details ||
+          error.response?.data?.error ||
+          error.message ||
+          "Payment initialization failed";
       setError(errorMsg);
       console.error("Payment error:", error);
     } finally {

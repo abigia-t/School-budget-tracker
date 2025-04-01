@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext } from "react";
 import { StoreContext } from "../context/StoreContext";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -33,8 +34,13 @@ const AuthForm = () => {
         setFieldError("email", "Invalid credentials. Please try again.");
         return;
       }
-  
-      login(user); // Store user in context
+
+      // Store user in context
+      login(user);
+
+      // Store user in localStorage
+      localStorage.setItem("currentUser", JSON.stringify(user));
+
       const rolePath = RoleRoute[user.role] || "/"; // Get role-based route
   
       toast.success("Login successful!");

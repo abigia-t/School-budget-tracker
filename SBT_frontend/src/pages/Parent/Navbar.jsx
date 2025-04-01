@@ -30,9 +30,9 @@ const NavBar = ({ onLogout }) => {
 
         {/* Desktop Navigation */}
         <ul className="hidden md:flex gap-10 text-lg font-semibold">
-          <Link to={"/parent/dashboard"}>
+          {/* <Link to={"/parent/dashboard"}>
             <li className="hover:text-yellow-300 cursor-pointer">Dashboard</li>
-          </Link>
+          </Link> */}
           <Link to={"/parent/payment"}>
             <li className="hover:text-yellow-300 cursor-pointer">Payment</li>
           </Link>
@@ -76,11 +76,11 @@ const NavBar = ({ onLogout }) => {
       {/* Mobile Navigation */}
       {isOpen && (
         <ul className="flex flex-col fixed top-10 w-full bg-blue-900/85   gap-4 text-lg font-semibold px-6 py-8">
-          <Link to={"/parent/dashboard"}>
+          {/* <Link to={"/parent/dashboard"}>
             <li onClick={toggleMenu} className="text-gray-300 cursor-pointer ">
               Dashboard
-            </li>
-          </Link>
+            </li> 
+          </Link> */}
           <Link to={"/parent/profile"}>
             <li onClick={toggleMenu} className="text-gray-300 cursor-pointer ">
               Profile
