@@ -2,6 +2,8 @@ import React, { useContext, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { StoreContext } from "./context/StoreContext"; // Context API for global auth state
 import { ToastContainer } from "react-toastify";
+import "./axiosHeaderRequestConfig.js"  // ✅ Runs once, setting up Axios headers
+import { isTokenExpired } from "./tokenUtils.js";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import Footer from "./components/Footer";
@@ -20,6 +22,7 @@ import GeneralManagerPage from "./pages/GM/GeneralManagerPage";
 import GeneralManagerDashboard from "./pages/GM/GeneralManagerDashboard";
 import BudgetRequested from "./pages/GM/BudgetRequested";
 import PaymentRequested from "./pages/GM/PaymentRequested";
+import Messages from "./pages/GM/Messages.jsx"
 import ViewReport from "./pages/GM/ViewReport";
 
 // school director routes
@@ -66,7 +69,29 @@ const App = () => {
       navigate(redirectPath);
     }
   }, [userRole, navigate]);
+ 
+  useEffect(() => {
+    const checkToken = () => {
+      const token = localStorage.getItem("token");
+      if (token && isTokenExpired(token)) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
+        }
+      }
+    };
 
+    // Run check immediately
+    checkToken();
+
+    // Check every 10 seconds
+    const interval = setInterval(checkToken, 10000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
+  
   return (
     <div>
       <ToastContainer />
@@ -88,6 +113,7 @@ const App = () => {
           <Route path="general-manager-dashboard" element={<GeneralManagerDashboard />} />
           <Route path="budget-requested" element={<BudgetRequested />} />
           <Route path="payment-requested" element={<PaymentRequested />} />
+          <Route path="messages-page" element={<Messages/>} />
           <Route path="veiw-report" element={<ViewReport />} />
         </Route>
 
@@ -124,9 +150,9 @@ const App = () => {
         </Route>
 
         {/* Parent Routes */}
-        <Route path="/parent" element={<Parent />}>
+        <Route path="/parent-page" element={<Parent />}>
           <Route index element={<Wellcome />} />
-          <Route path="dashboard" element={<ParentDashboard />} />
+          <Route path="parent-dashboard" element={<ParentDashboard />} />
           <Route path="profile" element={<ParentProfile />} />
           <Route path="payment" element={<ParentPayment />} />
           <Route path="pyament-history" element={<PaymentHistory />} />

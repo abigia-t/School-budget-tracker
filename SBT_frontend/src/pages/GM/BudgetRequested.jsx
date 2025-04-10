@@ -28,17 +28,20 @@ const BudgetRequested = () => {
   }, []);
 
   const handleStatusChange = (id, newStatus) => {
-    setRequests(requests.map(req => req.id === id ? { ...req, status: newStatus } : req));
+    setRequests(
+      requests.map((req) =>
+        req.id === id ? { ...req, status: newStatus } : req
+      )
+    );
   };
 
-  if (loading) {
-    return <div>Loading...</div>; // Add your custom loading indicator here
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6">Requested Budgets</h1>
-
+    <div className="bg-gray-100 mt-7 p-6 rounded-lg shadow-sm gap-6">
+      <h1 className="text-xl font-bold mb-5">Requested budgets</h1>
       {/* Budget Requests Table */}
       <div className="overflow-x-auto">
         <table className="w-full bg-white shadow-md rounded-lg">
@@ -54,15 +57,27 @@ const BudgetRequested = () => {
           <tbody>
             {requests.map((request) => (
               <tr key={request._id} className="border-b">
-                <td className="p-3">{request.requestedBy ? request.requestedBy.fullName : "Unknown"}</td>
+                <td className="p-3">
+                  {request.requestedBy
+                    ? request.requestedBy.fullName
+                    : "Unknown"}
+                </td>
                 <td className="p-3">{request.title}</td>
                 <td className="p-3">ETB {request.amount}</td>
                 <td className="p-3">{request.message}</td>
                 <td className="p-3 text-center">
                   <select
-                    className={`px-3 py-1 rounded ${request.status === "Approved" ? "bg-green-500 text-white" : request.status === "Rejected" ? "bg-red-500 text-white" : "bg-yellow-500 text-white"}`}
+                    className={`px-3 py-1 rounded ${
+                      request.status === "Approved"
+                        ? "bg-green-500 text-white"
+                        : request.status === "Rejected"
+                        ? "bg-red-500 text-white"
+                        : "bg-yellow-500 text-white"
+                    }`}
                     value={request.status}
-                    onChange={(e) => handleStatusChange(request._id, e.target.value)}
+                    onChange={(e) =>
+                      handleStatusChange(request._id, e.target.value)
+                    }
                   >
                     <option value="Pending">Pending</option>
                     <option value="Approved">Approved</option>

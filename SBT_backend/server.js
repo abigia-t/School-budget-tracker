@@ -2,9 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./configs/db.js";
-import actorRoute from "./routes/actorRoute.js";
-import studentRoute from "./routes/studentRoute.js";
-import paymentRoute from "./routes/paymentRoute.js";
+import authRoute from "./routes/authRoute.js"; // Import all routes
+import paymentRoute from "./routes/paymentRoute.js"; // Import payment routes
 import contactMessageRoutes from "./routes/contactMessageRoutes.js";
 import adminMessageRoutes from "./routes/adminMessageRoutes.js";
 import statsRoutes from "./routes/statsRoute.js";
@@ -19,11 +18,18 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
+
 // Get directory name
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// **Middlewares**
+app.use(express.json()); // Add this line
+app.use(cors());
+
+
 // Middleware for parsing JSON
 app.use(express.json());
+
 
 // CORS configuration
 const allowedOrigins = ['http://localhost:3000', 'http://localhost:5173'];
@@ -52,9 +58,11 @@ const connectToDatabase = async () => {
 connectToDatabase();
 
 // API Routes
-app.use("/api/actors", actorRoute);
-app.use("/api/students", studentRoute);
-app.use("/api/payments", paymentRoute);
+
+
+// **all API Routes**
+app.use("/api/auth", authRoute);   // Actor related routes
+app.use("/api/payments", paymentRoute); // Payment related routes
 app.use("/api/contact-messages", contactMessageRoutes);
 app.use("/api/admin-messages", adminMessageRoutes);
 app.use("/api/stats", statsRoutes);

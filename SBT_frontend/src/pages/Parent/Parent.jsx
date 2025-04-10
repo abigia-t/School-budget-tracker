@@ -1,12 +1,13 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import NavBar from "./Navbar"; // Adjusted path
-
+import { StoreContext } from "../../context/StoreContext";
+import { useContext } from "react";
 const Parent = () => {
-  const navigate = useNavigate();
+  const {logout} = useContext(StoreContext)
 
   const handleLogout = () => {
     console.log("Logout");
-    navigate('/');
+    logout()
   };
 
   return (

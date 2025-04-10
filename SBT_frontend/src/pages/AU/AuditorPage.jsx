@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import TopBar from "../../components/TopBar";
 import SideBar from "../../components/SideBar";
-import { Menu } from "lucide-react"; // Sidebar toggle icon
-
+import { ChevronRight, ChevronLeft } from "lucide-react"; // Consistent icons
 
 // Auditor-specific navigation links
 const auditorLinks = [
@@ -14,33 +13,35 @@ const auditorLinks = [
 ];
 
 const AuditorPage = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Default to open sidebar
 
   return (
-    <div className="flex min-h-screen transition-all duration-300">
-      {/* Sidebar (Collapsible) */}
-      <div className={`fixed top-0 h-screen bg-blue-950 text-white shadow-lg transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-16"}`}>
-        {/* Sidebar Content (Hidden when collapsed) */}
-        <div className={`${isSidebarOpen ? "block" : "hidden"} transition-opacity duration-300`}>
-          <SideBar title="Auditor" navLinks={auditorLinks} />
-        </div>
+    <div className="flex bg-gray-200 min-h-screen">
+      {/* Sidebar */}
+      <SideBar
+        navLinks={auditorLinks}
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+      />
 
-        {/* Sidebar Toggle Button */}
-        <div className="absolute top-4 left-4 cursor-pointer p-2 bg-gray-800 rounded-md" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-          <Menu size={24} color="white" />
-        </div>
+      {/* Toggle Button */}
+      <div
+        className="fixed top-4 left-4 z-50 cursor-pointer p-2 bg-gray-800 rounded-md text-white"
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      >
+        {isSidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
       </div>
 
-      {/* Main Content (Adjusts when Sidebar is toggled) */}
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-16"}`}>
-        {/* TopBar (Always visible at the top) */}
-        <div className="fixed w-full z-50 bg-white shadow-md">
+      {/* Main Content */}
+      <div
+        className={`flex-1 flex flex-col transition-all duration-300 ${
+          isSidebarOpen ? "ml-64" : "ml-16"
+        }`}
+      >
+        <div className="fixed w-full z-40 bg-white shadow-md">
           <TopBar />
         </div>
-
-        {/* Main Page Content */}
-        <main className="bg-gray-200 min-h-screen pt-16 pl-5">
+        <main className="pt-16 px-6">
           <Outlet />
         </main>
       </div>

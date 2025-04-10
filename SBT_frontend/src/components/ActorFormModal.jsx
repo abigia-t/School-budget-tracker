@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
 
-const ActorFormModal = ({ 
-  isOpen, 
-  modalType, 
-  newActor, 
-  handleInputChange, 
-  handleModalClose, 
-  handleSubmit 
-}) => {
+const ActorFormModal = ({isOpen,modalType,newActor,handleInputChange,handleModalClose,handleSubmit}) => {
   const [errors, setErrors] = useState({});
 
   const validate = () => {

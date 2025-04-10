@@ -1,49 +1,55 @@
+// controllers/contactMessageController.js
 import ContactMessage from "../models/contactMessageModel.js";
 
-// ✅ Add (Send) a new contact message
 export const sendContactMessage = async (req, res) => {
-  const { userName, userEmail, userMessage } = req.body;
-
   try {
+    const {
+      recipientType,
+      recipientDetail,
+      userName,
+      userEmail,
+      userMessage,
+    } = req.body;
+
+    if (!recipientType || !userName || !userEmail || !userMessage) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
     const newMessage = new ContactMessage({
+      recipientType,
+      recipientDetail: recipientType === "specific_actor" ? recipientDetail : null,
       userName,
       userEmail,
       userMessage,
     });
 
     await newMessage.save();
-    res.status(201).json({ message: "Message sent successfully!" });
+    res.status(201).json({ message: "Message sent successfully" });
   } catch (error) {
     console.error("Send Contact Message Error:", error);
-    res.status(500).json({ message: "Failed to send message.", error });
+    res.status(500).json({ message: "Server error while sending message" });
   }
 };
 
-// ✅ Fetch all contact messages
-export const getContactMessages = async (req, res) => {
+export const getAllContactMessages = async (req, res) => {
   try {
-    const messages = await ContactMessage.find().sort({ createdAt: -1 }); // Sort by newest first
+    const messages = await ContactMessage.find().sort({ createdAt: -1 });
     res.status(200).json(messages);
   } catch (error) {
-    console.error("Fetch Contact Messages Error:", error);
-    res.status(500).json({ message: "Failed to retrieve messages.", error });
+    console.error("Error fetching contact messages:", error);
+    res.status(500).json({ message: "Server error fetching contact messages" });
   }
 };
-
-// ✅ Delete a contact message by ID
 export const deleteContactMessage = async (req, res) => {
-  const { id } = req.params;
-
   try {
-    const deletedMessage = await ContactMessage.findByIdAndDelete(id);
-
-    if (!deletedMessage) {
-      return res.status(404).json({ message: "Message not found!" });
+    const { id } = req.params;
+    const msg = await ContactMessage.findByIdAndDelete(id);
+    if (!msg) {
+      return res.status(404).json({ message: "Message not found." });
     }
-
-    res.status(200).json({ message: "Message deleted successfully!" });
+    res.json({ message: "Message deleted successfully." });
   } catch (error) {
-    console.error("Delete Contact Message Error:", error);
-    res.status(500).json({ message: "Failed to delete message.", error });
+    res.status(500).json({ message: "Failed to delete Message." });
   }
 };
+

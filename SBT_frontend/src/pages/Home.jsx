@@ -7,6 +7,12 @@ import Modal from "../components/Modal";
 import Title from "../components/Title";
 import { assets, features } from "../assets/assets";
 import NavBar from "../components/NavBar";
+import {
+  FaEnvelope,
+  FaFacebook,
+  FaTelegram,
+  FaXTwitter,
+} from "react-icons/fa6";
 
 const Home = () => {
   const [isContactModalOpen, setContactModalOpen] = useState(false);
@@ -19,93 +25,38 @@ const Home = () => {
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Name is required"),
-      email: Yup.string().email("Invalid email address").required("Email is required"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
       message: Yup.string().required("Message is required"),
     }),
-    onSubmit: async (values) => {
+
+    onSubmit: async (values, { resetForm }) => {
       try {
         await axios.post("http://localhost:5000/api/contact-messages/send", {
           recipientType: "specific_actor",
-          recipientDetail: "systemadmin@actor.com",
+          recipientDetail: "systemadmin@gmail.com",
           userName: values.name,
           userEmail: values.email,
           userMessage: values.message,
         });
 
         setContactModalOpen(false);
-        toast("Message sent successfully!");
+        toast.success("Message sent successfully!");
+        resetForm();
       } catch (error) {
         console.error("Error sending message:", error);
-        alert("Failed to send the message.");
+        toast.error("Failed to send the message.");
       }
-    }
+    },
   });
 
   return (
     <div className="min-h-screen w-full flex flex-col">
       <NavBar setContactModalOpen={setContactModalOpen} />
 
-      {/* Contact Modal */}
-      <Modal
-        isOpen={isContactModalOpen}
-        title="Contact Us"
-        onClose={() => setContactModalOpen(false)}
-        onSubmit={formik.handleSubmit}
-        submitButtonText="Send Message"
-      >
-        <form onSubmit={formik.handleSubmit}>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-1xl font-medium">Your Name</label>
-              <input
-                type="text"
-                name="name"
-                onChange={formik.handleChange}
-                value={formik.values.name}
-                onBlur={formik.handleBlur}
-                className="w-full text-black border rounded-lg px-3 py-2"
-                placeholder="Enter your name"
-              />
-              {formik.touched.name && formik.errors.name && (
-                <p className="text-red-600 text-sm">{formik.errors.name}</p>
-              )}
-            </div>
-            <div>
-              <label className="block text-1xl font-medium">Your Email</label>
-              <input
-                type="email"
-                name="email"
-                onChange={formik.handleChange}
-                value={formik.values.email}
-                onBlur={formik.handleBlur}
-                className="w-full text-black border rounded-lg px-3 py-2"
-                placeholder="Enter your email"
-              />
-              {formik.touched.email && formik.errors.email && (
-                <p className="text-red-600 text-sm">{formik.errors.email}</p>
-              )}
-            </div>
-            <div>
-              <label className="block text-1xl font-medium">Message</label>
-              <textarea
-                name="message"
-                onChange={formik.handleChange}
-                value={formik.values.message}
-                onBlur={formik.handleBlur}
-                className="w-full text-black border rounded-lg px-3 py-2"
-                rows="5"
-                placeholder="Your message here..."
-              />
-              {formik.touched.message && formik.errors.message && (
-                <p className="text-red-600 text-sm">{formik.errors.message}</p>
-              )}
-            </div>
-          </div>
-        </form>
-      </Modal>
-
       {/* Header Section */}
-      <div id="home" className="bg-blue-950 text-white py-12 px-8 mt-16">
+      <div id="home" className="bg-blue-950 text-white py-20 px-8 mt-16">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="text-center md:text-left">
             {/* Typewriter Animated h1 */}
@@ -126,7 +77,7 @@ const Home = () => {
       </div>
 
       {/* Features Section */}
-      <div id="features" className="bg-gray-100 py-20 px-6">
+      <div id="services" className="bg-gray-100 py-20 px-6">
         <Title title="Our Features" />
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
           {features.map((feature, index) => (
@@ -157,13 +108,138 @@ const Home = () => {
         </div>
       </div>
 
+      {/* Contact Section - Widened */}
+      <div id="contact" className="bg-gray-100 py-20 px-6">
+        <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+          <Title title="Contact Us" />
+          <form onSubmit={formik.handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-lg font-medium mb-2">Your Name</label>
+              <input
+                type="text"
+                name="name"
+                onChange={formik.handleChange}
+                value={formik.values.name}
+                onBlur={formik.handleBlur}
+                className="w-full text-black border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter your name"
+              />
+              {formik.touched.name && formik.errors.name && (
+                <p className="text-red-600 text-sm mt-1">{formik.errors.name}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-lg font-medium mb-2">Your Email</label>
+              <input
+                type="email"
+                name="email"
+                onChange={formik.handleChange}
+                value={formik.values.email}
+                onBlur={formik.handleBlur}
+                className="w-full text-black border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter your email"
+              />
+              {formik.touched.email && formik.errors.email && (
+                <p className="text-red-600 text-sm mt-1">{formik.errors.email}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-lg font-medium mb-2">Message</label>
+              <textarea
+                name="message"
+                onChange={formik.handleChange}
+                value={formik.values.message}
+                onBlur={formik.handleBlur}
+                className="w-full text-black border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                rows="6"
+                placeholder="Your message here..."
+              />
+              {formik.touched.message && formik.errors.message && (
+                <p className="text-red-600 text-sm mt-1">{formik.errors.message}</p>
+              )}
+            </div>
+            <button
+  type="submit"
+  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 text-lg font-medium shadow-md hover:shadow-lg"
+>
+  Send Message
+</button>
+          </form>
+        </div>
+      </div>
+
       {/* About Section */}
-      <div id="about" className="bg-white py-12 px-6">
-        <Title title="About Yajeb Academy" />
+      <div id="about" className="bg-white py-20 px-6">
+        <Title title="About Us" />
         <div className="max-w-7xl mx-auto text-center">
           <p className="text-gray-700 text-lg max-w-3xl mx-auto mb-8">
-            Yajeb Academy is dedicated to providing quality education and ensuring efficient management of resources through innovative solutions like the Budget Tracker.
+            At Yajeb Academy, we are committed to fostering academic excellence
+            while ensuring efficient financial management. Our innovative
+            **Budget Tracker** simplifies resource allocation, allowing
+            institutions to focus on delivering quality education.
           </p>
+
+          <h3 className="text-blue-500 text-xl font-semibold mt-6">Our Mission</h3>
+          <p className="text-gray-700 text-lg max-w-3xl mx-auto mb-8">
+            To empower educational institutions with cutting-edge financial
+            solutions, enhancing transparency, accountability, and efficiency in
+            budget management.
+          </p>
+
+          <h3 className="text-blue-500 text-xl font-semibold mt-6">Our Vision</h3>
+          <p className="text-gray-700 text-lg max-w-3xl mx-auto mb-8">
+            To be a leader in financial technology for education, ensuring that
+            schools and academies operate smoothly with seamless financial
+            planning and monitoring tools.
+          </p>
+        </div>
+
+        {/* Contact Info */}
+        <div className="mt-8 text-center">
+          <h3 className="text-blue-500 text-xl font-semibold mb-4">Get in Touch</h3>
+          <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-8 text-gray-700">
+            {/* Email */}
+            <a
+              href="mailto:zeki.mama21.21@gmail.com"
+              className="flex items-center space-x-2 hover:text-blue-600"
+            >
+              <FaEnvelope className="text-xl" />
+              <span>Email Us</span>
+            </a>
+
+            {/* Telegram */}
+            <a
+              href="https://t.me/+90QGUxMxz4Q3YWE0"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 hover:text-blue-600"
+            >
+              <FaTelegram className="text-xl" />
+              <span>Telegram</span>
+            </a>
+
+            {/* Facebook */}
+            <a
+              href="https://web.facebook.com/zekimes"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 hover:text-blue-600"
+            >
+              <FaFacebook className="text-xl" />
+              <span>Facebook</span>
+            </a>
+
+            {/* Twitter (X) */}
+            <a
+              href="https://twitter.com/Zekiman1234"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 hover:text-blue-600"
+            >
+              <FaXTwitter className="text-xl" />
+              <span>Twitter</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>

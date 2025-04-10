@@ -3,95 +3,80 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { StoreContext } from "../context/StoreContext";
-import axios from "axios";
 import { toast } from "react-toastify";
 import RoleRoute from "../config/RoleRoute";
+import ChangePasswordForm from "./ChangePasswordForm";
 import schoolImage from "../assets/school-budget-tracker.png";
 
 const AuthForm = () => {
-  const [isForgotPassword, setIsForgotPassword] = useState(false);
-  const { login } = useContext(StoreContext);
+  const { login, resetPassword } = useContext(StoreContext);
   const navigate = useNavigate();
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+  const [userRole, setUserRole] = useState("");
 
-  const loginValidationSchema = Yup.object().shape({
+  const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string().required("Password is required").min(8, "Password must be at least 8 characters"),
+    password: Yup.string().required("Password is required"),
   });
 
-  const forgotPasswordValidationSchema = Yup.object().shape({
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string().required("Password is required").min(8, "Password must be at least 8 characters"),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password"), null], "Passwords must match")
-      .required("Confirm Password is required"),
-  });
+  const handleLogin = async (values, { setFieldError }) => {
+    const result = await login(values.email, values.password);
 
-  const initialValues = { email: "", password: "", confirmPassword: "" };
+    if (result.requiresPasswordChange) {
+      setUserEmail(values.email);
+      setUserRole(result.role);
+      setIsChangingPassword(true);
+      return;
+    }
 
-  const onSubmit = async (values, { resetForm, setFieldError }) => {
-    try {
-      if (isForgotPassword) {
-        const response = await axios.post("http://localhost:5000/api/actors/change-password", {
-          email: values.email,
-          password: values.password,
-          confirmPassword: values.confirmPassword,
-        });
+    if (result.success) {
+      navigate(RoleRoute[result.role] || "/");
+    } else {
+      setFieldError("email", result.message);
+      toast.error(result.message);
+    }
+  };
 
-        toast.success(response.data.message);
-        setIsForgotPassword(false);
-        resetForm();
-      } else {
-        const response = await axios.post("http://localhost:5000/api/actors/login", {
-          email: values.email,
-          password: values.password,
-        });
+  const handlePasswordChange = async (values) => {
+    const result = await resetPassword(
+      userEmail,
+      values.newPassword,
+      values.confirmPassword,
+      userRole
+    );
 
-        if (response.data.message === "User doesn't exist.") {
-          setFieldError("email", response.data.message);
-        } else if (response.data.message === "Invalid password.") {
-          setFieldError("password", response.data.message);
-        } else {
-          login(response.data.actor);
-          const rolePath = RoleRoute[response.data.actor.role];
-          if (rolePath) {
-            navigate(rolePath);
-          } else {
-            toast.error("Invalid role detected. Redirecting to home.");
-            navigate("/");
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-
-      if (error.response) {
-        setFieldError("email", error.response.data?.message || "An error occurred. Please try again.");
-      } else if (error.request) {
-        setFieldError("email", "No response from the server. Check your connection.");
-      } else {
-        setFieldError("email", `Request error: ${error.message}`);
-      }
+    if (result.success) {
+      setIsChangingPassword(false);
+      setUserEmail("");
+      setUserRole("");
+      navigate("/login");
     }
   };
 
   return (
-    <div
-      className="min-h-screen flex flex-col bg-cover bg-center"
-      style={{
-        backgroundImage: `url('https://images.unsplash.com/photo-1581090700227-1f9c1c62a631?auto=format&fit=crop&w=1650&q=80')`,
-      }}
-    >
-      <div className="flex-grow flex justify-center items-center bg-gradient-to-r">
-        <div className="flex flex-col md:flex-row max-w-6xl w-full bg-white rounded-lg shadow-md overflow-hidden">
-          {/* Form Section */}
-          <div className="flex-grow p-8 md:w-1/2">
-            <h1 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              {isForgotPassword ? "Reset Password" : "Sign In"}
-            </h1>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="flex flex-col md:flex-row max-w-6xl w-full bg-white rounded-lg shadow-md overflow-hidden">
+        {/* Form Section */}
+        <div className="flex-grow p-8 md:w-1/2">
+          <h1 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            {isChangingPassword ? "Change Password" : "Sign In"}
+          </h1>
+          
+          {isChangingPassword ? (
+            <ChangePasswordForm
+              onSubmit={handlePasswordChange}
+              onCancel={() => {
+                setIsChangingPassword(false);
+                setUserEmail("");
+                setUserRole("");
+              }}
+            />
+          ) : (
             <Formik
-              initialValues={initialValues}
-              validationSchema={isForgotPassword ? forgotPasswordValidationSchema : loginValidationSchema}
-              onSubmit={onSubmit}
+              initialValues={{ email: "", password: "" }}
+              validationSchema={validationSchema}
+              onSubmit={handleLogin}
             >
               {({ isSubmitting }) => (
                 <Form className="space-y-6">
@@ -110,7 +95,7 @@ const AuthForm = () => {
 
                   <div>
                     <label htmlFor="password" className="block text-blue-600 text-lg font-medium">
-                      {isForgotPassword ? "New Password" : "Password"}
+                      Password
                     </label>
                     <Field
                       type="password"
@@ -121,56 +106,27 @@ const AuthForm = () => {
                     <ErrorMessage name="password" component="div" className="text-red-500 text-sm mt-1" />
                   </div>
 
-                  {isForgotPassword && (
-                    <div>
-                      <label htmlFor="confirmPassword" className="block text-blue-600 text-lg font-medium">
-                        Confirm Password
-                      </label>
-                      <Field
-                        type="password"
-                        name="confirmPassword"
-                        id="confirmPassword"
-                        className="w-full border-2 border-blue-200 rounded-lg p-3 mt-1 text-lg focus:outline-none focus:border-blue-500"
-                      />
-                      <ErrorMessage name="confirmPassword" component="div" className="text-red-500 text-sm mt-1" />
-                    </div>
-                  )}
-
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full p-3 rounded-lg font-semibold text-lg transition duration-300 transform hover:scale-105 shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent border-2 border-blue-600 hover:border-purple-600"
+                    className="w-full p-3 rounded-lg font-semibold text-lg transition duration-300 transform hover:scale-105 shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-purple-600 hover:to-blue-600"
                   >
-                    {isForgotPassword ? "Reset Password" : "Sign In"}
+                    {isSubmitting ? "Signing In..." : "Sign In"}
                   </button>
                 </Form>
               )}
             </Formik>
+          )}
+        </div>
 
-            {!isForgotPassword && (
-              <div className="mt-6 text-lg text-center">
-                <p>
-                  Forgot your password?{" "}
-                  <button
-                    onClick={() => setIsForgotPassword(true)}
-                    className="text-blue-600 hover:text-purple-600 hover:underline transition duration-300"
-                  >
-                    Reset password
-                  </button>
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Image Section */}
-          <div className="w-full md:w-1/2 h-64 md:h-auto relative">
-            <img
-              src={schoolImage}
-              alt="School Budget Tracker"
-              className="w-full h-full object-cover transition duration-300 ease-in-out hover:opacity-100 opacity-80"
-            />
-            <div className="absolute inset-0 bg-black opacity-20 hover:opacity-30 transition-opacity" />
-          </div>
+        {/* Image Section - Now using the imported schoolImage */}
+        <div className="hidden md:block md:w-1/2 relative">
+          <img
+            src={schoolImage}
+            alt="School Budget Tracker"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black opacity-20" />
         </div>
       </div>
     </div>

@@ -1,10 +1,7 @@
 import express from "express";
-import { 
-  registerPayment, 
-  getPaymentByStudentId, 
-  updatePayment, 
-  deletePayment 
+import {registerPayment,getPaymentByStudentId,updatePayment,deletePayment 
 } from "../controllers/paymentController.js";
+import auth from "../middleware/auth.js";
 
 const router = express.Router();
 

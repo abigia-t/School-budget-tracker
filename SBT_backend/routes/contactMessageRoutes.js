@@ -1,10 +1,12 @@
+// routes/contactMessageRoutes.js
 import express from "express";
-import { sendContactMessage, getContactMessages, deleteContactMessage } from "../controllers/contactMessageController.js";
+import { deleteContactMessage, getAllContactMessages, sendContactMessage } from "../controllers/contactMessageController.js";
 
 const router = express.Router();
 
-router.post("/send", sendContactMessage); // Add new message
-router.get("/", getContactMessages); // Fetch all messages
-router.delete("/:id", deleteContactMessage); // Delete a message by ID
+// @route   POST /api/contact-messages/send
+router.post("/send", sendContactMessage);
+router.get("/", getAllContactMessages)
+router.delete("/:id", deleteContactMessage)
 
 export default router;
