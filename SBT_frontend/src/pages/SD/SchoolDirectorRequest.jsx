@@ -68,7 +68,7 @@ const SchoolDirectorRequest = () => {
       }
   
       const response = await axios.post(
-        'http://localhost:5000/api/budgets',
+        'http://localhost:5000/api/sdbudgets',
         formData,
         {
           headers: {
@@ -98,7 +98,7 @@ const SchoolDirectorRequest = () => {
   const fetchBudgets = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/budgets', {
+      const response = await axios.get('http://localhost:5000/api/sdbudgets', {
         timeout: 5000
       });
       const data = Array.isArray(response.data) 
@@ -122,7 +122,7 @@ const SchoolDirectorRequest = () => {
     }
 
     try {
-      const response = await axios.delete(`http://localhost:5000/api/budgets/${id}`);
+      const response = await axios.delete(`http://localhost:5000/api/sdbudgets/${id}`);
       if (response.status !== 200) {
         throw new Error(response.data?.message || 'Failed to delete');
       }
@@ -240,7 +240,7 @@ const SchoolDirectorRequest = () => {
       )}
 
       <div className="mt-6 bg-white rounded-xl shadow-lg overflow-hidden">
-        <h2 className="text-xl font-semibold text-gray-700 p-4 border-b">Human Resource Expense</h2>
+        <h2 className="text-xl font-semibold text-gray-700 p-4 border-b">School Director Expense</h2>
         
         {isLoading ? (
           <div className="text-center py-8">
