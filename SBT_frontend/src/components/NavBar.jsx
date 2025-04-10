@@ -18,19 +18,19 @@ const NavBar = ({ setContactModalOpen }) => {
 
       <ul className="hidden md:flex gap-10 text-lg font-semibold">
         <Link to={"/"}>
-          <li className="hover:text-gray-300 cursor-pointer">Home</li>
+          <li className="group hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:bg-clip-text hover:text-transparent transition-all duration-300">Home</li>
         </Link>
         <a href="#about">
-          <li className="hover:text-gray-300 cursor-pointer">About Us</li>
+          <li className="group hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:bg-clip-text hover:text-transparent transition-all duration-300">About Us</li>
         </a>
         <li
           onClick={() => setContactModalOpen(true)}
-          className="hover:text-gray-300 cursor-pointer"
+          className="group hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:bg-clip-text hover:text-transparent transition-all duration-300"
         >
           Contact Us
         </li>
         <a href="#features">
-          <li className="hover:text-gray-300 cursor-pointer">Features</li>
+          <li className="group hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:bg-clip-text hover:text-transparent transition-all duration-300">Services</li>
         </a>
       </ul>
 

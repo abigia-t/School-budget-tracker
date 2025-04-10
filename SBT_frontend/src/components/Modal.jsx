@@ -100,7 +100,7 @@ const Modal = ({ isOpen, title, children, onSubmit, onClose, submitButtonText })
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-900 transition"
+                      className="bg-gradient-to-r from-blue-400 to-purple-500 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity shadow-md"
                     >
                       {submitButtonText || "Submit"}
                     </button>
