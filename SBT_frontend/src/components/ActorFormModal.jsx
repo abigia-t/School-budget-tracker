@@ -47,7 +47,7 @@ const ActorFormModal = ({isOpen,modalType,newActor,handleInputChange,handleModal
   return ( 
     <Modal
       isOpen={isOpen}
-      title={modalType === "create" ? "Register New Actor" : "Update Actor"}
+      title={modalType === "create" ? "Register Staff" : "Update Staff"}
       onClose={handleModalClose}
     >
       <form onSubmit={handleFormSubmit} className="space-y-4">
@@ -91,7 +91,7 @@ const ActorFormModal = ({isOpen,modalType,newActor,handleInputChange,handleModal
         </div>
 
         {/* ✅ Add Submit & Cancel Buttons */}
-        <div className="flex justify-end space-x-2 mt-4">
+        <div className="flex justify-between">
           <button 
             type="button"
             onClick={handleModalClose}

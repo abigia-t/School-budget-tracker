@@ -10,6 +10,8 @@ const generalManagerLinks = [
   { path: "/general-manager-page/payment-requested", label: "Payment" },
   { path: "/general-manager-page/messages-page", label: "Messages" },
   { path: "/general-manager-page/veiw-report", label: "View Report" },
+  { path: "/general-manager-page/annual-budget", label: "Set Budget" },
+
 ];
 
 const GeneralManagerPage = () => {

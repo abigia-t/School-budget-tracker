@@ -1,91 +1,103 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import LargeLoading from "../../components/loadings/LargeLoading";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import { Eye } from "lucide-react";
 
 const BudgetRequested = () => {
-  const [requests, setRequests] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [isRequests, setIsRequests] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch the budget requests from the backend when the component mounts
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/budgets"); // Replace with your API endpoint
-        console.log("API Response:", response.data); // Check the response format
-        if (Array.isArray(response.data)) {
-          setRequests(response.data); // Set only if it's an array
-        } else {
-          console.error("Response is not an array:", response.data);
-          setRequests([]); // Set to an empty array if not an array
+        const response = await axios.get(
+          "http://localhost:5000/api/budget-requests"
+        );
+        if (response.data.success && Array.isArray(response.data.data)) {
+          setIsRequests(response.data.data);
         }
-        setLoading(false);
+         else {
+          setIsRequests([]);
+          console.error("Unexpected format:", response.data);
+        }
       } catch (error) {
-        console.error("Error fetching budget requests", error);
-        setLoading(false);
+        console.error("Error fetching budget requests:", error);
+        setIsRequests([]);
+        toast.error("Failed to fetch budget requests.");
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchRequests();
   }, []);
 
-  const handleStatusChange = (id, newStatus) => {
-    setRequests(
-      requests.map((req) =>
-        req.id === id ? { ...req, status: newStatus } : req
-      )
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center mt-10">
+        <LargeLoading />
+      </div>
+    );
+  }
+  const getStatusBadge = (status) => {
+    const statusClass =
+      {
+        pending: "bg-yellow-100 text-yellow-800",
+        approved: "bg-green-100 text-green-800",
+        rejected: "bg-red-100 text-red-800",
+      }[status?.toLowerCase()] || "bg-gray-100 text-gray-800";
+
+    return (
+      <span
+        className={`px-3 py-1 rounded-full text-sm font-medium ${statusClass}`}
+      >
+        {status || "Unknown"}
+      </span>
     );
   };
-
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
-
   return (
-    <div className="bg-gray-100 mt-7 p-6 rounded-lg shadow-sm gap-6">
-      <h1 className="text-xl font-bold mb-5">Requested budgets</h1>
-      {/* Budget Requests Table */}
+    <div className="bg-gray-100 mt-7 p-6 rounded-lg shadow-sm">
+      <h1 className="text-xl font-bold mb-5">Requested Budgets</h1>
       <div className="overflow-x-auto">
         <table className="w-full bg-white shadow-md rounded-lg">
           <thead className="bg-gray-200">
             <tr>
               <th className="p-3 text-left">Requested By</th>
-              <th className="p-3 text-left">Title</th>
+              <th className="p-3 text-left">Category</th>
+              <th className="p-3 text-left">Month</th>
               <th className="p-3 text-left">Amount (ETB)</th>
-              <th className="p-3 text-left">Message</th>
-              <th className="p-3 text-center">Status</th>
+              <th className="p-3 text-left">Status (ETB)</th>              
+              <th className="p-3 text-center">Detail</th>
             </tr>
           </thead>
           <tbody>
-            {requests.map((request) => (
-              <tr key={request._id} className="border-b">
-                <td className="p-3">
-                  {request.requestedBy
-                    ? request.requestedBy.fullName
-                    : "Unknown"}
-                </td>
-                <td className="p-3">{request.title}</td>
-                <td className="p-3">ETB {request.amount}</td>
-                <td className="p-3">{request.message}</td>
-                <td className="p-3 text-center">
-                  <select
-                    className={`px-3 py-1 rounded ${
-                      request.status === "Approved"
-                        ? "bg-green-500 text-white"
-                        : request.status === "Rejected"
-                        ? "bg-red-500 text-white"
-                        : "bg-yellow-500 text-white"
-                    }`}
-                    value={request.status}
-                    onChange={(e) =>
-                      handleStatusChange(request._id, e.target.value)
-                    }
-                  >
-                    <option value="Pending">Pending</option>
-                    <option value="Approved">Approved</option>
-                    <option value="Rejected">Rejected</option>
-                  </select>
+            {isRequests.length === 0 ? (
+              <tr>
+                <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
+                  No budget requests found.
                 </td>
               </tr>
-            ))}
+            ) : (
+              isRequests.map((request) => (
+                <tr key={request._id} className="border-b">
+                  <td className="p-3">{request.requestedBy?.role || "Unknown"}</td>
+                  <td className="p-3">{request.category}</td>
+                  <td className="p-3">{request.month}</td>
+                  <td className="p-3">ETB {request.amount}</td>
+                  <td className="p-3">{getStatusBadge(request.status)}</td>
+                  <td className="p-3 text-center">
+                    <Link
+                      to={`/general-manager-page/budget-requested/${request._id}`}
+                      className="text-blue-500 hover:text-blue-700"
+                    >
+                      <Eye size={20} />
+                    </Link>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

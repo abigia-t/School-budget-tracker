@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import TopBar from "../../components/TopBar";
 import SideBar from "../../components/SideBar";
-import Footer2 from "../../components/footer2";
+// import Footer2 from "../../components/Footer2.jsx";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 
 const HRheadLinks = [
@@ -59,7 +59,7 @@ const HumanResourcePage = () => {
 
       {/* Only our Footer2 should appear */}
       <div className={`w-full ${isSidebarOpen ? "ml-64" : "ml-16"} transition-all duration-300`}>
-        <Footer2 />
+        {/* <Footer2 /> */}
       </div>
     </div>
   );

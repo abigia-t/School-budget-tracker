@@ -4,7 +4,7 @@ import ActorTable from "../../components/ActorTable";
 import ActorFormModal from "../../components/ActorFormModal";
 import DeleteConfirmationModal from "../../components/DeleteConfirmationModal";
 import { toast } from "react-toastify";
-
+import {FaEdit, FaPlusCircle} from "react-icons/fa"
 const ManageActors = () => {
   const [actors, setActors] = useState([]);
   const [filteredActors, setFilteredActors] = useState([]);
@@ -40,13 +40,13 @@ const ManageActors = () => {
             onClick={() => handleEditActor(actor)}
             className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600"
           >
-            Edit
+            <FaEdit size={18}/>
           </button>
           <button
             onClick={() => handleDeleteActor(actor)}
             className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
           >
-            Delete
+            <FaTrash size={25}/>
           </button>
         </div>
       ),
@@ -71,15 +71,15 @@ const ManageActors = () => {
 
   useEffect(() => {
     const term = searchTerm.toLowerCase();
-    const filtered = actors.filter(
-      (actor) =>
-        actor.firstName.toLowerCase().includes(term) ||
-        actor.lastName.toLowerCase().includes(term) ||
-        actor.email.toLowerCase().includes(term) ||
-        actor.role.toLowerCase().includes(term)
+    const filtered = actors.filter((actor) =>
+      actor.firstName?.toLowerCase().includes(term) ||
+      actor.lastName?.toLowerCase().includes(term) ||
+      actor.email?.toLowerCase().includes(term) ||
+      actor.role?.toLowerCase().includes(term)
     );
     setFilteredActors(filtered);
   }, [searchTerm, actors]);
+  
 
   const handleEditActor = (actor) => {
     setModalType("update");
@@ -176,7 +176,7 @@ const ManageActors = () => {
             }}
             className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
           >
-            + New Staff
+            <FaPlusCircle size={18}/>
           </button>
         </div>
       </div>

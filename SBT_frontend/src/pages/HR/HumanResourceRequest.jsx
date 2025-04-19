@@ -1,388 +1,225 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Modal from "../../components/Modal";
+import BudgetRequestForm from "../../components/BudgetRequestForm";
 import axios from "axios";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { FaTrash, FaEye, FaPlus } from 'react-icons/fa';
+import { toast } from "react-toastify";
+import LargeLoading from "../../components/loadings/LargeLoading";
+import { FaPlus, FaInfoCircle, FaTrash } from "react-icons/fa";
+import { BUDGET_STATUS } from "../../shared/constants";
 
 const HumanResourceRequest = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [submittedBudgets, setSubmittedBudgets] = useState([]);
+  const [budgets, setBudgets] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [viewingFile, setViewingFile] = useState(null);
-  const [showFileModal, setShowFileModal] = useState(false);
-  const [sortConfig, setSortConfig] = useState({ key: 'submittedAt', direction: 'desc' });
+  const [filter, setFilter] = useState("all");
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [sortConfig, setSortConfig] = useState({
+    key: "createdAt",
+    direction: "desc",
+  });
 
-  const notify = (message, type = 'success') => {
-    toast[type](message, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  };
-
-  const sortedBudgets = React.useMemo(() => {
-    let sortableBudgets = [...submittedBudgets];
-    if (sortConfig.key) {
-      sortableBudgets.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === 'asc' ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === 'asc' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
-    return sortableBudgets;
-  }, [submittedBudgets, sortConfig]);
-
-  const requestSort = (key) => {
-    let direction = 'asc';
-    if (sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
-    }
-    setSortConfig({ key, direction });
-  };
-
-  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    try {
-      const formData = new FormData();
-      
-      Object.entries(values).forEach(([key, value]) => {
-        if (key !== 'attachments' && value !== undefined && value !== null) {
-          formData.append(key, value);
-        }
-      });
-  
-      if (values.attachments) {
-        Array.from(values.attachments).forEach(file => {
-          if (file instanceof File) {
-            formData.append('attachments', file);
-          }
-        });
-      }
-  
-      const response = await axios.post(
-        'http://localhost:5000/api/budgets',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-      );
-  
-      if (response.status !== 201) {
-        throw new Error(response.data?.message || 'Unexpected response');
-      }
-  
-      notify("Budget request created successfully!");
-      
-      setIsModalOpen(false);
-      resetForm();
-      fetchBudgets();
-      
-    } catch (err) {
-      console.error("Error:", err);
-      notify(err.response?.data?.message || err.message || "Operation failed", 'error');
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  const navigate = useNavigate();
 
   const fetchBudgets = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/budgets', {
-        timeout: 5000
+      const res = await axios.get("http://localhost:5000/api/budget-requests", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
-      const data = Array.isArray(response.data) 
-        ? response.data 
-        : Array.isArray(response.data?.data) 
-          ? response.data.data 
-          : [response.data?.data || response.data];
-      setSubmittedBudgets(data);
+      setBudgets(res.data?.data || []);
     } catch (err) {
-      console.error("Fetch error:", err);
-      setError(err.response?.data?.message || err.message);
-      notify('Failed to load budget requests', 'error');
+      setError(err.response?.data?.message || "Failed to fetch requests");
+      toast.error("Failed to load requests");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this budget request?')) {
-      return;
+  useEffect(() => {
+    fetchBudgets();
+  }, []);
+
+  const processedBudgets = useMemo(() => {
+    let result = [...budgets];
+    if (filter !== "all") {
+      result = result.filter(
+        (b) => b.status === BUDGET_STATUS[filter.toUpperCase()]
+      );
     }
-
-    try {
-      const response = await axios.delete(`http://localhost:5000/api/budgets/${id}`);
-      if (response.status !== 200) {
-        throw new Error(response.data?.message || 'Failed to delete');
-      }
-      notify('Budget request deleted successfully');
-      fetchBudgets();
-    } catch (err) {
-      console.error("Delete error:", err);
-      notify(err.response?.data?.message || 'Failed to delete budget request', 'error');
+    if (sortConfig.key) {
+      result.sort((a, b) => {
+        const aVal = a[sortConfig.key],
+          bVal = b[sortConfig.key];
+        if (typeof aVal === "string")
+          return sortConfig.direction === "asc"
+            ? aVal.localeCompare(bVal)
+            : bVal.localeCompare(aVal);
+        if (typeof aVal === "number")
+          return sortConfig.direction === "asc" ? aVal - bVal : bVal - aVal;
+        return 0;
+      });
     }
+    return result;
+  }, [budgets, filter, sortConfig]);
+
+  const requestSort = (key) => {
+    setSortConfig((prev) => ({
+      key,
+      direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
+    }));
   };
 
-  const handleViewFile = (file) => {
-    const cleanFileName = file.path.replace(/^uploads[\\/]/, '');
-    const fileUrl = `http://localhost:5000/uploads/${cleanFileName}`;
-    
-    setViewingFile({
-      url: fileUrl,
-      name: file.filename,
-      type: file.mimetype
-    });
-    setShowFileModal(true);
-  };
-
-  const handleCloseFileModal = () => {
-    setShowFileModal(false);
-    setViewingFile(null);
-  };
-
-  const FileViewerModal = () => {
-    if (!showFileModal || !viewingFile) return null;
-
-    const isImage = viewingFile.type.startsWith('image/');
-    const isPDF = viewingFile.type === 'application/pdf';
+  const getStatusBadge = (status) => {
+    const statusClass =
+      {
+        pending: "bg-yellow-100 text-yellow-800",
+        approved: "bg-green-100 text-green-800",
+        rejected: "bg-red-100 text-red-800",
+      }[status?.toLowerCase()] || "bg-gray-100 text-gray-800";
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-auto">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-medium">{viewingFile.name}</h3>
-            <button 
-              onClick={handleCloseFileModal}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              ✕
-            </button>
-          </div>
-          
-          <div className="flex justify-center">
-            {isImage ? (
-              <img 
-                src={viewingFile.url} 
-                alt={viewingFile.name} 
-                className="max-w-full max-h-[70vh]"
-              />
-            ) : isPDF ? (
-              <iframe 
-                src={viewingFile.url} 
-                className="w-full h-[70vh] border-none"
-                title={viewingFile.name}
-              />
-            ) : (
-              <div className="text-center p-4">
-                <p className="mb-4">This file type cannot be previewed.</p>
-                <a
-                  href={viewingFile.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                  Open in New Tab
-                </a>
-              </div>
-            )}
-          </div>
-          
-          <div className="mt-4 flex justify-end">
-            <button
-              onClick={handleCloseFileModal}
-              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
+      <span
+        className={`px-3 py-1 rounded-full text-sm font-medium ${statusClass}`}
+      >
+        {status || "Unknown"}
+      </span>
     );
   };
 
-  useEffect(() => {
-    fetchBudgets();
-  }, [isModalOpen]);
+  const handleDelete = async (budgetId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this request?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(
+        `http://localhost:5000/api/budget-requests/${budgetId}`
+      );
+      setBudgets((prev) => prev.filter((b) => b._id !== budgetId));
+      toast.success("Budget request deleted successfully");
+    } catch (err) {
+      console.error("Delete error:", err);
+      toast.error(err.response?.data?.message || "Failed to delete request");
+    }
+  };
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-gray-100 min-h-screen">
-      <ToastContainer />
-      
-      <div className="flex justify-end mb-8">
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-gradient-to-r from-blue-400 to-purple-500 text-white w-12 h-12 rounded-full hover:opacity-90 transition-opacity flex items-center justify-center shadow-lg"
-          title="New Budget Request"
-        >
-          <FaPlus className="text-xl" />
-        </button>
-      </div>
+    <div className="bg-gray-100 mt-7 p-6 rounded-lg shadow-sm">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-800">Budget Requests</h1>
+          <div className="flex space-x-2">
+            {["all", "pending", "approved", "rejected"].map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-4 py-2 rounded-md capitalize ${
+                  filter === f
+                    ? `bg-${f === "all" ? "blue" : f}-500 text-white`
+                    : "bg-white border border-gray-300"
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700"
+            title="Create New Request"
+          >
+            <FaPlus size={18} />
+          </button>
+        </div>
 
-      {isModalOpen && (
+        {/* Create Modal */}
         <Modal
-          isOpen={isModalOpen}
-          title="Add New Expense"
-          onSubmit={handleSubmit}
-          onClose={() => setIsModalOpen(false)}
-          submitButtonText="Submit Request"
-        />
-      )}
+          isOpen={isCreateModalOpen}
+          title="New Budget Request"
+          onClose={() => setIsCreateModalOpen(false)}
+        >
+          <BudgetRequestForm
+            onClose={() => {
+              setIsCreateModalOpen(false);
+              fetchBudgets();
+            }}
+            submitButtonText="Submit Request"
+          />
+        </Modal>
 
-      <div className="mt-6 bg-white rounded-xl shadow-lg overflow-hidden">
-        <h2 className="text-xl font-semibold text-gray-700 p-4 border-b">Human Resource Expense</h2>
-        
-        {isLoading ? (
-          <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
-            <p className="mt-3 text-gray-600">Loading budget requests...</p>
-          </div>
-        ) : error ? (
-          <div className="bg-red-50 p-4 rounded-lg text-center">
-            <p className="text-red-600 font-medium">{error}</p>
-            <button 
-              onClick={() => window.location.reload()}
-              className="mt-3 bg-red-100 text-red-800 px-4 py-2 rounded hover:bg-red-200 transition-colors"
-            >
-              Retry Loading
-            </button>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th 
-                    scope="col" 
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                    onClick={() => requestSort('requestCategory')}
-                  >
-                    Category
-                    {sortConfig.key === 'requestCategory' && (
-                      <span className="ml-1">
-                        {sortConfig.direction === 'asc' ? '↑' : '↓'}
-                      </span>
-                    )}
-                  </th>
-                  <th 
-                    scope="col" 
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                    onClick={() => requestSort('fiscalYear')}
-                  >
-                    Fiscal Year
-                    {sortConfig.key === 'fiscalYear' && (
-                      <span className="ml-1">
-                        {sortConfig.direction === 'asc' ? '↑' : '↓'}
-                      </span>
-                    )}
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Description
-                  </th>
-                  <th 
-                    scope="col" 
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                    onClick={() => requestSort('amount')}
-                  >
-                    Amount (ETB)
-                    {sortConfig.key === 'amount' && (
-                      <span className="ml-1">
-                        {sortConfig.direction === 'asc' ? '↑' : '↓'}
-                      </span>
-                    )}
-                  </th>
-                  <th 
-                    scope="col" 
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                    onClick={() => requestSort('submittedAt')}
-                  >
-                    Date
-                    {sortConfig.key === 'submittedAt' && (
-                      <span className="ml-1">
-                        {sortConfig.direction === 'asc' ? '↑' : '↓'}
-                      </span>
-                    )}
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {sortedBudgets.length === 0 ? (
+        {/* Table */}
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          {isLoading ? (
+            <LargeLoading />
+          ) : error ? (
+            <div className="p-8 text-center text-red-600">{error}</div>
+          ) : processedBudgets.length === 0 ? (
+            <div className="p-8 text-center text-gray-500">
+              No requests found
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                   <tr>
-                    <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
-                      No budget requests found.
-                    </td>
+                    {["category", "amount", "status"].map((col) => (
+                      <th
+                        key={col}
+                        onClick={() => requestSort(col)}
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                      >
+                        {col.charAt(0).toUpperCase() + col.slice(1)}
+                      </th>
+                    ))}
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Actions
+                    </th>
                   </tr>
-                ) : (
-                  sortedBudgets.map((budget) => (
-                    <tr key={budget._id} className="hover:bg-gray-50">
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {processedBudgets.map((item) => (
+                    <tr key={item._id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
-                          {budget.requestCategory || 'Uncategorized'}
-                        </div>
+                        {item.category}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-500">
-                          {budget.fiscalYear}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-500 max-w-xs truncate">
-                          {budget.description}
-                        </div>
+                      <td className="px-6 py-4 whitespace-nowrap font-medium">
+                        {item.amount?.toLocaleString() || "0"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-500">
-                          {budget.amount?.toLocaleString('en-ET') || '0'} ETB
-                        </div>
+                        {getStatusBadge(item.status)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-500">
-                          {new Date(budget.submittedAt).toLocaleDateString()}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex space-x-3 justify-end">
-                          <button
-                            onClick={() => handleDelete(budget._id)}
-                            className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50"
-                            title="Delete"
+                        <div className="flex space-x-4">
+                          <Link
+                            to={`/human-resource-page/human-resource-request/${item._id}`}
+                            className="text-gray-500 hover:text-gray-700"
                           >
-                            <FaTrash />
-                          </button>
-                          {budget.attachments?.length > 0 && (
+                            <FaInfoCircle size={18} />
+                          </Link>
+                          {item.status?.toLowerCase() === "pending" && (
                             <button
-                              onClick={() => handleViewFile(budget.attachments[0])}
-                              className="text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-50"
-                              title="View Attachment"
+                              onClick={() => handleDelete(item._id)}
+                              className="text-red-500 hover:text-red-700"
+                              title="Delete"
                             >
-                              <FaEye />
+                              <FaTrash />
                             </button>
                           )}
                         </div>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
-
-      <FileViewerModal />
     </div>
   );
 };

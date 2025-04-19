@@ -6,7 +6,7 @@ const Messages = () => {
   // State for User Messages
   const [messages, setMessages] = useState([]);
 
-  // State for Notifications
+  // State for 
   const [recipientType, setRecipientType] = useState("actors");
   const [recipientDetail, setRecipientDetail] = useState("");
   const [message, setMessage] = useState("");

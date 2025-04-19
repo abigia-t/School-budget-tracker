@@ -24,6 +24,7 @@ import BudgetRequested from "./pages/GM/BudgetRequested";
 import PaymentRequested from "./pages/GM/PaymentRequested";
 import Messages from "./pages/GM/Messages.jsx"
 import ViewReport from "./pages/GM/ViewReport";
+import SetBudget from "./pages/GM/SetBudget.jsx";
 
 // school director routes
 import SchoolDirectorPage from "./pages/SD/SchoolDirectorPage";
@@ -46,6 +47,7 @@ import ResourceAndFinanceHeadRequest from './pages/RFH/ResourceAndFinanceHeadReq
 import HumanResourcePage from "./pages/HR/HumanResourcePage";
 import HumanResourceDashboard from "./pages/HR/HumanResourceDashboard";
 import HumanResourceRequest from "./pages/HR/HumanResourceRequest";
+import HumanResourceRequestDetail from "./pages/HR/HumanResourceRequestDetail.jsx";
 import PreparePayroll from './pages/HR/PreparePayroll';
 
 // parents routes
@@ -57,7 +59,7 @@ import Notification from "./pages/Parent/Notifications";
 import ParentProfile from "./pages/Parent/Profile";
 import PaymentReturn from "./pages/Parent/PaymentReturn";
 import Wellcome from "./pages/Parent/Welcome";
-
+import BudgetRequestedDetail from "./pages/GM/BudgetRequestedDetail.jsx";
 
 const App = () => {
   const { userRole } = useContext(StoreContext); // Get role from Context API
@@ -111,10 +113,12 @@ const App = () => {
   {/* General Manager Routes */}
   <Route path="/general-manager-page" element={<GeneralManagerPage />}>
           <Route path="general-manager-dashboard" element={<GeneralManagerDashboard />} />
-          <Route path="budget-requested" element={<BudgetRequested />} />
           <Route path="payment-requested" element={<PaymentRequested />} />
           <Route path="messages-page" element={<Messages/>} />
           <Route path="veiw-report" element={<ViewReport />} />
+          <Route path="annual-budget" element={<SetBudget/>}/>
+          <Route path="budget-requested" element={<BudgetRequested />} />
+          <Route path="budget-requested/:id" element={<BudgetRequestedDetail/>}/>
         </Route>
 
         {/* School Director Routes */}
@@ -145,8 +149,9 @@ const App = () => {
         <Route path="/human-resource-page" element={<HumanResourcePage />}>
           <Route index element={<HumanResourceDashboard />} />
           <Route path="human-resource-dashboard" element={<HumanResourceDashboard />} />
-          <Route path="human-resource-request" element={<HumanResourceRequest />} />
           <Route path="prepare-payroll" element={<PreparePayroll />} />
+          <Route path="human-resource-request" element={<HumanResourceRequest />} />
+          <Route path="human-resource-request/:id" element={<HumanResourceRequestDetail/>}/>
         </Route>
 
         {/* Parent Routes */}

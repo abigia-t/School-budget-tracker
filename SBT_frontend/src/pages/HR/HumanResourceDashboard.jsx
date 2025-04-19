@@ -43,7 +43,7 @@ const HumanResourceDashboard = () => {
   }, []);
 
   return (
-    <div className="bg-gradient-to-r from-blue-100 to-indigo-200 pt-16"> {/* Gradient background */} 
+    <div className="mt-7 p-6 rounded-lg shadow-sm bg-gradient-to-r from-blue-100 to-indigo-200"> {/* Gradient background */} 
       {/* Dashboard Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
         {statsData.map((item, index) => (
