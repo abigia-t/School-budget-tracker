@@ -1,4 +1,4 @@
-import Payroll from "../models/PayrollModel.js";
+import Payroll from "../models/payrollModel.js";
 
 
 // GET all payrolls

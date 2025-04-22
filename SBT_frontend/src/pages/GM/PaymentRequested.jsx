@@ -15,7 +15,7 @@ const PaymentRequest = () => {
 
   return (
     <div className="bg-gray-100 mt-7 p-6 rounded-lg shadow-sm gap-6">
-      <h1 className="text-xl font-bold mb-5">Payments</h1>
+      <h1 className="text-xl text-center font-bold mb-5">Payments</h1>
 
       {/* Payment Requests Table */}
       <div className="overflow-x-auto">

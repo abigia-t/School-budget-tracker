@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import LargeLoading from "../../components/loadings/LargeLoading";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Eye } from "lucide-react";
+import SmallLoading from "../../components/loadings/SmallLoading";
 
 const BudgetRequested = () => {
   const [isRequests, setIsRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(()=>{
+      setIsLoading(false)
+    },2500) 
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [])
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -26,21 +35,14 @@ const BudgetRequested = () => {
         console.error("Error fetching budget requests:", error);
         setIsRequests([]);
         toast.error("Failed to fetch budget requests.");
-      } finally {
-        setIsLoading(false);
-      }
+      } 
     };
 
     fetchRequests();
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center mt-10">
-        <LargeLoading />
-      </div>
-    );
-  }
+  if (isLoading) return <SmallLoading />;
+  
   const getStatusBadge = (status) => {
     const statusClass =
       {
@@ -59,7 +61,7 @@ const BudgetRequested = () => {
   };
   return (
     <div className="bg-gray-100 mt-7 p-6 rounded-lg shadow-sm">
-      <h1 className="text-xl font-bold mb-5">Requested Budgets</h1>
+      <h1 className="text-xl  text-center font-bold mb-5">Requested Budgets</h1>
       <div className="overflow-x-auto">
         <table className="w-full bg-white shadow-md rounded-lg">
           <thead className="bg-gray-200">

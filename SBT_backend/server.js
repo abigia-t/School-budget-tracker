@@ -11,6 +11,8 @@ import payrollRoute from "./routes/payrollRoute.js";
 import BudgetRequestRoutes from './routes/BudgetRequestRoutes.js';
 import annualBudgetRoutes from './routes/annualBudgetRoutes.js';
 import otherFundRoutes from './routes/otherFundRoutes.js';
+import financialRoute from "./routes/financialRoute.js";
+import employeeRoutes from './routes/employeeRoutes.js'; // Import employee routes
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -49,8 +51,6 @@ const connectToDatabase = async () => {
 
 connectToDatabase();
 
-// API Routes
-
 
 // **all API Routes**
 app.use("/api/auth", authRoute);   // Actor related routes
@@ -58,10 +58,12 @@ app.use("/api/payments", paymentRoute); // Payment related routes
 app.use("/api/contact-messages", contactMessageRoutes);
 app.use("/api/admin-messages", adminMessageRoutes);
 app.use("/api/stats", statsRoutes);
+app.use("/api/employee", employeeRoutes); // Employee related routes
 app.use("/api/payrolls", payrollRoute);
 app.use("/api/annual-budget", annualBudgetRoutes); // Annual budget routes
 app.use("/api/other-fund", otherFundRoutes); // Other fund routes
 app.use('/api/budget-requests', BudgetRequestRoutes); // Budget request routes
+app.use("/api/financials", financialRoute);
 // Serve uploads folder
 app.use("/uploads", express.static(path.join(path.resolve(), "uploads")));
 // Default Route
