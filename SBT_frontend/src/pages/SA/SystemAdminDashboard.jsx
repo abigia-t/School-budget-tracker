@@ -3,7 +3,8 @@ import { StoreContext } from "../../context/StoreContext";
 import { FaUsers, FaUserGraduate, FaClipboardCheck, FaUserTie } from "react-icons/fa";
 
 const SystemAdminDashboard = () => {
-  const { stats } = useContext(StoreContext);
+  const { stats, isFetchingStats } = useContext(StoreContext);
+  const { totalEmployee, isFetchingTotalEmployee } = useContext(StoreContext);
 
   const statsData = [
     {
@@ -21,34 +22,57 @@ const SystemAdminDashboard = () => {
       count: stats.totalRegistered,
       icon: <FaClipboardCheck className="text-4xl text-purple-600 mb-2" />,
     },
+  ];
+
+  const totalEmployeesData = [
     {
       title: "Total Employees",
-      count: stats.totalEmployees || 0, // fallback if missing
-      icon: <FaUserTie className="text-4xl text-yellow-600 mb-2" />,
+      count: totalEmployee,
+      icon: <FaUserTie className="text-3xl text-red-600" />,
     },
   ];
 
   return (
-    <div className="bg-gray-100 mt-7 p-6 rounded-lg shadow-sm gap-6">
-      {/* Dashboard Summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-5">
-        {statsData.map((item, index) => (
-          <div
-            key={index}
-            className="flex flex-col items-center justify-center shadow-md rounded-lg p-6 bg-white hover:shadow-lg transition"
-          >
-            {item.icon}
-            <h1 className="text-lg font-semibold text-gray-700">{item.title}</h1>
-            <h2 className="text-2xl font-bold text-gray-800 mt-1">{item.count}</h2>
-          </div>
-        ))}
-      </div>
+    <div className="flex flex-col min-h-[calc(90vh-10px)] bg-gray-100 px-8 py-6 mt-10"> 
+      {/* mt-10 pulls content lower */}
+      
+      <section className="flex-1 w-full">
+        <h2 className="text-2xl text-center font-semibold mb-6 text-gray-800">
+          Users Overview
+        </h2>
 
-      <div className="bg-white grid grid-cols-2 mt-10 p-6 rounded-xl shadow-md">
-        {/* Future sections like Notifications or Messages go here */}
-        {/* <NotificationSection /> */}
-        {/* <MessagesSection /> */}
-      </div>
+        {isFetchingStats || isFetchingTotalEmployee ? (
+          <SmallLoading />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+            {statsData.map((item, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl shadow-md p-6 text-center"
+              >
+                <div className="flex justify-center">{item.icon}</div>
+                <h3 className="text-lg font-medium text-gray-700 mt-3">
+                  {item.title}
+                </h3>
+                <p className="text-2xl font-bold text-indigo-700">
+                  {item.count}
+                </p>
+              </div>
+            ))}
+
+            {/* Total Employees card */}
+            <div className="bg-white rounded-xl shadow-md p-6 text-center">
+              <div className="flex justify-center">{totalEmployeesData[0].icon}</div>
+              <h3 className="text-lg font-medium text-gray-700 mt-3">
+                {totalEmployeesData[0].title}
+              </h3>
+              <p className="text-2xl font-bold text-indigo-700">
+                {totalEmployeesData[0].count}
+              </p>
+            </div>
+          </div>
+        )}
+      </section>
     </div>
   );
 };

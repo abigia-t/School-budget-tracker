@@ -1,87 +1,110 @@
-import Student from "../models/studentModel.js";
+import Student from "../models/studentModel.js"; // Import student model
+import Payment from "../models/paymentModel.js"; // Import payment model
+import Chapa from "chapa";
 
-// **1. Register a Payment (Add to Student Model)**
-export const registerPayment = async (req, res) => {
+const myChapa = new Chapa("CHASECK_TEST-J6yJZv2uvUsKQ4J6LB3PTMQQB35VOmOl");
+
+export const initializePayment = async (req, res) => {
   try {
-    const { studentId, amount, method, status } = req.body;
+    const { studentId, amount, email, firstName, lastName, phoneNumber } = req.body;
 
-    if (!studentId || !amount || !method || !status) {
-      return res.json({ status: false, message: "All fields are required." });
+    if (!studentId || !amount || !email || !firstName || !lastName || !phoneNumber) {
+      console.error("Missing required fields:", req.body);
+      return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // Find student
-    const student = await Student.findOne({ studentId });
+    // Find student by studentId
+    const student = await Student.findOne({ studentId: studentId });
     if (!student) {
-      return res.json({ status: false, message: "Student not found." });
+      console.error("Student not found for ID:", studentId);
+      return res.status(404).json({ error: "Student not found" });
     }
-    // Add payment data inside the student's model
-    student.paymentData.push({
+
+    const customerInfo = {
+      amount: amount.toString(),
+      currency: "ETB",
+      email,
+      first_name: firstName,
+      last_name: lastName,
+      phone_number: phoneNumber,
+      callback_url: `http://localhost:5000/api/payments/verify`,
+      customization: {
+        title: "School Fee Payment",
+        description: "Payment for student fees",
+      },
+    };
+
+    const response = await myChapa.initialize(customerInfo, { autoRef: true });
+    if (response.status === "failed") {
+      console.error("Payment Failed:", response.message);
+      throw new Error(response.message);
+    }
+
+    // Save payment with correct student _id
+    const payment = new Payment({
+      student: student._id,  // ✅ Correct now
+      txRef: response.tx_ref,
       amount,
-      method,
-      status,
-      date: new Date(),
+      currency: "ETB",
     });
 
-    await student.save();
-    res.json({ status: true, message: "Payment registered successfully", student });
+    await payment.save();
+
+    res.json({
+      checkoutUrl: response.data.checkout_url,
+      txRef: response.tx_ref,
+    });
   } catch (error) {
-    res.json({ status: false, message: error.message || "Server error" });
+    res.status(500).json({ error: "Payment initialization failed", details: error.message });
   }
 };
 
-// **2. Get Payments for a Specific Student**
-export const getPaymentByStudentId = async (req, res) => {
-  try {
-    const { studentId } = req.params;
 
-    const student = await Student.findOne({ studentId });
-    if (!student) {
-      return res.json({ status: false, message: "Student not found." });
+export const verifyPayment = async (req, res) => {
+  try {
+    const txRef = req.query.tx_ref;
+    if (!txRef) {
+      return res.status(400).send("Transaction reference is required");
     }
 
-    res.status(200).json(student.paymentData);
+    const response = await myChapa.verify(txRef);
+
+    if (response.status === "failed") {
+      throw new Error(response.message);
+    }
+
+    await Payment.updateOne({ txRef }, { status: response.status });
+
+    res.redirect("http://localhost:3000/parent/payment-return");
   } catch (error) {
-    res.json({ status: false, message: error.message || "Server error" });
+    res.status(500).send(`Verification failed: ${error.message}`);
   }
 };
 
-// **3. Update a Payment Record**
-export const updatePayment = async (req, res) => {
+// Fetch all payments
+export const getAllPayments = async (req, res) => {
   try {
-    const { studentId, paymentId } = req.params;
-    const { amount, method, status } = req.body;
-
-    const student = await Student.findOne({ studentId });
-    if (!student) return res.json({ status: false, message: "Student not found" });
-
-    const payment = student.paymentData.id(paymentId);
-    if (!payment) return res.json({ status: false, message: "Payment not found" });
-
-    // Update only provided fields
-    if (amount) payment.amount = amount;
-    if (method) payment.method = method;
-    if (status) payment.status = status;
-
-    await student.save();
-    res.json({ status: true, message: "Payment updated successfully", student });
+    const payments = await Payment.find().populate("student");
+    console.log("Fetched payments with students:", payments);
+    res.json(payments);
   } catch (error) {
-    res.json({ status: false, message: error.message || "Server error" });
+    console.error("Failed to fetch payments:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to fetch payments", details: error.message });
   }
 };
 
-// **4. Delete a Payment Record**
-export const deletePayment = async (req, res) => {
+// Fetch payment by ID
+export const getPaymentById = async (req, res) => {
   try {
-    const { studentId, paymentId } = req.params;
-
-    const student = await Student.findOne({ studentId });
-    if (!student) return res.json({ status: false, message: "Student not found" });
-
-    student.paymentData = student.paymentData.filter((p) => p._id.toString() !== paymentId);
-    
-    await student.save();
-    res.json({ status: true, message: "Payment deleted successfully", student });
+    const payment = await Payment.findById(req.params.id).populate("student");
+    if (!payment) {
+      return res.status(404).json({ error: "Payment not found" });
+    }
+    res.json(payment);
   } catch (error) {
-    res.json({ status: false, message: error.message || "Server error" });
+    console.error("Failed to fetch payment:", error);
+    res.status(500).json({ error: "Failed to fetch payment", details: error.message });
   }
 };

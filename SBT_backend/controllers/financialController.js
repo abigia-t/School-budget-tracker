@@ -1,6 +1,6 @@
 import AnnualBudget from "../models/annualBudgetModel.js";
 import OtherFund from "../models/otherFundModel.js";
-import Student from "../models/studentModel.js";
+import Payment from "../models/paymentModel.js";
 import BudgetRequest from "../models/BudgetRequestModel.js";
 import Payroll from "../models/payrollModel.js";
 import { aggregateExpensesByMonth, aggregatePayrollByDepartment } from "../utils/financialHelpers.js";
@@ -15,12 +15,9 @@ export const getFinancialOverview = async (req, res) => {
     const otherFundTotal = otherFunds.reduce((sum, item) => sum + item.allocatedFund, 0);
 
     // Student Fees total
-    const students = await Student.find({ role: "Student" });
-    const studentFees = students.reduce((sum, student) => {
-      const paid = student.paymentData?.totalPaid || 0;
-      return sum + paid;
-    }, 0);
-
+    const payments = await Payment.find();
+    const studentFees = payments.reduce((sum, item) => sum + item.amount, 0);
+    
     // === NEW: Calculate Total Expenses ===
 
     // 1. Approved Budget Requests

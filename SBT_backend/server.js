@@ -16,6 +16,7 @@ import employeeRoutes from './routes/employeeRoutes.js'; // Import employee rout
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+
 dotenv.config();
 const app = express();
 // Get directory name
@@ -64,6 +65,7 @@ app.use("/api/annual-budget", annualBudgetRoutes); // Annual budget routes
 app.use("/api/other-fund", otherFundRoutes); // Other fund routes
 app.use('/api/budget-requests', BudgetRequestRoutes); // Budget request routes
 app.use("/api/financials", financialRoute);
+
 // Serve uploads folder
 app.use("/uploads", express.static(path.join(path.resolve(), "uploads")));
 // Default Route

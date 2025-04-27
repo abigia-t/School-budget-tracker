@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -9,25 +9,39 @@ const SetBudget = () => {
   const [organizationName, setOrganizationName] = useState("");
   const [fundYear, setFundYear] = useState("");
   const [allocatedFund, setAllocatedFund] = useState("");
-  const navigate = useNavigate();
+  const [isSubmittingAnnual, setIsSubmittingAnnual] = useState(false);
+  const [isSubmittingFund, setIsSubmittingFund] = useState(false);
 
   const handleSubmitAnnual = async (e) => {
     e.preventDefault();
+    // Validate year first
+    if (!year || year.toString().length !== 4) {
+      toast.error("Please enter a valid 4-digit year");
+      return;
+    }
+    setIsSubmittingAnnual(true);
     try {
       await axios.post("http://localhost:5000/api/annual-budget/", {
         year,
         allocatedBudget,
       });
       toast.success("Budget allocated!");
-      navigate("/general-manager-page/general-manager-dashboard");
     } catch (err) {
       console.error(err);
       toast.error(err?.response?.data?.message || "Failed to allocate budget");
+    } finally {
+      setIsSubmittingAnnual(false);
     }
   };
 
   const handleSubmitOtherFund = async (e) => {
     e.preventDefault();
+    // Validate year first
+    if (!fundYear || fundYear.toString().length !== 4) {
+      toast.error("Please enter a valid 4-digit year");
+      return;
+    }
+    setIsSubmittingFund(true);
     try {
       await axios.post("http://localhost:5000/api/other-fund/", {
         organizationName,
@@ -35,10 +49,15 @@ const SetBudget = () => {
         fundYear,
       });
       toast.success("Fund allocated!");
-      navigate("/general-manager-page/general-manager-dashboard");
+      // Clear form after successful submission
+      setOrganizationName("");
+      setAllocatedFund("");
+      setFundYear("");
     } catch (err) {
       console.error(err);
       toast.error(err?.response?.data?.message || "Failed to allocate funds");
+    } finally {
+      setIsSubmittingFund(false);
     }
   };
 
@@ -48,9 +67,9 @@ const SetBudget = () => {
         Set Budgets
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         {/* Annual Budget */}
-        <div className="bg-white rounded-2xl shadow-md p-6 md:p-8">
+        <div className="bg-white rounded-2xl shadow-md p-6 md:p-8 mb-8">
           <h2 className="text-xl font-semibold text-blue-700 mb-5">
             📅 Annual Budget
           </h2>
@@ -83,15 +102,18 @@ const SetBudget = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition"
+              disabled={isSubmittingAnnual}
+              className={`w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition ${
+                isSubmittingAnnual ? "opacity-70 cursor-not-allowed" : ""
+              }`}
             >
-              Allocate Budget
+              {isSubmittingAnnual ? "Setting..." : "Set Budget"}
             </button>
           </form>
         </div>
 
         {/* Other Funds */}
-        <div className="bg-white rounded-2xl shadow-md p-6 md:p-8">
+        <div className="bg-white rounded-2xl shadow-md p-6 md:p-8 w-full">
           <h2 className="text-xl font-semibold text-blue-700 mb-5">
             🏢 Other Funds
           </h2>
@@ -137,9 +159,11 @@ const SetBudget = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition"
+              className={`w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition ${
+                isSubmittingFund ? "opacity-70 cursor-not-allowed" : ""
+              }`}
             >
-              Allocate Funds
+              {isSubmittingFund ? "Setting..." : "Set Fund"}
             </button>
           </form>
         </div>

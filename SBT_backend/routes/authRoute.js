@@ -2,7 +2,7 @@ import express from "express";
 import {registerActor,loginActor,getAllActors,getActorById,updateActor,deleteActor,changePassword as changeActorPassword,
 } from "../controllers/actorController.js";
 
-import {registerStudent,loginStudent,getAllStudents,getStudentById,updateStudent,deleteStudent,changePassword as changeStudentPassword,
+import {registerStudent,loginStudent,getAllStudents,getStudentById,updateStudent,deleteStudent,changePassword as changeStudentPassword, getStudentByStudentId,
 } from "../controllers/studentController.js";
 
 const router = express.Router();
@@ -18,6 +18,7 @@ router.delete("/actors/:id", deleteActor);
 router.post("/students/register", registerStudent);
 router.get("/students", getAllStudents);
 router.get("/students/:id", getStudentById);
+router.get("/students/custom/:studentId", getStudentByStudentId);
 router.put("/students/:id", updateStudent);
 router.delete("/students/:id", deleteStudent);
 

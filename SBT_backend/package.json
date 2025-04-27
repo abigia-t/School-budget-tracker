@@ -9,12 +9,14 @@
     "start": "node server.js",
     "server": "nodemon server.js"
   },
-  "author": "yekiber",
+  "author": "Zekariyas",
   "license": "ISC",
   "description": "this is...",
   "dependencies": {
+    "axios": "^1.9.0",
     "bcryptjs": "^3.0.2",
     "body-parser": "^1.20.3",
+    "chapa": "^1.0.5",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",

@@ -15,13 +15,16 @@ import SystemAdminPage from "./pages/SA/SystemAdminPage";
 import SystemAdminDashboard from "./pages/SA/SystemAdminDashboard";
 import ManageActors from "./pages/SA/ManageActors";
 import ManageStudents from "./pages/SA/ManageStudents";
+import ManageStudentsDetail from "./pages/SA/ManageStudentsDetail.jsx";
 import ManageChapa from "./pages/SA/ManageChapa";
 
 //general manager routes
 import GeneralManagerPage from "./pages/GM/GeneralManagerPage";
 import GeneralManagerDashboard from "./pages/GM/GeneralManagerDashboard";
 import BudgetRequested from "./pages/GM/BudgetRequested";
+import BudgetRequestedDetail from "./pages/GM/BudgetRequestedDetail.jsx";
 import PaymentRequested from "./pages/GM/PaymentRequested";
+import PaymentListDetail from "./pages/GM/PaymentListDetail.jsx";
 import Messages from "./pages/GM/Messages.jsx"
 import ViewReport from "./pages/GM/ViewReport";
 import SetBudget from "./pages/GM/SetBudget.jsx";
@@ -51,15 +54,14 @@ import HumanResourceRequestDetail from "./pages/HR/HumanResourceRequestDetail.js
 import PreparePayroll from './pages/HR/PreparePayroll';
 
 // parents routes
-import Parent from "./pages/Parent/parent";
-import ParentDashboard from "./pages/Parent/Dashboard";
-import ParentPayment from "./pages/Parent/Payment";
-import PaymentHistory from "./pages/Parent/PaymentHistory";
-import Notification from "./pages/Parent/Notifications";
-import ParentProfile from "./pages/Parent/Profile";
-import PaymentReturn from "./pages/Parent/PaymentReturn";
-import Wellcome from "./pages/Parent/Welcome";
-import BudgetRequestedDetail from "./pages/GM/BudgetRequestedDetail.jsx";
+import Parent from "./pages/Parent/Parent";
+import ParentDashboard from "./components/parent/Dashbord";
+import ParentPayment from "./components/parent/Payment";
+import PaymentHistory from "./components/parent/PaymentHistory";
+import Notifications from "./components/parent/Notifications";
+import ParentProfile from "./components/parent/Profile";
+import PaymentReturn from "./components/PaymentReturn";
+import Welcome from "./components/parent/Welcome";
 
 const App = () => {
   const { userRole } = useContext(StoreContext); // Get role from Context API
@@ -108,12 +110,14 @@ const App = () => {
           <Route path="system-admin-dashboard" element={<SystemAdminDashboard />} />
           <Route path="manage-actors" element={<ManageActors />} />
           <Route path="manage-students" element={<ManageStudents />} />
+          <Route path="manage-students-detail/:id" element={<ManageStudentsDetail />} />
           <Route path="manage-chapa" element={<ManageChapa />} />
         </Route>
   {/* General Manager Routes */}
   <Route path="/general-manager-page" element={<GeneralManagerPage />}>
           <Route path="general-manager-dashboard" element={<GeneralManagerDashboard />} />
           <Route path="payment-requested" element={<PaymentRequested />} />
+          <Route path="payment-requested/:id" element={<PaymentListDetail />}/>
           <Route path="messages-page" element={<Messages/>} />
           <Route path="veiw-report" element={<ViewReport />} />
           <Route path="annual-budget" element={<SetBudget/>}/>
@@ -155,15 +159,15 @@ const App = () => {
         </Route>
 
         {/* Parent Routes */}
-        <Route path="/parent-page" element={<Parent />}>
-          <Route index element={<Wellcome />} />
-          <Route path="parent-dashboard" element={<ParentDashboard />} />
-          <Route path="profile" element={<ParentProfile />} />
-          <Route path="payment" element={<ParentPayment />} />
-          <Route path="pyament-history" element={<PaymentHistory />} />
-          <Route path="notification" element={<Notification />} />
-          <Route path="payment-return" element={<PaymentReturn />} />
-        </Route>
+          <Route path="/parent" element={<Parent />}>
+            <Route index element={<Welcome/>}/>
+            <Route path="dashboard" element={<ParentDashboard />} />
+            <Route path="profile" element={<ParentProfile />} />
+            <Route path="payment" element={<ParentPayment />} />
+            <Route path="pyament-history" element={<PaymentHistory />} />
+            <Route path="notfication" element={<Notifications />} />
+            <Route path="payment-return" element={<PaymentReturn />} />
+          </Route>
       </Routes>
       
 

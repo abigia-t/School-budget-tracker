@@ -5,7 +5,7 @@ const RoleRoute = {
   "Auditor": "/auditor-page/auditor-dashboard",
   "Resource and Finance": "/resource-and-finance-head-page/resource-and-finance-head-dashboard",
   "Human Resource": "/human-resource-page/human-resource-dashboard",
-  "Student": "/parent-page/parent-dashboard", // Student route is included
+  "Student": "/parent/dashboard", // Student route is included
 };
 
 export default RoleRoute;

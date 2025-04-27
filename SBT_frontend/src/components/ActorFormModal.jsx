@@ -47,7 +47,7 @@ const ActorFormModal = ({isOpen,modalType,newActor,handleInputChange,handleModal
   return ( 
     <Modal
       isOpen={isOpen}
-      title={modalType === "create" ? "Register Staff" : "Update Staff"}
+      title={modalType === "create" ? "Staff registration form" : "Update Staff"}
       onClose={handleModalClose}
     >
       <form onSubmit={handleFormSubmit} className="space-y-4">

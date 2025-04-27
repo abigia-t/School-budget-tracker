@@ -22,14 +22,17 @@ const ManageStudents = () => {
 
   useEffect(() => {
     const query = searchTerm.toLowerCase();
-    const results = students.filter(
-      (s) =>
-        s._id.toLowerCase().includes(query) ||
-        s.firstName.toLowerCase().includes(query) ||
-        s.email.toLowerCase().includes(query)
+    const results = students.filter((s) =>
+      (s.studentId || "").toLowerCase().includes(query) ||
+      (s.firstName || "").toLowerCase().includes(query) ||
+      (s.middleName || "").toLowerCase().includes(query) ||
+      (s.lastName || "").toLowerCase().includes(query) ||
+      (s.email || "").toLowerCase().includes(query)
     );
     setFilteredStudents(results);
   }, [searchTerm, students]);
+  
+  
 
   const fetchStudents = async () => {
     try {
@@ -41,7 +44,7 @@ const ManageStudents = () => {
         toast.error("Invalid response format from server.");
       }
     } catch (error) {
-      toast.error("Failed to fetch students.");
+      toast.error("Failed to fetch.");
     }
   };
 
@@ -68,9 +71,9 @@ const ManageStudents = () => {
       const updatedList = students.filter((s) => s._id !== currentStudent._id);
       setStudents(updatedList);
       setFilteredStudents(updatedList);
-      toast.success("Student deleted successfully!");
+      toast.success("Deleted successfully!");
     } catch (error) {
-      toast.error("Failed to delete student.");
+      toast.error("Failed to delete.");
     } finally {
       setIsDeleteModalOpen(false);
     }
@@ -88,7 +91,7 @@ const ManageStudents = () => {
         const updatedList = [...students, res.data];
         setStudents(updatedList);
         setFilteredStudents(updatedList);
-        toast.success("Student added successfully!");
+        toast.success("Added successfully!");
       } catch (error) {
         console.error("Add Error:", error.response?.data || error.message);
         toast.error(
@@ -108,9 +111,9 @@ const ManageStudents = () => {
         );
         setStudents(updatedList);
         setFilteredStudents(updatedList);
-        toast.success("Student updated successfully!");
+        toast.success("Updated successfully!");
       } catch (error) {
-        toast.error("Failed to update student.");
+        toast.error("Failed to update.");
       }
     }
 
@@ -120,11 +123,11 @@ const ManageStudents = () => {
   return (
     <div className="bg-gray-100 mt-7 p-6 rounded-lg shadow-sm">
       <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-4">
-        <h2 className="text-2xl font-semibold">Manage Students</h2>
+        <h3 className="text-2xl font-light">Manage Students</h3>
         <div className="flex flex-col md:flex-row items-center gap-3">
           <input
             type="text"
-            placeholder="Search by ID, name, or email"
+            placeholder="Search by ID or name..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
@@ -133,7 +136,7 @@ const ManageStudents = () => {
             onClick={handleAddStudent}
             className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
           >
-            Register Student
+            Register
           </button>
         </div>
       </div>

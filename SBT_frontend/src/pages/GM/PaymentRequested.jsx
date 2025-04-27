@@ -1,59 +1,118 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { FaInfoCircle, FaMoneyBillWave } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
+import LargeLoading from "../../components/loadings/LargeLoading";
 
-const PaymentRequest = () => {
-  // Sample student payment requests (Replace with API data)
-  const [paymentRequests, setPaymentRequests] = useState([
-    { id: 1, studentName: "Jemal Kedir", amount: 1200, status: "Pending" },
-    { id: 2, studentName: "Kahin Zekariyas", amount: 1500, status: "Pending" },
-    { id: 3, studentName: "Samuel Mussie", amount: 1100, status: "Pending" }
-  ]);
+const PaymentList = () => {
+  const [payments, setPayments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  // Handle payment approval status change
-  const handleStatusChange = (id, newStatus) => {
-    setPaymentRequests(paymentRequests.map(request => request.id === id ? { ...request, status: newStatus } : request));
-  };
+  useEffect(() => {
+    const fetchPayments = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/payments");
+        if (Array.isArray(response.data)) {
+          setPayments(response.data);
+        } else {
+          toast.error("Unexpected data format from API.");
+        }
+      } catch (error) {
+        toast.error("Failed to fetch payment data.");
+        console.error("API Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPayments();
+  }, []);
+
+  const filteredPayments = payments.filter((payment) =>
+    `${payment.student?.firstName} ${payment.student?.lastName}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+
+  const formatDate = (dateString) =>
+    new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
 
   return (
-    <div className="bg-gray-100 mt-7 p-6 rounded-lg shadow-sm gap-6">
-      <h1 className="text-xl text-center font-bold mb-5">Payments</h1>
-
-      {/* Payment Requests Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full bg-white shadow-md rounded-lg">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="p-3 text-left">Student Name</th>
-              <th className="p-3 text-left">Amount (ETB)</th>
-              <th className="p-3 text-left">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paymentRequests.map((request) => (
-              <tr key={request.id} className="border-b">
-                <td className="p-3">{request.studentName}</td>
-                <td className="p-3">ETB {request.amount}</td>
-                <td className="p-3 text-center">
-                  <select
-                    className={`px-3 py-1 rounded ${
-                      request.status === "Approved" ? "bg-green-500 text-white" :
-                      request.status === "Rejected" ? "bg-red-500 text-white" :
-                      "bg-yellow-500 text-white"
-                    }`}
-                    value={request.status}
-                    onChange={(e) => handleStatusChange(request.id, e.target.value)}
-                  >
-                    <option value="Pending">Pending</option>
-                    <option value="Approved">Approved</option>
-                    <option value="Rejected">Rejected</option>
-                  </select>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="bg-gray-100 mt-7 p-6 rounded-lg shadow-sm min-h-[80vh]">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">
+          <FaMoneyBillWave className="inline mr-2" />
+          Student Payments
+        </h1>
+        <input
+          type="text"
+          placeholder="Search by student name..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
       </div>
+
+      {loading ? (
+        <LargeLoading />
+      ) : filteredPayments.length === 0 ? (
+        <div className="bg-white p-8 rounded-lg shadow text-center">
+          <p className="text-gray-500 text-lg">
+            {payments.length === 0
+              ? "No payments found"
+              : "No matching payments found"}
+          </p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+          <table className="w-full">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="p-4 text-left">Student</th>
+                <th className="p-4 text-left">Grade</th>
+                <th className="p-4 text-left">Amount</th>
+                <th className="p-4 text-left">Date</th>
+                <th className="p-4 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredPayments.map((payment) => (
+                <tr
+                  key={payment._id}
+                  className="border-b hover:bg-gray-50 transition"
+                >
+                  <td className="p-4">
+                    {payment.student?.firstName} {payment.student?.lastName}
+                  </td>
+                  <td className="p-4">{payment.student?.grade}</td>
+                  <td className="p-4 font-medium">
+                    ETB {payment.amount?.toLocaleString()}
+                  </td>
+                  <td className="p-4">{formatDate(payment.createdAt)}</td>
+                  <td className="p-4">
+                    <Link
+                      to={`/general-manager-page/payment-requested/${payment._id}`}
+                      className="text-blue-500 hover:text-blue-700 flex items-center"
+                      title="View Student Payment Details"
+                    >
+                      <FaInfoCircle className="mr-1" />
+                      Detail
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
 
-export default PaymentRequest;
+export default PaymentList;

@@ -126,7 +126,7 @@ const ManageActors = () => {
           const newList = [...actors, response.data];
           setActors(newList);
           setIsModalOpen(false);
-          toast.success("Actor added successfully!");
+          toast.success("Added successfully!");
         })
         .catch((error) => {
           toast.error(error.response?.data?.message || "Failed to create actor.");
@@ -141,16 +141,16 @@ const ManageActors = () => {
             prev.map((actor) => (actor._id === currentActor._id ? updated : actor))
           );
           setIsModalOpen(false);
-          toast.success("Actor updated successfully!");
+          toast.success("Staff Updated!");
         })
-        .catch(() => toast.error("Failed to update actor."));
+        .catch(() => toast.error("Failed to update!"));
     }
   };
 
   return (
     <div className="bg-gray-100 mt-7 p-6 rounded-lg shadow-sm">
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-        <h2 className="text-3xl font-semibold">Manage Actors</h2>
+        <h3 className="text-3xl font-light">Manage Staff</h3>
         <div className="flex gap-4 items-center w-full md:w-auto">
           <input
             type="text"
@@ -208,11 +208,11 @@ const ManageActors = () => {
             .then(() => {
               setActors((prev) => prev.filter((a) => a._id !== currentActor._id));
               setIsModalOpen(false);
-              toast.success("Actor deleted successfully!");
+              toast.success("Deleted successfully!");
             })
             .catch((error) => {
               console.error("Delete error:", error);
-              toast.error("Failed to delete actor.");
+              toast.error("Failed to delete.");
             });
         }}
       />

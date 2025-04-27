@@ -1,25 +1,45 @@
 import AnnualBudget from "../models/annualBudgetModel.js";
 
-export const allocateAnnualBudget = async (req, res) => { 
+export const allocateAnnualBudget = async (req, res) => {
   const { year, allocatedBudget } = req.body;
 
+  // Validate inputs
+  if (!year || !allocatedBudget || allocatedBudget <= 0) {
+    return res.status(400).json({ 
+      success: false,
+      message: "Set Valid Inputs." 
+    });
+  }
+
   try {
-    const exists = await AnnualBudget.findOne({ year });
-    if (exists) {
-      return res.status(400).json({ message: "Budget for this year already exists" });
+    // Check if ANY budget exists (regardless of year)
+    const existingBudget = await AnnualBudget.findOne();
+
+    if (existingBudget) {
+      return res.status(403).json({
+        success: false,
+        message: "A budget already exists. Remove it before setting a new one.",
+        existingBudget
+      });
     }
 
-    const newBudget = new AnnualBudget({
-      year,
-      allocatedBudget
-    });
-
+    // Only allow creation if NO budgets exist
+    const newBudget = new AnnualBudget({ year, allocatedBudget });
     await newBudget.save();
-    res.status(201).json({ message: "Annual Budget allocated", data: newBudget });
+
+    res.status(201).json({
+      success: true,
+      message: "Budget Set Successfully",
+      data: newBudget
+    });
 
   } catch (err) {
     console.error("Budget Error:", err);
-    res.status(500).json({ message: "Failed to allocate budget" });
+    res.status(500).json({ 
+      success: false,
+      message: "Budget operation failed",
+      error: err.message 
+    });
   }
 };
 

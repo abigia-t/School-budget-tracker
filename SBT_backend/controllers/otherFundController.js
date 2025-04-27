@@ -3,6 +3,20 @@ import OtherFund from "../models/otherFundModel.js";
 export const setOtherFund = async (req, res) => {
   try {
     const { fundYear, organizationName, allocatedFund } = req.body;
+    // 1. Validate Inputs
+  if (!fundYear || !organizationName || !allocatedFund) {
+    return res.status(400).json({ 
+      success: false,
+      message: "All Fields are required." 
+    });
+  }
+
+  if (allocatedFund <= 0) {
+    return res.status(400).json({ 
+      success: false,
+      message: "Please Set Proper Number." 
+    });
+  }
     const newFund = new OtherFund({
       fundYear,
       organizationName,

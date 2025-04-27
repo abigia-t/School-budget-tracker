@@ -1,47 +1,49 @@
 import React from "react";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 const ActorTable = ({ actors = [], columns, handleEditActor, handleDeleteActor }) => {
   if (!Array.isArray(actors)) {
-    console.error("Invalid actors data:", actors); // Debugging
+    console.error("Invalid actors data:", actors);
     return <p className="text-red-500">Error: Actors data is invalid.</p>;
   }
 
   return (
-    <table className="w-full border-collapse border border-gray-300">
-      <thead>
-        <tr className="bg-gray-100">
+    <table className="min-w-full divide-y divide-gray-300 mt-4">
+      <thead className="bg-gray-200">
+        <tr>
           {columns.map((col) => (
-            <th key={col.key} className="border px-4 py-2 text-left">
+            <th
+              key={col.key}
+              className="px-4 py-3 text-left text-sm font-medium text-gray-900 tracking-wider"
+            >
               {col.label}
             </th>
           ))}
         </tr>
       </thead>
-      <tbody>
+      <tbody className="bg-white divide-y divide-gray-200">
         {actors.length > 0 ? (
           actors.map((actor) => (
-            <tr key={actor._id} className="border">
+            <tr key={actor._id}>
               {columns.map((col) => (
-                <td key={col.key} className="border px-4 py-2">
+                <td key={col.key} className="px-4 py-3 text-sm text-gray-800">
                   {col.key === "actions" ? (
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-3">
                       <button
                         onClick={() => handleEditActor(actor)}
-                        className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600"
+                        className="text-blue-600 hover:text-blue-800"
                       >
-                        Edit
+                        <FaEdit size={18} />
                       </button>
                       <button
-                        onClick={() => {
-                          handleDeleteActor(actor);
-                        }}
-                        className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
+                        onClick={() => handleDeleteActor(actor)}
+                        className="text-red-500 hover:text-red-700"
                       >
-                        Delete
+                        <FaTrash size={18} />
                       </button>
                     </div>
                   ) : (
-                    actor[col.key]
+                    actor[col.key] || "N/A"
                   )}
                 </td>
               ))}
@@ -49,7 +51,7 @@ const ActorTable = ({ actors = [], columns, handleEditActor, handleDeleteActor }
           ))
         ) : (
           <tr>
-            <td colSpan={columns.length} className="text-center py-4">
+            <td colSpan={columns.length} className="text-center px-4 py-6 text-gray-500">
               No actors found.
             </td>
           </tr>

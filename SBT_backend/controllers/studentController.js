@@ -21,6 +21,7 @@ export const registerStudent = async (req, res) => {
       password,
       phoneNumber,
       address,
+      grade,
     } = req.body;
 
     // Validate email format
@@ -60,6 +61,7 @@ export const registerStudent = async (req, res) => {
       password: hashedPassword,
       phoneNumber,
       address,
+      grade,
       role: "Student",
     });
 
@@ -195,6 +197,28 @@ export const getStudentById = async (req, res) => {
   }
 };
 
+
+// **5. Get Student By Custom StudentId (like 'ya1')**
+export const getStudentByStudentId = async (req, res) => {
+  try {
+    const { studentId } = req.params; // Expecting custom student ID like 'ya1'
+
+    // Search by the custom student ID
+    const student = await Student.findOne({ studentId }).select("-password");
+
+    if (!student)
+      return res
+        .status(404)
+        .json({ status: false, message: "Student not found" });
+
+    res.status(200).json(student);
+  } catch (error) {
+    console.error("getStudentByStudentId error:", error);
+    res
+      .status(500)
+      .json({ status: false, message: error.message || "Server error" });
+  }
+};
 // **5. Update Student Details**
 export const updateStudent = async (req, res) => {
   try {
