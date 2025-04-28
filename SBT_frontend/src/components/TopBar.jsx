@@ -19,7 +19,12 @@ const TopBar = () => {
   };
 
   const handleResetPassword = async (values) => {
-    const result = await resetPassword(user.email, values.newPassword, values.confirmPassword, user.role);
+    const result = await resetPassword(
+      user.email,
+      values.newPassword,
+      values.confirmPassword,
+      user.role
+    );
     if (result.success) {
       setIsChangingPassword(false);
     }
@@ -38,8 +43,10 @@ const TopBar = () => {
       </div>
 
       <div className="flex items-center gap-4 flex-grow justify-around">
-        <h1 className="text-3xl font-bold">Budget Tracking System</h1>
-        <div className="relative" onClick={() => setShowInfo(!showInfo)}>
+        <h2 className="text-2xl font-light flex items-center gap-2">
+          👋 Welcome, <span className="font-semibold">{user?.firstName}</span>!
+        </h2>
+        <div className="relative group">
           <div className="flex items-center gap-2 cursor-pointer">
             <img
               src={avatar}
@@ -49,31 +56,29 @@ const TopBar = () => {
             <IoMdArrowDropdown size={20} className="text-white" />
           </div>
 
-          {showInfo && (
-            <div className="absolute right-0 mt-2 w-64 bg-white text-gray-800 rounded-lg shadow-lg overflow-hidden animate-fadeIn">
-              <div className="p-4 flex flex-col items-center border-b">
-                <img
-                  src={avatar}
-                  alt="User"
-                  className="h-16 w-16 rounded-full border-2 border-blue-500 object-cover"
-                />
-                <p className="mt-2 font-semibold text-lg">{user?.firstName}</p>
-                <p className="text-sm text-gray-500">{user?.email}</p>
-              </div>
-              <h2
-                className="w-full flex items-center justify-center py-3 text-blue-950 hover:bg-white transition font-semibold gap-2 cursor-pointer"
-                onClick={() => setIsChangingPassword(true)}
-              >
-                Change Password
-              </h2>
-              <button
-                className="w-full flex items-center justify-center py-3 text-red-500 hover:text-red-700 transition font-semibold gap-2"
-                onClick={handleLogout}
-              >
-                <FiLogOut size={20} /> Logout
-              </button>
+          <div className="absolute right-0 mt-2 w-64 bg-white text-gray-800 rounded-lg shadow-lg overflow-hidden opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-all duration-300 animate-fadeIn">
+            <div className="p-4 flex flex-col items-center border-b">
+              <img
+                src={avatar}
+                alt="User"
+                className="h-16 w-16 rounded-full border-2 border-blue-500 object-cover"
+              />
+              <p className="mt-2 font-semibold text-lg">{user?.firstName}</p>
+              <p className="text-sm text-gray-500">{user?.email}</p>
             </div>
-          )}
+            <h2
+              className="w-full flex items-center justify-center py-3 text-blue-950 hover:bg-white transition font-semibold gap-2 cursor-pointer"
+              onClick={() => setIsChangingPassword(true)}
+            >
+              Change Password
+            </h2>
+            <button
+              className="w-full flex items-center justify-center py-3 text-red-500 hover:text-red-700 transition font-semibold gap-2"
+              onClick={handleLogout}
+            >
+              <FiLogOut size={20} /> Logout
+            </button>
+          </div>
         </div>
       </div>
 

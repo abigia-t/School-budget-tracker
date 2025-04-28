@@ -8,7 +8,7 @@ const ParentProfile = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/parents")
+      .get("http://localhost:5000/api/students")
       .then((response) => setParentData(response.data))
       .catch((err) => setError(err.message))
       .catch((error) => console.log("parent fetch error", error))
@@ -27,11 +27,11 @@ const ParentProfile = () => {
       <div className="flex flex-col sm:flex-row items-center justify-between pb-6 border-b border-gray-200">
         <div className="flex items-center space-x-5">
           <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-md">
-            {parentData.fullName.charAt(0)}
+            {parentData.firstName.charAt(0)}
           </div>
           <div>
             <h2 className="text-3xl font-bold text-gray-800 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              {parentData.fullName}
+              {parentData.firstName}{parentData.middleName}{parentData.lastName}
             </h2>
             <p className="text-gray-600 mt-1 text-sm">{parentData.email}</p>
           </div>
@@ -44,7 +44,7 @@ const ParentProfile = () => {
       {/* Personal Info & Budget Grid */}
       <div className="mt-8 flex">
         <div className="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-          <h3 className="text-xl font-semibold text-gray-800 mb-3">
+          <h3 className="text-xl font-semibold text-gray-800 mt-20 mb-3">
             Personal Information
           </h3>
           <dl className="space-y-3">
@@ -97,41 +97,9 @@ const ParentProfile = () => {
               ))}
             </div>
           </div>
-          {/* <div className="flex items-center space-x-2">
-            <dt className="font-medium text-gray-700">Grade:</dt>
-            <dd className="text-gray-600">{grade}</dd>
-          </div>
-          <div className="flex items-center space-x-2">
-            <dt className="font-medium text-gray-700">Account:</dt>
-            <dd className="text-gray-600 font-mono">{accountNumber}</dd>
-          </div>
-          <div className="flex items-center space-x-2">
-            <dt className="font-medium text-gray-700">Last Transaction:</dt>
-            <dd className="text-gray-600">{lastTransaction}</dd>
-          </div> */}
+         
         </dl>
       </div>
-
-      {/* Progress Bar 
-      <div className="mt-8">
-        <h3 className="text-xl font-semibold text-gray-800 mb-3">
-          Monthly Budget Usage
-        </h3>
-        <div className="relative w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-          <div
-            className="absolute h-4 bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-500 ease-in-out"
-            style={{ width: `ETB {budgetPercentage}%` }}
-          />
-        </div>
-        <div className="flex justify-between mt-2 text-sm">
-          <span className="text-gray-600">
-            {budgetPercentage.toFixed(1)}% Used
-          </span>
-          <span className="text-gray-600">
-            ETB {spentThisMonth.toFixed(2)} / ETB {monthlyBudget.toFixed(2)}
-          </span>
-        </div>
-      </div>*/}
     </div>
   );
 };

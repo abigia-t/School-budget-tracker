@@ -1,10 +1,10 @@
-// ParentPayment.jsx
 import { useState } from "react";
 import axios from "axios";
 
 const ParentPayment = () => {
   const [studentData, setStudentData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [fetchingStudent, setFetchingStudent] = useState(false);
+  const [processingPayment, setProcessingPayment] = useState(false);
   const [error, setError] = useState(null);
   const [paymentAmount, setPaymentAmount] = useState(0);
   const [lateFee, setLateFee] = useState(0);
@@ -24,12 +24,13 @@ const ParentPayment = () => {
 
   const handleFetchStudent = async (e) => {
     e.preventDefault();
-    const studentId = e.target.studentId.value.trim(); // Custom student ID input field
+    const studentId = e.target.studentId.value.trim();
     if (!studentId) {
       setError("Please enter a valid Student ID.");
       return;
     }
-    setLoading(true);
+
+    setFetchingStudent(true);
     setError(null);
 
     try {
@@ -51,21 +52,21 @@ const ParentPayment = () => {
       setError(error.response?.data?.error || "Student not found.");
       console.error("Fetch error:", error);
     } finally {
-      setLoading(false);
+      setFetchingStudent(false);
     }
   };
 
   const handlePayment = async () => {
-    setLoading(true);
+    setProcessingPayment(true);
     setError(null);
-  
+
     try {
       if (!studentData) {
         throw new Error("No student data available");
       }
-  
-      console.log("Attempting payment with student data:", studentData); // Add logging
-  
+
+      console.log("Attempting payment with student data:", studentData);
+
       const paymentData = {
         studentId: studentData.studentId,
         amount: totalAmount,
@@ -74,50 +75,51 @@ const ParentPayment = () => {
         lastName: studentData.lastName,
         phoneNumber: studentData.phoneNumber,
       };
-  
-      console.log("Sending payment data:", paymentData); // Log before sending
-  
+
+      console.log("Sending payment data:", paymentData);
+
       const response = await axios.post(
         `http://localhost:5000/api/payments/initialize`,
         paymentData,
         {
-          headers: {
-            'Content-Type': 'application/json',
-          }
+          headers: { "Content-Type": "application/json" },
         }
       );
-  
-      console.log("Payment initialization response:", response.data); // Log response
-      window.location.href = response.data.checkoutUrl;
+
+      console.log("Payment initialization response:", response.data);
+      window.open(response.data.checkoutUrl, "_blank");
     } catch (error) {
       console.error("Full payment error:", error);
       console.error("Error response data:", error.response?.data);
-      
-      const errorMsg = error.response?.data?.error || 
-                      error.response?.data?.message || 
-                      error.message || 
-                      "Payment initialization failed";
-      
+
+      const errorMsg =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        error.message ||
+        "Payment initialization failed";
       setError(errorMsg);
     } finally {
-      setLoading(false);
+      setProcessingPayment(false);
     }
   };
-  
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">
+    <div className="max-w-5xl mx-auto p-6 bg-gray-100 min-h-screen">
+        <h1 className="text-3xl font-light text-gray-800 mt-20 mb-8 text-center">
         Parent Payment Portal
       </h1>
 
-      {loading && <p className="text-center text-gray-600">Loading...</p>}
+      {(fetchingStudent || processingPayment) && (
+        <p className="text-center text-gray-600">
+          {fetchingStudent ? "Fetching student..." : "Processing payment..."}
+        </p>
+      )}
       {error && <p className="text-center text-red-500">{error}</p>}
 
       {!studentData && (
         <form
           onSubmit={handleFetchStudent}
-          className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6 space-y-4"
+          className="w-full max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 space-y-4"
         >
           <label htmlFor="id" className="block text-gray-700 font-medium">
             Enter Student ID
@@ -132,9 +134,9 @@ const ParentPayment = () => {
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300"
-            disabled={loading}
+            disabled={fetchingStudent}
           >
-            {loading ? "Fetching..." : "Submit"}
+            {fetchingStudent ? "Fetching..." : "Submit"}
           </button>
         </form>
       )}
@@ -186,10 +188,10 @@ const ParentPayment = () => {
 
             <button
               onClick={handlePayment}
-              disabled={loading}
+              disabled={processingPayment}
               className="w-full mt-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition duration-300 disabled:bg-gray-400"
             >
-              {loading ? "Processing..." : "Proceed to Payment"}
+              {processingPayment ? "Processing..." : "Proceed to Payment"}
             </button>
           </div>
         </div>

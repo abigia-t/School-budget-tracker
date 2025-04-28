@@ -18,8 +18,8 @@ const ParentDashboard = () => {
     return (
       <div className="max-w-5xl mx-auto p-6 bg-gray-100 min-h-screen">
         {/* Header */}
-        <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-          Parent Dashboard
+        <h1 className="text-3xl font-light text-gray-800 mt-20 mb-8 text-center">
+          Student Dashboard
         </h1>
   
         {/* Cards Grid */}

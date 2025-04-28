@@ -2,19 +2,16 @@ import mongoose from "mongoose";
 
 const budgetRequestSchema = new mongoose.Schema(
   {
-    //for GM only
     requestedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Actor",
       required: true,
     },
-    //for requesters only
     approvedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Actor",
       required: false,
     },
-    //for requesters only
     approvedAt: {
       type: Date,
       required: false,
@@ -46,12 +43,12 @@ const budgetRequestSchema = new mongoose.Schema(
     },
     file: {
       type: String,
-      required: false, // optional field for reciept image URL
+      required: false, 
     },
     status: {
       type: String,
       enum: ["Pending", "Approved", "Rejected"],
-      default: "Pending", // Match frontend select options (capitalized)
+      default: "Pending", 
     },
   },
   { timestamps: true }

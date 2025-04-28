@@ -19,7 +19,7 @@ const SideBar = () => {
   return (
     <motion.nav
       layout
-      className="sticky top-0 h-screen shrink-0 border-r border-slate-300 bg-white p-2"
+      className="mt-20 sticky top-0 h-screen shrink-0 border-r border-slate-300 bg-white p-4"
       style={{
         width: open ? "225px" : "fit-content",
       }}
@@ -34,13 +34,13 @@ const SideBar = () => {
           setSelected={setSelected}
           open={open}
         />
-        <Option
+        {/* <Option
           Icon={FiUser}
           title="Profile"
           selected={selected}
           setSelected={setSelected}
           open={open}
-        />
+        /> */}
         <Option
           Icon={FiDollarSign}
           title="Payment"
@@ -63,14 +63,14 @@ const SideBar = () => {
           setSelected={setSelected}
           open={open}
         />
-        <LogoutButton
+        {/* <LogoutButton
           Icon={FiLogOut}
           title="Logout"
           selected={selected}
           setSelected={setSelected}
           open={open}
           // onLogout={handleLogout}
-        />
+        /> */}
       </div>
 
       <ToggleClose open={open} setOpen={setOpen} />
