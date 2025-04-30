@@ -9,7 +9,6 @@ import { assets } from "../assets/assets";
 import ChangePasswordForm from "./ChangePasswordForm";
 
 const TopBar = () => {
-  const [showInfo, setShowInfo] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const { user, logout, resetPassword } = useContext(StoreContext);
   const avatar = user?.gender === "female" ? FemaleAvatar : MaleAvatar;

@@ -6,7 +6,6 @@ import "./axiosHeaderRequestConfig.js"  // ✅ Runs once, setting up Axios heade
 import { isTokenExpired } from "./tokenUtils.js";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
-import Footer from "./components/Footer";
 import NoPage from "./pages/NoPage";
 import RoleRoute from "./config/RoleRoute";
 
@@ -169,9 +168,6 @@ const App = () => {
             <Route path="payment-return" element={<PaymentReturn />} />
           </Route>
       </Routes>
-      
-
-      <Footer />
     </div>
   );
 };

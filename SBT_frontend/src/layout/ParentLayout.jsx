@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import SideBar from "../components/parent/sideBar/Index";
 import TopBar from "../components/TopBar";
+import Footer from "../components/Footer";
 const ParentLayout = () => {
   return (
     <div className="flex">
