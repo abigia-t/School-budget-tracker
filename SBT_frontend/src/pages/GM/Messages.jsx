@@ -6,7 +6,7 @@ const Messages = () => {
   // State for User Messages
   const [messages, setMessages] = useState([]);
 
-  // State for 
+  // State for
   const [recipientType, setRecipientType] = useState("actors");
   const [recipientDetail, setRecipientDetail] = useState("");
   const [message, setMessage] = useState("");
@@ -28,111 +28,129 @@ const Messages = () => {
 
     fetchMessages();
   }, []);
- // Handlers
- const handleDeleteMessage = async (id) => {
-  if (!window.confirm("Are you sure you want to delete this message?"))
-    return;
-  try {
-    await axios.delete(`http://localhost:5000/api/contact-messages/${id}`);
-    setMessages(messages.filter((msg) => msg._id !== id));
-    toast.success("Message deleted successfully.");
-  } catch (error) {
-    console.error("Error deleting message:", error);
-    toast.error("Failed to delete message.");
-  }
-};
+  // Handlers
+  const handleDeleteMessage = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this message?"))
+      return;
+    try {
+      await axios.delete(`http://localhost:5000/api/contact-messages/${id}`);
+      setMessages(messages.filter((msg) => msg._id !== id));
+      toast.success("Message deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting message:", error);
+      toast.error("Failed to delete message.");
+    }
+  };
 
+  const handleSendNotification = async () => {
+    if (!message.trim()) {
+      return toast.error("Message cannot be empty!");
+    }
 
-const handleSendNotification = async () => {
-  if (!message.trim()) {
-    return toast.error("Message cannot be empty!");
-  }
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/admin-messages/send",
+        {
+          recipientType,
+          recipientDetail,
+          message,
+        }
+      );
 
-  try {
-    const response = await axios.post("http://localhost:5000/api/admin-messages/send", {
-      recipientType,
-      recipientDetail,
-      message,
-    });
+      toast.success(response.data.message);
+      setMessage(""); // Clear input after sending
+      fetchNotifications(); // Refresh notifications
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to send message.");
+    }
+  };
 
-    toast.success(response.data.message);
-    setMessage(""); // Clear input after sending
-    fetchNotifications(); // Refresh notifications
-  } catch (error) {
-    toast.error(error.response?.data?.message || "Failed to send message.");
-  }
-};
+  // Fetch notifications (useEffect hook to load on mount)
+  const fetchNotifications = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/admin-messages/all"
+      );
+      setNotifications(response.data);
+    } catch (error) {
+      toast.error("Failed to load messages.");
+    }
+  };
 
-// Fetch notifications (useEffect hook to load on mount)
-const fetchNotifications = async () => {
-try {
-  const response = await axios.get("http://localhost:5000/api/admin-messages/all");
-  setNotifications(response.data);
-} catch (error) {
-  toast.error("Failed to load messages.");
-}
-};
-
-const handleDeleteNotification = async (messageId) => {
-  try {
-    await axios.delete(`http://localhost:5000/api/admin-messages/${messageId}`);
-    toast.success("Message deleted!");
-    fetchNotifications(); // Refresh notifications
-  } catch (error) {
-    toast.error("Failed to delete message.");
-  }
-};
+  const handleDeleteNotification = async (messageId) => {
+    try {
+      await axios.delete(
+        `http://localhost:5000/api/admin-messages/${messageId}`
+      );
+      toast.success("Message deleted!");
+      fetchNotifications(); // Refresh notifications
+    } catch (error) {
+      toast.error("Failed to delete message.");
+    }
+  };
 
   return (
-    <div className="bg-gray-100 mt-7 p-6 rounded-lg shadow-md grid grid-cols-2 gap-6">
-      <div className="flex flex-col h-full">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">
-          User Messages
+    <div className="bg-white mt-8 p-8 rounded-2xl shadow-xl max-w-5xl mx-auto space-y-12">
+      {/* USER MESSAGES SECTION */}
+      <section>
+        <h2 className="text-2xl font-light text-gray-800 mb-6 border-b pb-2">
+          📥 User Messages
         </h2>
-        <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+        <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300">
           {messages.length > 0 ? (
             messages.map((msg) => (
-              <div key={msg._id} className="bg-white p-4 rounded-lg shadow">
-                <p className="text-gray-600">
-                  <span className="font-semibold text-gray-800">Name:</span>{" "}
-                  {msg.userName}
-                </p>
-                <p className="text-gray-600">
-                  <span className="font-semibold text-gray-800">Email:</span>{" "}
-                  {msg.userEmail}
-                </p>
-                <p className="text-gray-600 break-words">
-                  <span className="font-semibold text-gray-800">Message:</span>{" "}
+              <div
+                key={msg._id}
+                className="bg-gray-50 border border-gray-200 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="mb-2">
+                  <p className="text-gray-700">
+                    <strong className="text-gray-900">Name:</strong>{" "}
+                    {msg.userName}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong className="text-gray-900">Email:</strong>{" "}
+                    {msg.userEmail}
+                  </p>
+                </div>
+                <p className="text-gray-600 mb-3 whitespace-pre-line break-words">
+                  <strong className="text-gray-900">Message:</strong>{" "}
                   {msg.userMessage}
                 </p>
-                <p className="text-xs text-gray-500 mt-2">
-                  Sent on: {new Date(msg.createdAt).toLocaleString()}
-                </p>
-                <button
-                  onClick={() => handleDeleteMessage(msg._id)}
-                  className="mt-2 bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition-colors"
-                >
-                  Delete
-                </button>
+                <div className="flex justify-between items-center text-sm text-gray-500">
+                  <span>
+                    Sent on: {new Date(msg.createdAt).toLocaleString()}
+                  </span>
+                  <button
+                    onClick={() => handleDeleteMessage(msg._id)}
+                    className="text-red-600 hover:text-red-800 font-medium"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             ))
           ) : (
-            <p className="text-gray-500">No messages received yet.</p>
+            <p className="text-gray-500 text-center">
+              No messages received yet.
+            </p>
           )}
         </div>
-      </div>
+      </section>
 
-      {/* Notifications Section */}
-      <div className="flex flex-col h-full">
-        <h2 className="text-xl font-semibold mb-4">Send Messages</h2>
+      {/* SEND NOTIFICATIONS SECTION */}
+      <section>
+        <h2 className="text-2xl font-light text-gray-800 mb-6 border-b pb-2">
+          📤 Send Messages
+        </h2>
 
-        {/* Recipient Type Dropdown */}
-        <div className="mb-4">
-          <label className="block font-medium mb-1">Recipient Type:</label>
+        {/* Recipient Type */}
+        <div className="mb-5">
+          <label className="block font-medium mb-2">Recipient Type</label>
           <select
             value={recipientType}
             onChange={(e) => setRecipientType(e.target.value)}
-            className="border rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="actors">All Staff</option>
             <option value="student_parents">All Parents</option>
@@ -141,14 +159,14 @@ const handleDeleteNotification = async (messageId) => {
           </select>
         </div>
 
-        {/* Recipient Detail Input */}
+        {/* Conditional Recipient Detail */}
         {(recipientType === "specific_actor" ||
           recipientType === "specific_student") && (
-          <div className="mb-4">
-            <label className="block font-medium mb-1">
+          <div className="mb-5">
+            <label className="block font-medium mb-2">
               {recipientType === "specific_actor"
-                ? "Staff Email:"
-                : "Student ID:"}
+                ? "Staff Email"
+                : "Student ID"}
             </label>
             <input
               type="text"
@@ -159,74 +177,78 @@ const handleDeleteNotification = async (messageId) => {
                   ? "Enter staff email"
                   : "Enter student ID"
               }
-              className="border rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         )}
 
         {/* Message Input */}
-        <div className="mb-4">
-          <label className="block font-medium mb-1">Message:</label>
+        <div className="mb-5">
+          <label className="block font-medium mb-2">Message</label>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Enter notification message"
-            className="border rounded p-2 w-full h-24 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter notification message..."
+            className="w-full border border-gray-300 rounded-lg p-3 h-28 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
-        {/* Send Notification Button */}
+        {/* Send Button */}
         <button
           onClick={handleSendNotification}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-6 w-full transition-colors"
+          className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium"
         >
-          Send 
+          Send Message
         </button>
+      </section>
 
-        {/* Notification History */}
-        <div className="flex-1">
-          <h4 className="text-lg font-semibold mb-2">Message History</h4>
-          <div className="border rounded p-4 max-h-[50vh] overflow-y-auto pr-2">
-            {notifications.length > 0 ? (
-              notifications.map((notification) => (
-                <div
-                  key={notification._id}
-                  className="border-b py-2 flex justify-between items-center"
-                >
-                  <div className="flex-1">
+      {/* NOTIFICATION HISTORY */}
+      <section>
+        <h2 className="text-2xl font-mono text-gray-800 mb-6 border-b pb-2">
+          📚 Message History
+        </h2>
+        <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300">
+          {notifications.length > 0 ? (
+            notifications.map((notification) => (
+              <div
+                key={notification._id}
+                className="bg-gray-50 p-5 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+              >
+                <div className="text-gray-700 space-y-1">
+                  <p>
+                    <strong>Type:</strong> {notification.recipientType}
+                  </p>
+                  {notification.recipientDetail && (
                     <p>
-                      <strong>Type:</strong> {notification.recipientType}
+                      <strong>Recipient:</strong> {notification.recipientDetail}
                     </p>
-                    {notification.recipientDetail && (
-                      <p>
-                        <strong>Recipient:</strong>{" "}
-                        {notification.recipientDetail}
-                      </p>
-                    )}
-                    <p className="break-words">
-                      <strong>Message:</strong> {notification.message}
-                    </p>
-                    <p className="text-gray-500 text-sm">
-                      Sent by {notification.sentBy?.email || "Unknown"} -{" "}
-                      {notification.createdAt
-                        ? new Date(notification.createdAt).toLocaleString()
-                        : "N/A"}
-                    </p>
-                  </div>
+                  )}
+                  <p className="break-words">
+                    <strong>Message:</strong> {notification.message}
+                  </p>
+                </div>
+
+                <div className="mt-4 flex justify-between items-center">
+                  <p className="text-sm text-gray-500">
+                    Sent by {notification.sentBy?.email || "Unknown"} -{" "}
+                    {notification.createdAt
+                      ? new Date(notification.createdAt).toLocaleString()
+                      : "N/A"}
+                  </p>
                   <button
                     onClick={() => handleDeleteNotification(notification._id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 ml-2 transition-colors"
+                    className="mt-3 text-red-600 hover:text-red-800 font-medium"
                   >
                     Delete
                   </button>
                 </div>
-              ))
-            ) : (
-              <p className="text-gray-500">No message found.</p>
-            )}
-          </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500 text-center">No message found.</p>
+          )}
         </div>
-      </div>
+      </section>
     </div>
   );
 };

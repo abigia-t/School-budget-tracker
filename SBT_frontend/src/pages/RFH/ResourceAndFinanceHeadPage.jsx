@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import TopBar from "../../components/TopBar";
+import Footer2 from "../../components/Footer2";
 import SideBar from "../../components/SideBar";
 import { Menu } from "lucide-react"; // Sidebar toggle icon
 
@@ -39,6 +40,10 @@ const ResourceAndFinanceHeadPage = () => {
         <main className="bg-gray-200 min-h-screen pt-16 pl-5">
           <Outlet />
         </main>
+        <div className="w-full z-40 bg-white shadow-md">
+          {" "}
+          <Footer2 />
+        </div>
       </div>
     </div>
   );
@@ -46,4 +51,3 @@ const ResourceAndFinanceHeadPage = () => {
 
 
 export default ResourceAndFinanceHeadPage;
-

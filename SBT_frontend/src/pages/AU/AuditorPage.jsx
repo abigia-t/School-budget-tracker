@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import TopBar from "../../components/TopBar";
+import Footer2 from "../../components/Footer2";
 import SideBar from "../../components/SideBar";
 import { ChevronRight, ChevronLeft } from "lucide-react"; // Consistent icons
 
@@ -44,6 +45,10 @@ const AuditorPage = () => {
         <main className="pt-16 px-6">
           <Outlet />
         </main>
+        <div className="w-full z-40 bg-white shadow-md">
+          {" "}
+          <Footer2 />
+        </div>
       </div>
     </div>
   );

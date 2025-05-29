@@ -15,6 +15,8 @@ import financialRoute from "./routes/financialRoute.js";
 import employeeRoutes from './routes/employeeRoutes.js'; // Import employee routes
 import path from 'path';
 import { fileURLToPath } from 'url';
+import adminMessagesRoutes from './routes/adminMessages.js';
+import programBudgetRoutes from "./routes/programBudgetRoutes.js";
 
 
 dotenv.config();
@@ -65,6 +67,8 @@ app.use("/api/annual-budget", annualBudgetRoutes); // Annual budget routes
 app.use("/api/other-fund", otherFundRoutes); // Other fund routes
 app.use('/api/budget-requests', BudgetRequestRoutes); // Budget request routes
 app.use("/api/financials", financialRoute);
+app.use('/api/admin-messages', adminMessagesRoutes);
+app.use("/api/program-budgets", programBudgetRoutes);
 
 // Serve uploads folder
 app.use("/uploads", express.static(path.join(path.resolve(), "uploads")));

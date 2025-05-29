@@ -3,8 +3,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { toast } from "react-toastify";
-import Modal from "../components/Modal";
 import Title from "../components/Title";
+import Footer from "../components/Footer";
 import { assets, features } from "../assets/assets";
 import NavBar from "../components/NavBar";
 import {
@@ -15,8 +15,6 @@ import {
 } from "react-icons/fa6";
 
 const Home = () => {
-  const [isContactModalOpen, setContactModalOpen] = useState(false);
-
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -53,13 +51,12 @@ const Home = () => {
 
   return (
     <div className="min-h-screen w-full flex flex-col">
-      <NavBar setContactModalOpen={setContactModalOpen} />
+      <NavBar />
 
       {/* Header Section */}
       <div id="home" className="bg-blue-950 text-white py-20 px-8 mt-16">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="text-center md:text-left">
-            {/* Typewriter Animated h1 */}
             <h1 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent animate-gradient typewriter">
               Welcome to Yajeb Academy Budget Tracker
             </h1>
@@ -242,6 +239,7 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };
