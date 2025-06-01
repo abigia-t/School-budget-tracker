@@ -1,44 +1,51 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import TopBar from "../../components/TopBar";
+import Footer2 from "../../components/Footer2";
 import SideBar from "../../components/SideBar";
-import { Menu } from "lucide-react"; // Using Lucide for a clean menu icon
+import { ChevronRight, ChevronLeft } from "lucide-react";
 
 const SMHeadLinks = [
   { path: "/school-director-page/school-director-dashboard", label: "Dashboard" },
   { path: "/school-director-page/school-director-request", label: "Request Budget" },
 ];
 
-
 const SchoolDirectorPage = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
-    <div className="flex min-h-screen transition-all duration-300">
-      {/* Sidebar (Hidden Content but Menu Icon Always Visible) */}
-      <div className={`fixed top-0 h-screen bg-blue-950 text-white shadow-lg transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-16"}`}>
-        {/* Sidebar Content (Hidden when Sidebar is Collapsed) */}
-        <div className={`${isSidebarOpen ? "block" : "hidden"} transition-opacity duration-300`}>
-          <SideBar title="School Director" subtitle="Budget Tracking" navLinks={SMHeadLinks} />
-        </div>
+    <div className="flex bg-gray-200 min-h-screen">
+      {/* Sidebar */}
+      <SideBar
+        navLinks={SMHeadLinks}
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+      />
 
-        {/* Always Visible Menu Icon */}
-        <div className="absolute top-4 left-4 cursor-pointer p-2 bg-gray-800 rounded-md" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-          <Menu size={24} color="white" />
-        </div>
+      {/* Toggle Button */}
+      <div
+        className="fixed top-4 left-4 z-50 cursor-pointer p-2 bg-gray-800 rounded-md text-white"
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      >
+        {isSidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
       </div>
 
-      {/* Main Content (Expands When Sidebar is Hidden) */}
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-16"}`}>
-        {/* TopBar (Always Fully Displayed) */}
-        <div className="fixed w-full z-50 bg-white shadow-md">
+      {/* Main Content */}
+      <div
+        className={`flex-1 flex flex-col transition-all duration-300 ${
+          isSidebarOpen ? "ml-64" : "ml-16"
+        }`}
+      >
+        <div className="fixed w-full z-40 bg-white shadow-md">
           <TopBar />
         </div>
-
-        {/* Main Content */}
-        <main className="bg-gray-200 min-h-screen pt-16">
+        <main className="pt-16 px-6">
           <Outlet />
         </main>
+        <div className="w-full z-40 bg-white shadow-md">
+          {" "}
+          <Footer2 />
+        </div>
       </div>
     </div>
   );

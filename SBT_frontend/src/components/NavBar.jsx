@@ -22,14 +22,12 @@ const NavBar = ({ setContactModalOpen }) => {
         </Link>
         <a href="#about">
           <li className="group hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:bg-clip-text hover:text-transparent transition-all duration-300">About Us</li>
+        </a> 
+        <a href="#contact">
+          <li className="group hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:bg-clip-text hover:text-transparent transition-all duration-300">Contact Us</li>
         </a>
-        <li
-          onClick={() => setContactModalOpen(true)}
-          className="group hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:bg-clip-text hover:text-transparent transition-all duration-300"
-        >
-          Contact Us
-        </li>
-        <a href="#features">
+       
+        <a href="#services">
           <li className="group hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:bg-clip-text hover:text-transparent transition-all duration-300">Services</li>
         </a>
       </ul>

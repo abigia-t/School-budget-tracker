@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
 
-const ActorFormModal = ({ 
-  isOpen, 
-  modalType, 
-  newActor, 
-  handleInputChange, 
-  handleModalClose, 
-  handleSubmit 
-}) => {
+const ActorFormModal = ({isOpen,modalType,newActor,handleInputChange,handleModalClose,handleSubmit}) => {
   const [errors, setErrors] = useState({});
 
   const validate = () => {
@@ -54,7 +47,7 @@ const ActorFormModal = ({
   return ( 
     <Modal
       isOpen={isOpen}
-      title={modalType === "create" ? "Register New Actor" : "Update Actor"}
+      title={modalType === "create" ? "Staff registration form" : "Update Staff"}
       onClose={handleModalClose}
     >
       <form onSubmit={handleFormSubmit} className="space-y-4">
@@ -98,7 +91,7 @@ const ActorFormModal = ({
         </div>
 
         {/* ✅ Add Submit & Cancel Buttons */}
-        <div className="flex justify-end space-x-2 mt-4">
+        <div className="flex justify-between">
           <button 
             type="button"
             onClick={handleModalClose}

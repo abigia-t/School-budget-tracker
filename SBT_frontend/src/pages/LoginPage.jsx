@@ -1,13 +1,15 @@
 import React from "react";
 import AuthForm from "../components/AuthForm";
 import NavBar from "../components/NavBar";
+import Footer from "../components/Footer"; // Assuming you have a Footer component
 const LoginPage = () => {
   return (
-    <div>
-     <NavBar/>
-      <div className="bg-gray-200 flex justify-center items-center py-6 pt-10">
+    <div className="h-full bg-gray-300">
+      <NavBar />
+      <div className="bg-gray-300 flex items-center justify-center min-h-[calc(100vh-4rem)] p-4">
         <AuthForm />
       </div>
+      <Footer/>
     </div>
   );
 };

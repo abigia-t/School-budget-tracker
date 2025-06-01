@@ -2,29 +2,30 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./configs/db.js";
-import actorRoute from "./routes/actorRoute.js";
-import studentRoute from "./routes/studentRoute.js";
-import paymentRoute from "./routes/paymentRoute.js";
+import authRoute from "./routes/authRoute.js"; // Import all routes
+import paymentRoute from "./routes/paymentRoute.js"; // Import payment routes
 import contactMessageRoutes from "./routes/contactMessageRoutes.js";
 import adminMessageRoutes from "./routes/adminMessageRoutes.js";
 import statsRoutes from "./routes/statsRoute.js";
 import payrollRoute from "./routes/payrollRoute.js";
-import budgetRoutes from './routes/budgetRoutes.js';
+import BudgetRequestRoutes from './routes/BudgetRequestRoutes.js';
+import annualBudgetRoutes from './routes/annualBudgetRoutes.js';
+import otherFundRoutes from './routes/otherFundRoutes.js';
+import financialRoute from "./routes/financialRoute.js";
+import employeeRoutes from './routes/employeeRoutes.js'; // Import employee routes
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Load environment variables from .env file
+
 dotenv.config();
-
-// Initialize Express app
 const app = express();
-
 // Get directory name
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
+// **Middlewares**
+app.use(express.json()); // Add this line
+app.use(cors());
 // Middleware for parsing JSON
-app.use(express.json());
-
+app.use(express.json()); // Parse JSON bodies (as sent by API clients)
 // CORS configuration
 const allowedOrigins = ['http://localhost:3000', 'http://localhost:5173'];
 app.use(cors({
@@ -51,29 +52,25 @@ const connectToDatabase = async () => {
 
 connectToDatabase();
 
-// API Routes
-app.use("/api/actors", actorRoute);
-app.use("/api/students", studentRoute);
-app.use("/api/payments", paymentRoute);
+
+// **all API Routes**
+app.use("/api/auth", authRoute);   // Actor related routes
+app.use("/api/payments", paymentRoute); // Payment related routes
 app.use("/api/contact-messages", contactMessageRoutes);
 app.use("/api/admin-messages", adminMessageRoutes);
 app.use("/api/stats", statsRoutes);
+app.use("/api/employee", employeeRoutes); // Employee related routes
 app.use("/api/payrolls", payrollRoute);
-app.use('/api/budgets', budgetRoutes);
+app.use("/api/annual-budget", annualBudgetRoutes); // Annual budget routes
+app.use("/api/other-fund", otherFundRoutes); // Other fund routes
+app.use('/api/budget-requests', BudgetRequestRoutes); // Budget request routes
+app.use("/api/financials", financialRoute);
 
-
-// Serve static files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
+// Serve uploads folder
+app.use("/uploads", express.static(path.join(path.resolve(), "uploads")));
 // Default Route
 app.get("/", (req, res) => {
   res.send("🚀 API is running...");
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ success: false, message: 'Something broke!' });
 });
 
 // Start Server

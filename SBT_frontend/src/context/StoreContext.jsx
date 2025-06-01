@@ -1,102 +1,197 @@
 import { createContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
+import axios, { setAuthHeader } from "../axiosHeaderRequestConfig.js";
+import LargeLoading from "../components/loadings/LargeLoading.jsx";
+import { toast } from "react-toastify";
 
 export const StoreContext = createContext();
 
 export const StoreContextProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFetchingTotalEmployee, setIsFetchingTotalEmployee] = useState(false);
+  const [isFetchingStats, setIsFetchingStats] = useState(false);
+  const [totalEmployee, setTotalEmployee] = useState(0);
   const [stats, setStats] = useState({
     totalActors: 0,
     totalStudents: 0,
     totalRegistered: 0,
   });
+  const [user, setUser] = useState(null);
 
-  const navigate = useNavigate();
+  const [financialData, setFinancialData] = useState({
+    totalRevenue: 0,
+    annualBudget: 0,
+    otherFundTotal: 0,
+    studentFees: 0,
+    totalExpenses: 0,
+    netProfit: 0,
+  });
+  const [chartOverview, setChartOverview] = useState(null);
 
-  // Fetch statistics
+  const fetchFinancialData = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/financials/");
+      console.log("Fetched financial data", res.data);
+      setFinancialData(res.data);
+    } catch (err) {
+      console.error("Failed to fetch financial data:", err);
+    }
+  };
+
   useEffect(() => {
-    const fetchStats = async () => {
+    fetchFinancialData();
+  }, []);
+
+useEffect(() => {
+    const fetchChartOverview = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/stats");
-        setStats(data);
-      } catch (error) {
-        console.error("Error fetching stats:", error);
+        const res = await axios.get("http://localhost:5000/api/financials");
+        setChartOverview(res.data);
+      } catch (err) {
+        console.error("Error fetching overview:", err);
       }
     };
+    fetchChartOverview();
+  }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const fetchTotalEmployee = async () => {
+      setIsFetchingTotalEmployee(true);
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/employee/"
+        );
+        setTotalEmployee(response.data.totalEmployee);
+      } catch (error) {
+        console.error("Error fetching total employees:", error);
+      } finally {
+        setIsFetchingTotalEmployee(false);
+      }
+    };
+    fetchTotalEmployee();
+  }, []);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      setIsFetchingStats(true);
+      try {
+        const response = await axios.get("http://localhost:5000/api/stats");
+        setStats(response.data);
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      } finally {
+        setIsFetchingStats(false);
+      }
+    };
     fetchStats();
   }, []);
 
-  // Login function
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+
+    if (storedUser && token) {
+      setUser(JSON.parse(storedUser));
+    }
+
+    const publicRoutes = ["/", "/login"];
+    if (!token && !publicRoutes.includes(location.pathname)) {
+      navigate("/login");
+    }
+  }, [location]);
+
   const login = async (email, password) => {
     try {
-      const endpoint = email.includes("@actor")
-        ? "http://localhost:5000/api/actors/login"
-        : "http://localhost:5000/api/students/login";
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        { email, password }
+      );
 
-      const response = await axios.post(endpoint, { email, password });
+      if (response.data.requiresPasswordChange) {
+        return {
+          requiresPasswordChange: true,
+          email: response.data.email,
+          role: response.data.role,
+        };
+      }
+      
       const { user, token } = response.data;
 
-      // Check if the user is logging in with the default password
-      if (password === "12345678") {
-        toast.warning("Please change your default password.");
-        navigate("/reset-password", { state: { email, role: user.role } });
-        return { success: false, message: "Please change your default password." };
+      if (!token) {
+        return { success: false, message: "No token received" };
       }
 
       setUser(user);
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", token);
+      setAuthHeader();
+      navigate("/");
 
-      return { success: true, role: user.role };
+      return { success: true, user, role: user.role };
     } catch (error) {
-      console.error("Login error:", error.response?.data?.message || error.message);
-      return { success: false, message: error.response?.data?.message || "Invalid credentials" };
+      return {
+        success: false,
+        message: error.response?.data?.message || "Login failed",
+      };
     }
   };
 
-  // Reset password function
   const resetPassword = async (email, newPassword, confirmPassword, role) => {
     try {
-      const endpoint = role === "actor"
-        ? "http://localhost:5000/api/actors/change-password"
-        : "http://localhost:5000/api/students/change-password";
-
-      const response = await axios.put(endpoint, { email, newPassword, confirmPassword });
+      const response = await axios.put(
+        "http://localhost:5000/api/auth/change-password",
+        { email, newPassword, confirmPassword }
+      );
 
       if (response.data.status) {
-        toast.success("Password changed successfully! Please login again.");
-        navigate("/login");
+        toast.success("Password changed successfully!");
+        return { success: true };
       } else {
-        toast.error(response.data.message || "Failed to change password. Please try again.");
+        toast.error(response.data.message);
+        return { success: false, message: response.data.message };
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Failed to change password. Please try again.";
+      const errorMessage =
+        error.response?.data?.message || "Password change failed";
       toast.error(errorMessage);
+      return { success: false, message: errorMessage };
     }
   };
 
-  // Logout function
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");
-    navigate("/");
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
-  // Persist user state on reload
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
+  if (isLoading) return <LargeLoading />;
 
   return (
-    <StoreContext.Provider value={{ user, login, logout, stats, resetPassword }}>
+    <StoreContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        stats,
+        resetPassword,
+        totalEmployee,
+        isFetchingTotalEmployee,
+        isFetchingStats,
+        financialData,
+        chartOverview,
+      }}
+    >
       {children}
     </StoreContext.Provider>
   );
 };
-
-export default StoreContextProvider;

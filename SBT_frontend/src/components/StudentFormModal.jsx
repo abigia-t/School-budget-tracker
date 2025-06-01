@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose, handleSubmit }) => {
+const StudentFormModal = ({ isOpen, handleModalClose, handleSubmit }) => {
   const [formData, setFormData] = useState({
     studentId: "",
     firstName: "",
@@ -10,22 +10,8 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
     password: "",
     phoneNumber: "",
     address: "",
+    grade: "",
   });
-
-  useEffect(() => {
-    if (modalType === "edit" && currentStudent) {
-      setFormData({
-        studentId: currentStudent.studentId,
-        firstName: currentStudent.firstName,
-        middleName: currentStudent.middleName,
-        lastName: currentStudent.lastName,
-        email: currentStudent.email,
-        password: "",  // Don't show the current password
-        phoneNumber: currentStudent.phoneNumber,
-        address: currentStudent.address,
-      });
-    }
-  }, [modalType, currentStudent]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -37,13 +23,30 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
     handleSubmit(formData);
   };
 
+  const gradeOptions = [
+    "KG1",
+    "KG2",
+    "KG3",
+    "Grade1",
+    "Grade2",
+    "Grade3",
+    "Grade4",
+    "Grade5",
+    "Grade6",
+  ];
+
   return isOpen ? (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-md w-96 mt-10">
-        <h3 className="text-xl font-semibold mb-4">{modalType === "create" ? "Add Student" : "Edit Student"}</h3>
+    <div className="fixed inset-0 flex items-start justify-center bg-black bg-opacity-50 pt-24">
+      <div className="bg-white p-4 rounded-md w-[550px] max-h-[95vh] shadow-lg">
+        <h3 className="text-xl font-light mb-3 text-center">
+          Registeration Form
+        </h3>
         <form onSubmit={onSubmit} className="grid grid-cols-2 gap-4">
-          <div className="col-span-2">
-            <label htmlFor="studentId" className="block text-sm font-medium">Student ID</label>
+          {/* 2 Columns for all inputs */}
+          <div>
+            <label htmlFor="studentId" className="block text-sm font-medium">
+              Student ID
+            </label>
             <input
               type="text"
               id="studentId"
@@ -56,7 +59,9 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
           </div>
 
           <div>
-            <label htmlFor="firstName" className="block text-sm font-medium">First Name</label>
+            <label htmlFor="firstName" className="block text-sm font-medium">
+              First Name
+            </label>
             <input
               type="text"
               id="firstName"
@@ -69,7 +74,9 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
           </div>
 
           <div>
-            <label htmlFor="middleName" className="block text-sm font-medium">Middle Name</label>
+            <label htmlFor="middleName" className="block text-sm font-medium">
+              Middle Name
+            </label>
             <input
               type="text"
               id="middleName"
@@ -82,7 +89,9 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
           </div>
 
           <div>
-            <label htmlFor="lastName" className="block text-sm font-medium">Last Name</label>
+            <label htmlFor="lastName" className="block text-sm font-medium">
+              Last Name
+            </label>
             <input
               type="text"
               id="lastName"
@@ -95,7 +104,9 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium">
+              Email
+            </label>
             <input
               type="email"
               id="email"
@@ -107,23 +118,25 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
             />
           </div>
 
-          {modalType === "create" && (
-            <div className="col-span-2">
-              <label htmlFor="password" className="block text-sm font-medium">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                required
-              />
-            </div>
-          )}
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              required
+            />
+          </div>
 
           <div>
-            <label htmlFor="phoneNumber" className="block text-sm font-medium">Phone Number</label>
+            <label htmlFor="phoneNumber" className="block text-sm font-medium">
+              Phone Number
+            </label>
             <input
               type="text"
               id="phoneNumber"
@@ -136,7 +149,9 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
           </div>
 
           <div>
-            <label htmlFor="address" className="block text-sm font-medium">Address</label>
+            <label htmlFor="address" className="block text-sm font-medium">
+              Address
+            </label>
             <input
               type="text"
               id="address"
@@ -148,7 +163,32 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
             />
           </div>
 
-          <div className="col-span-2 flex justify-between">
+          {/* Full-width Grade selection */}
+          <div className="col-span-2">
+            <label htmlFor="grade" className="block text-sm font-medium">
+              Grade
+            </label>
+            <select
+              id="grade"
+              name="grade"
+              value={formData.grade}
+              onChange={handleInputChange}
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              required
+            >
+              <option value="" disabled>
+                Select Grade
+              </option>
+              {gradeOptions.map((grade) => (
+                <option key={grade} value={grade}>
+                  {grade.replace("Grade", "Grade ")}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Buttons */}
+          <div className="col-span-2 flex justify-around ">
             <button
               type="button"
               onClick={handleModalClose}
@@ -160,7 +200,7 @@ const StudentFormModal = ({ isOpen, modalType, currentStudent, handleModalClose,
               type="submit"
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
             >
-              {modalType === "create" ? "Register" : "Update"}
+              Register
             </button>
           </div>
         </form>

@@ -57,7 +57,7 @@ const PreparePayroll = () => {
   }, []);
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-gray-100 min-h-screen">
+    <div className="bg-gray-100 mt-7 p-6 rounded-lg shadow-sm">
       <ToastContainer />
 
       <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">

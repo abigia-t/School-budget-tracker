@@ -1,16 +1,34 @@
+// models/contactMessageModel.js
 import mongoose from "mongoose";
 
-// Define schema for contact messages
 const contactMessageSchema = new mongoose.Schema(
   {
-    userName: { type: String, required: true },
-    userEmail: { type: String, required: true },
-    userMessage: { type: String, required: true },
+    recipientType: {
+      type: String,
+      enum: ["specific_actor", "all_actors"],
+      required: true,
+    },
+    recipientDetail: {
+      type: String,
+      required: function () {
+        return this.recipientType === "specific_actor";
+      },
+    },
+    userName: {
+      type: String,
+      required: true,
+    },
+    userEmail: {
+      type: String,
+      required: true,
+    },
+    userMessage: {
+      type: String,
+      required: true,
+    },
   },
-  { timestamps: true } // Automatically add createdAt and updatedAt timestamps
+  { timestamps: true }
 );
 
-// Create the ContactMessage model
-const ContactMessage = mongoose.models.ContactMessage || mongoose.model("ContactMessage", contactMessageSchema);
-
+const ContactMessage = mongoose.model("ContactMessage", contactMessageSchema);
 export default ContactMessage;

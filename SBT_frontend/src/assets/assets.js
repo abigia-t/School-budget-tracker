@@ -1,5 +1,4 @@
-
-import Logo from "./Logo.png";
+import Logo from "./Logo.png"
 import profile_image from "./profile_image.png";
 import getty_1 from "./getty_1.jpg";
 import getty_2 from "./getty_2.jpg";
