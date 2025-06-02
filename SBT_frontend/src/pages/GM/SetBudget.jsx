@@ -63,7 +63,7 @@ const SetBudget = () => {
 
   return (
     <div className="mt-7 rounded-lg shadow-sm bg-gray-100 min-h-[90vh] py-10 px-4">
-      <h1 className="text-center text-3xl font-bold text-blue-800 mb-10">
+      <h1 className="text-center text-3xl font-light text-blue-800 mb-10">
         Set Budgets
       </h1>
 

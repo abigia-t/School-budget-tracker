@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import TopBar from "../../components/TopBar";
-import Footer2 from "../../components/Footer2";
 import SideBar from "../../components/SideBar";
 // import Footer2 from "../../components/Footer2.jsx";
 import { ChevronRight, ChevronLeft } from "lucide-react";
@@ -58,7 +57,6 @@ const HumanResourcePage = () => {
           </main>
           <div className="w-full z-40 bg-white shadow-md">
           {" "}
-          <Footer2 />
         </div>
         </div>
       </div>

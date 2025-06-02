@@ -30,7 +30,7 @@ const PaymentListDetail = () => {
         }
       } catch (error) {
         console.error("API Error:", error);
-        setError("Failed to fetch payment details");
+        setError("Failed to fetch details");
       } finally {
         setLoading(false);
       }
@@ -106,7 +106,7 @@ const PaymentListDetail = () => {
             className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
           >
             <FaFileDownload className="mr-2" />
-            Download Receipt
+            Download
           </button>
         </div>
       </div>

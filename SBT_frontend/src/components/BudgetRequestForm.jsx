@@ -19,7 +19,7 @@ const BudgetRequestForm = ({ onClose, submitButtonText, fetchBudgets }) => {
   // Validation schema
   const validationSchema = Yup.object({
     category: Yup.string().required("Required"),
-    fiscalYear: Yup.string(), // Not required
+    fiscalYear: Yup.string().required("Required"),
     month: Yup.string().required("Required"),
     amount: Yup.number().required("Required")
       .min(0, "Must be a positive number")
@@ -123,9 +123,11 @@ const BudgetRequestForm = ({ onClose, submitButtonText, fetchBudgets }) => {
               <label className="block font-semibold mb-1">Fiscal Year</label>
               <Field as="select" name="fiscalYear" className="w-full p-2 rounded">
                 <option value="">Select Fiscal Year</option>
-                <option value="2024/2025">2024/2025</option>
-                <option value="2025/2026">2025/2026</option>
-                <option value="2026/2027">2026/2027</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+                <option value="2027">2027</option>
+                <option value="2028">2028</option>
               </Field>
             </div>
 

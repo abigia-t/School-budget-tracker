@@ -31,8 +31,8 @@ const HumanResourceRequest = () => {
       });
       setBudgets(res.data?.data || []);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to fetch requests");
-      toast.error("Failed to load requests");
+      setError(err.response?.data?.message || "Request failed");
+      toast.error("Failed to load");
     } finally {
       setIsLoading(false);
     }
@@ -91,7 +91,7 @@ const HumanResourceRequest = () => {
 
   const handleDelete = async (budgetId) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this request?"
+      "Are you sure?"
     );
     if (!confirmDelete) return;
 
@@ -100,10 +100,10 @@ const HumanResourceRequest = () => {
         `http://localhost:5000/api/budget-requests/${budgetId}`
       );
       setBudgets((prev) => prev.filter((b) => b._id !== budgetId));
-      toast.success("Budget request deleted successfully");
+      toast.success("Deleted successfully");
     } catch (err) {
       console.error("Delete error:", err);
-      toast.error(err.response?.data?.message || "Failed to delete request");
+      toast.error(err.response?.data?.message || "Failed to delete");
     }
   };
 
@@ -131,7 +131,7 @@ const HumanResourceRequest = () => {
           <button
             onClick={() => setIsCreateModalOpen(true)}
             className="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700"
-            title="Create New Request"
+            title="Create Request"
           >
             <FaPlus size={18} />
           </button>
@@ -148,7 +148,7 @@ const HumanResourceRequest = () => {
               setIsCreateModalOpen(false);
               fetchBudgets();
             }}
-            submitButtonText="Submit Request"
+            submitButtonText="Submit"
           />
         </Modal>
 

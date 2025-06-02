@@ -1,21 +1,26 @@
 import React, { useContext } from "react";
 import { StoreContext } from "../../context/StoreContext";
 import { FaUsers, FaUserGraduate, FaClipboardCheck, FaUserTie } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import SmallLoading from "../../components/loadings/SmallLoading";
 
 const SystemAdminDashboard = () => {
   const { stats, isFetchingStats } = useContext(StoreContext);
   const { totalEmployee, isFetchingTotalEmployee } = useContext(StoreContext);
+  const navigate = useNavigate();
 
   const statsData = [
     {
       title: "Total Staff",
       count: stats.totalActors,
       icon: <FaUsers className="text-4xl text-blue-700 mb-2" />,
+      link: "/system-admin-page/manage-actors"
     },
     {
       title: "Total Students",
       count: stats.totalStudents,
       icon: <FaUserGraduate className="text-4xl text-green-600 mb-2" />,
+      link: "/system-admin-page/manage-students"
     },
     {
       title: "Total Registered",
@@ -32,10 +37,14 @@ const SystemAdminDashboard = () => {
     },
   ];
 
+  const handleCardClick = (link) => {
+    if (link) {
+      navigate(link);
+    }
+  };
+
   return (
-    <div className="flex flex-col min-h-[calc(90vh-10px)] bg-gray-100 px-8 py-6 mt-10"> 
-      {/* mt-10 pulls content lower */}
-      
+    <div className="flex flex-col min-h-[calc(90vh-10px)] bg-gray-100 px-8 py-6 mt-10">
       <section className="flex-1 w-full">
         <h2 className="text-2xl text-center font-semibold mb-6 text-gray-800">
           Users Overview
@@ -48,7 +57,10 @@ const SystemAdminDashboard = () => {
             {statsData.map((item, index) => (
               <div
                 key={index}
-                className="bg-white rounded-xl shadow-md p-6 text-center"
+                onClick={() => handleCardClick(item.link)}
+                className={`bg-white rounded-xl shadow-md p-6 text-center ${
+                  item.link ? "cursor-pointer hover:shadow-lg transition-shadow hover:bg-gray-50" : ""
+                }`}
               >
                 <div className="flex justify-center">{item.icon}</div>
                 <h3 className="text-lg font-medium text-gray-700 mt-3">

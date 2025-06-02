@@ -160,7 +160,7 @@ const AddPayroll = ({ employee, onSuccess, onCancel }) => {
           disabled={isSubmitting}
           className="bg-gradient-to-r from-blue-400 to-purple-500 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity shadow-md"
         >
-          {isSubmitting ? 'Submitting...' : 'Submit Payroll'}
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
       </div>
     </form>

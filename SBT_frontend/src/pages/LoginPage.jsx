@@ -1,15 +1,27 @@
 import React from "react";
 import AuthForm from "../components/AuthForm";
 import NavBar from "../components/NavBar";
-import Footer from "../components/Footer"; // Assuming you have a Footer component
+import Footer from "../components/Footer";
+import schoolImage from "../assets/school-budget-tracker.png";
+
 const LoginPage = () => {
   return (
-    <div className="h-full bg-gray-300">
+    <div className="min-h-screen flex flex-col bg-gray-100">
       <NavBar />
-      <div className="bg-gray-300 flex items-center justify-center min-h-[calc(100vh-4rem)] p-4">
-        <AuthForm />
+      <div 
+        className="flex-grow flex items-center justify-center p-4"
+        style={{
+          backgroundImage: `url(${schoolImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <div className="bg-black bg-opacity-50 w-full h-full flex items-center justify-center">
+          <AuthForm />
+        </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

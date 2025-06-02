@@ -55,13 +55,11 @@ const AuthForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="flex flex-col md:flex-row max-w-6xl w-full bg-white rounded-lg shadow-md overflow-hidden">
-        {/* Form Section */}
-        <div className="flex-grow p-8 md:w-1/2">
-          <h1 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            {isChangingPassword ? "Change Password" : "Sign In"}
-          </h1>
+    <div className="w-full max-w-md bg-white rounded-lg shadow-md overflow-hidden mx-auto my-20">
+      <div className="p-8">
+        <h1 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          {isChangingPassword ? "Change Password" : "Sign In"}
+        </h1>
           
           {isChangingPassword ? (
             <ChangePasswordForm
@@ -118,18 +116,7 @@ const AuthForm = () => {
             </Formik>
           )}
         </div>
-
-        {/* Image Section - Now using the imported schoolImage */}
-        <div className="hidden md:block md:w-1/2 relative">
-          <img
-            src={schoolImage}
-            alt="School Budget Tracker"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black opacity-20" />
-        </div>
       </div>
-    </div>
   );
 };
 

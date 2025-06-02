@@ -66,16 +66,20 @@ const Home = () => {
             </p>
           </div>
           <div className="flex justify-center">
-            <div className="overflow-hidden rounded-lg shadow-lg">
-              <img src={assets.image_png} alt="Students engaged in learning" className="object-cover h-64 w-64 md:h-80 md:w-80 transition-transform duration-300 hover:scale-105" />
-            </div>
-          </div>
+  <div className="overflow-hidden rounded-md shadow-lg">
+    <img 
+      src={assets.image_png} 
+      alt="Students engaged in learning" 
+      className="object-cover h-72 w-72 md:h-96 md:w-96 lg:h-104 lg:w-104 transition-transform duration-300 hover:scale-105" 
+    />
+  </div>
+</div>
         </div>
       </div>
 
       {/* Features Section */}
       <div id="services" className="bg-gray-100 py-20 px-6">
-        <Title title="Our Features" />
+        <Title title="Services" />
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
           {features.map((feature, index) => (
             <div

@@ -9,7 +9,7 @@ import getty_6 from "./getty_6.jpg";
 import feature_icon1 from "./feature_icon1.jpg";
 import feature_icon2 from "./feature_icon2.jpg";
 import feature_icon3 from "./feature_icon3.jpg";
-import image_png from "./image_png.png";
+import image_png from "./image_png.jpg";
 
 export const assets = {
   Logo,

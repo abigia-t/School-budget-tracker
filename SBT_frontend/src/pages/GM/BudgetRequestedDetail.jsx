@@ -19,10 +19,10 @@ const BudgetRequestedDetail = () => {
         if (res.data) {
           setRequest(res.data);
         } else {
-          toast.warning("No budget request found.");
+          toast.warning("No budget found.");
         }
       } catch (err) {
-        toast.error("Failed to load budget detail.");
+        toast.error("Failed to load detail.");
         console.error(err);
       } finally {
         setLoading(false);
@@ -39,7 +39,7 @@ const BudgetRequestedDetail = () => {
       toast.success(`Status updated to ${newStatus}`);
       navigate(-1); // Go back to previous page
     } catch (err) {
-      toast.error("Failed to update status.");
+      toast.error("Failed to update.");
       console.error(err);
     }
   };

@@ -46,7 +46,7 @@ const PaymentList = () => {
   return (
     <div className="bg-gray-100 mt-7 p-6 rounded-lg shadow-sm min-h-[80vh]">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">
+        <h1 className="text-2xl font-light text-gray-800">
           <FaMoneyBillWave className="inline mr-2" />
           Student Payments
         </h1>

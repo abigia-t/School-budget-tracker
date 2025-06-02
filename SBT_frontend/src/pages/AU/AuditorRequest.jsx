@@ -25,7 +25,7 @@ const AuditorRequest = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+      <h1 className="text-3xl font-light text-gray-800 mb-8 text-center">
         Request Budget
       </h1>
 
@@ -35,7 +35,7 @@ const AuditorRequest = () => {
           onClick={() => setIsModalOpen(true)} // Open the form modal when clicked
           className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
         >
-          Add Budget Request Here
+           Budget Request
         </button>
       </div>
 
@@ -46,7 +46,7 @@ const AuditorRequest = () => {
           title="Request Budget"
           onSubmit={handleSubmit}
           onClose={() => setIsModalOpen(false)} // Close the modal on button click
-          submitButtonText="Submit Request"
+          submitButtonText="Submit"
         />
       )}
 

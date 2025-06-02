@@ -42,7 +42,7 @@ const PreparePayroll = () => {
   };
 
   const handlePayrollAdded = (newPayroll) => {
-    notify("Payroll submitted successfully!");
+    notify("Setted successfully!");
     setPayrolls(prev => [...prev, newPayroll]);
     setShowPayrollForm(false);
   };
@@ -60,8 +60,8 @@ const PreparePayroll = () => {
     <div className="bg-gray-100 mt-7 p-6 rounded-lg shadow-sm">
       <ToastContainer />
 
-      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-        Payroll Management Dashboard
+      <h1 className="text-3xl font-light text-blue-800 mb-8 text-center">
+        Payroll Management 
       </h1>
 
       <div className="mt-6 bg-white rounded-xl shadow-lg overflow-hidden">
@@ -72,7 +72,7 @@ const PreparePayroll = () => {
         {isLoading ? (
           <div className="text-center py-8">
             <div className="inline-block animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
-            <p className="mt-3 text-gray-600">Loading payroll data...</p>
+            <p className="mt-3 text-gray-600">Loading payroll...</p>
           </div>
         ) : error ? (
           <div className="bg-red-50 p-4 rounded-lg text-center">

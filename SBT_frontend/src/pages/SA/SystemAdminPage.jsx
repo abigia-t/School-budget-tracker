@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import TopBar from "../../components/TopBar";
-import Footer2 from "../../components/Footer2";
 import SideBar from "../../components/SideBar";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 
@@ -9,7 +8,6 @@ const adminLinks = [
   { path: "/system-admin-page/system-admin-dashboard", label: "Dashboard" },
   { path: "/system-admin-page/manage-actors", label: "Manage Staff" },
   { path: "/system-admin-page/manage-students", label: "Manage Students" },
-  { path: "/system-admin-page/manage-chapa", label: "Manage Chapa Integration" },
 ];
 
 const SystemAdminPage = () => {
@@ -46,7 +44,6 @@ const SystemAdminPage = () => {
         </main>
         <div className="w-full z-40 bg-white shadow-md">
           {" "}
-          <Footer2 />
         </div>
       </div>
     </div>

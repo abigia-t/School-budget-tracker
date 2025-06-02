@@ -22,7 +22,7 @@ const budgetRequestSchema = new mongoose.Schema(
     },
     fiscalYear: {
       type: String,
-      required: false,
+      required: true,
     },
     month: {
       type: String,

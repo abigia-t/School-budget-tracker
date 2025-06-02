@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Messages = () => {
-  // State for User Messages
+  // State for all User Messages
   const [messages, setMessages] = useState([]);
 
   // State for
@@ -30,12 +30,12 @@ const Messages = () => {
   }, []);
   // Handlers
   const handleDeleteMessage = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this message?"))
+    if (!window.confirm("Are you sure?"))
       return;
     try {
       await axios.delete(`http://localhost:5000/api/contact-messages/${id}`);
       setMessages(messages.filter((msg) => msg._id !== id));
-      toast.success("Message deleted successfully.");
+      toast.success("Deleted successfully.");
     } catch (error) {
       console.error("Error deleting message:", error);
       toast.error("Failed to delete message.");
@@ -44,7 +44,7 @@ const Messages = () => {
 
   const handleSendNotification = async () => {
     if (!message.trim()) {
-      return toast.error("Message cannot be empty!");
+      return toast.error("Cannot be empty!");
     }
 
     try {
@@ -138,7 +138,7 @@ const Messages = () => {
         </div>
       </section>
 
-      {/* SEND NOTIFICATIONS SECTION */}
+      {/* SEND messsage SECTION */}
       <section>
         <h2 className="text-2xl font-light text-gray-800 mb-6 border-b pb-2">
           📤 Send Messages

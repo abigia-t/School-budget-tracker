@@ -40,14 +40,14 @@ export const createBudgetRequest = async (req, res) => {
     res.status(201).json({ 
       success: true, 
       data: newRequest,
-      message: "Created successfully"
+      message: "Request success."
     });
     
   } catch (error) {
     console.error("Create Error:", error);
     res.status(500).json({ 
       success: false, 
-      message: error.message || "Failed to create budget request" 
+      message: error.message || "Failed to request" 
     });
   }
 };
@@ -62,7 +62,7 @@ export const getAllBudgetRequests = async (req, res) => {
     res.json({ success: true, data: requests });
   } catch (error) {
     console.error("Fetch Error:", error);
-    res.status(500).json({ success: false, message: "Failed to fetch requests" });
+    res.status(500).json({ success: false, message: "Failed to fetch" });
   }
 };
 
@@ -76,7 +76,7 @@ export const getBudgetRequestById = async (req, res) => {
       .populate("approvedBy", "firstName  role");
 
     if (!budgetRequest) {
-      return res.status(404).json({ message: "Budget request not found" });
+      return res.status(404).json({ message: "Request not found" });
     }
 
     res.status(200).json(budgetRequest);
@@ -138,7 +138,7 @@ export const updateBudgetRequest = async (req, res) => {
     res.json({
       success: true,
       data: updatedRequest,
-      message: "Budget request updated successfully",
+      message: "request updated successfully",
     });
   } catch (error) {
     console.error("Update Error:", error);
@@ -163,9 +163,9 @@ export const deleteBudgetRequest = async (req, res) => {
     }
 
     await BudgetRequest.findByIdAndDelete(id);
-    res.json({ success: true, message: "Request deleted successfully!" });
+    res.json({ success: true, message: "deleted successfully!" });
   } catch (error) {
     console.error("Delete Error:", error);
-    res.status(500).json({ success: false, message: "Failed to delete request" });
+    res.status(500).json({ success: false, message: "Failed to delete!" });
   }
 };
